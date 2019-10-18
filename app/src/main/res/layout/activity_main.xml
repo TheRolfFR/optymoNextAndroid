@@ -1,43 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/main_refresh_layout"
     android:layout_height="match_parent"
     tools:context=".controller.activities.MainActivity"
-    android:backgroundTint="@color/colorBackground">
+    android:backgroundTint="@android:color/black">
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/content_description_background"
-        android:cropToPadding="false"
-        app:srcCompat="@drawable/top_background" />
-
-    <include
-        layout="@layout/content_main" />
-
-    <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionLayout
-        android:id="@+id/floating_layout"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.robertlevonyan.examples.customfloatingactionbutton.view.FloatingActionButton
-            app:fabType="roundedSquare"
-            />
-    </com.robertlevonyan.views.customfloatingactionbutton.FloatingActionLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_floating_button_bg"
-        android:backgroundTint="@android:color/transparent"
-        android:src="@drawable/ic_bookmark_plus"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="10dp"
-        android:elevation="0dp"
-        app:rippleColor="@android:color/transparent" />
+        <include
+            android:id="@+id/content_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/content_main" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/floating_button_height"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/padding_app"
+            android:layout_marginBottom="@dimen/floating_button_margin_bottom"
+            android:text="@string/add_button_text"
+            android:textColor="@android:color/transparent"
+            app:fabColor="@color/colorPrimaryOnElement"
+            app:fabIcon="@drawable/ic_bookmark_plus" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

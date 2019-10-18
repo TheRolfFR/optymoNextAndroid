@@ -12,43 +12,48 @@
     android:paddingEnd="10dp"
     tools:context=".controller.activities.SplashScreenActivity">
 
-    <TextView
-        android:id="@+id/splash_app_title"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="@string/app_name"
-        android:textAlignment="center"
-        android:textColor="@android:color/white"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ProgressBar
+            android:id="@+id/splash_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTintMode="src_atop"
+            android:progressDrawable="@drawable/loading_spinner_xxxhdpi"
+            android:theme="@style/progressBarWhite" />
+
+        <TextView
+            android:id="@+id/splash_app_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_bold"
+            android:text="@string/app_name_loading"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/splash_icon_height"
+        android:layout_marginTop="@dimen/splash_icon_margin_vertical"
+        android:layout_marginBottom="@dimen/splash_icon_margin_vertical"
+        app:srcCompat="@drawable/ic_logo_form" />
 
     <TextView
         android:id="@+id/splash_loading_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/nunito_bold"
         android:text="@string/splash_loading_text"
         android:textAlignment="center"
         android:textColor="@android:color/white"
-        android:textSize="20sp" />
+        android:textSize="22sp" />
 
-    <ProgressBar
-        android:id="@+id/splash_generation_progress_bar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:indeterminate="false"
-        android:progressTint="#FFFFFF" />
-
-    <ProgressBar
-        android:id="@+id/splash_progress_2"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:progressTint="@android:color/white" />
 </LinearLayout>

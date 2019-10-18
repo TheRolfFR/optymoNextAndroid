@@ -10,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.therolf.optymoNext.R;
@@ -21,6 +22,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private static final String TAG = "splash";
 
     private OptymoNetworkController networkController;
+    private boolean generatedNetwork = false;
 
     @SuppressLint("ObsoleteSdkInt")
     @Override
@@ -32,30 +34,25 @@ public class SplashScreenActivity extends AppCompatActivity {
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
-
-        final ProgressBar genProgressBar = findViewById(R.id.splash_generation_progress_bar);
-        final ProgressBar roundProgressBar = findViewById(R.id.splash_progress_2);
+        final ProgressBar roundProgressBar = findViewById(R.id.splash_progress);
 
         networkController = OptymoNetworkController.getInstance();
         networkController.setProgressListener(new OptymoNetwork.ProgressListener() {
             @Override
             public void OnProgressUpdate(float progress) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    genProgressBar.setProgress(Math.round(progress*100), true);
                     roundProgressBar.setProgress(Math.round(progress*100), true);
                 } else {
-                    genProgressBar.setProgress(Math.round(progress*100));
                     roundProgressBar.setProgress(Math.round(progress*100));
                 }
             }
 
             @Override
             public void OnGenerationEnd(boolean returnValue) {
+                generatedNetwork = true;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    genProgressBar.setProgress(100, true);
                     roundProgressBar.setProgress(100, true);
                 } else {
-                    genProgressBar.setProgress(100);
                     roundProgressBar.setProgress(100);
                 }
                 if(returnValue)
@@ -63,12 +60,25 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
         });
 
-        new OptymoNetworkGen().execute(SplashScreenActivity.this);
+        if(generatedNetwork) {
+            goToMain();
+        } else {
+            new OptymoNetworkGen().execute(SplashScreenActivity.this);
+        }
     }
 
     void goToMain() {
         Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 2);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_CANCELED) {
+            goToMain();
+        }
     }
 
     @SuppressLint("StaticFieldLeak")

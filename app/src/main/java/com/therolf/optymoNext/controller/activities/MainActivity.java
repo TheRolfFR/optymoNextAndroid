@@ -5,23 +5,18 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.therolf.optymoNext.R;
 import com.therolf.optymoNext.controller.OptymoFavoritesController;
 import com.therolf.optymoNext.controller.OptymoNetworkController;
 import com.therolf.optymoNext.vue.adapters.OptymoDirectionAdapter;
 import com.therolf.optymoNext.vue.adapters.OptymoNextTimeAdapter;
-import com.therolf.optymoNext.vue.adapters.OptymoStopAdapter;
 import com.therolf.optymoNextModel.OptymoNextTime;
 
 
@@ -31,96 +26,86 @@ public class MainActivity extends AppCompatActivity {
 
     private static OptymoNetworkController networkController = null;
 
-    ImageButton favoriteRefreshButton;
     ListView favoriteList;
-
-    ImageButton stopsRefreshButton;
-    Spinner stopsSpinner;
-    ListView nextStopsList;
+    SwipeRefreshLayout refreshLayout;
     OptymoGetNextTime getNextTime = null;
 
+    private static Intent addFavoriteActivity = null;
+
     private OptymoFavoritesController favoriteManager;
+
+    public static void destroyIntent() {
+        addFavoriteActivity = null;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // data part
+        // data part (BEFORE REFRESH LAYOUT)
         favoriteManager   = OptymoFavoritesController.getInstance(this);
         networkController = OptymoNetworkController.getInstance();
         Log.e("lines number", "" + networkController.getLines().length);
 
-        // favorite parts
-        favoriteRefreshButton = findViewById(R.id.main_favorite_refresh_button);
+        // favorite list (BEFORE REFRESH LAYOUT)
         favoriteList = findViewById(R.id.main_favorite_next_stops);
 
-        // favorite set adapters
-        favoriteRefreshButton.setOnClickListener(new View.OnClickListener() {
+        // refresh layout
+        refreshLayout = findViewById(R.id.main_refresh_layout);
+        refreshLayout.setColorSchemeResources(
+                R.color.colorPrimaryOnElement,
+                R.color.colorPrimaryOnElement,
+                R.color.colorPrimaryOnElement);
+        refreshFavoriteList();
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View view) {
-                System.out.println(favoriteManager.getFavorites().length);
-                favoriteList.setAdapter(new OptymoDirectionAdapter(MainActivity.this, favoriteManager.getFavorites()));
+            public void onRefresh() {
+                refreshLayout.setRefreshing(true);
+                refreshFavoriteList();
             }
         });
-        favoriteList.setAdapter(new OptymoDirectionAdapter(this, favoriteManager.getFavorites()));
 
-
-        // stops parts
-        stopsSpinner = findViewById(R.id.main_stops_spinner);
-        nextStopsList = findViewById(R.id.main_next_stops);
-
-        // stops set data
-        stopsSpinner.setAdapter(new OptymoStopAdapter(MainActivity.this, networkController.getStops()));
-        stopsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(getNextTime != null) {
-                    getNextTime.cancel(true);
-                }
-
-                getNextTime = new OptymoGetNextTime();
-                getNextTime.execute(i);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                nextStopsList.setAdapter(new OptymoNextTimeAdapter(MainActivity.this, new OptymoNextTime[0]));
-            }
-        });
+        // search icon
+        findViewById(R.id.top_search_icon).setVisibility(View.VISIBLE);
 
         // bottom floating button
-        FloatingActionButton fab = findViewById(R.id.fab);
+        com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent addActivity = new Intent(MainActivity.this, FavoritesActivity.class);
-                startActivity(addActivity);
+                if(addFavoriteActivity == null) {
+                    addFavoriteActivity = new Intent(MainActivity.this, FavoritesActivity.class);
+                    startActivity(addFavoriteActivity);
+                }
             }
         });
+        /*fab.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN ) {
+                    enableFloatingButton(false);
+                }
+
+                return true;
+            }
+        });*/
+    }
+
+    private void refreshFavoriteList() {
+        Toast.makeText(this, "Loading favorites...", Toast.LENGTH_SHORT).show();
+        favoriteList.setAdapter(new OptymoDirectionAdapter(this, favoriteManager.getFavorites()));
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    protected void onDestroy() {
+        Intent i = new Intent();
+        i.putExtra("HELLO_WORLD", "!");
+        setResult(2, i);
+        super.onDestroy();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
     class OptymoGetNextTime extends AsyncTask<Integer, Void, OptymoNextTime[]> {
         @Override
         protected OptymoNextTime[] doInBackground(Integer... integers) {
@@ -131,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(OptymoNextTime[] optymoNextTimes) {
             super.onPostExecute(optymoNextTimes);
 
-            nextStopsList.setAdapter(new OptymoNextTimeAdapter(MainActivity.this, optymoNextTimes));
+            favoriteList.setAdapter(new OptymoNextTimeAdapter(MainActivity.this, optymoNextTimes));
         }
     }
 }

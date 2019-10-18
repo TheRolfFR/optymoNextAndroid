@@ -6,59 +6,117 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="10dp"
     tools:context=".controller.activities.FavoritesActivity">
 
-    <TextView
-        android:id="@+id/add_favorite_title"
+    <include
+        android:id="@+id/top_part"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_favorite"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        tools:text="Add favorite" />
+        layout="@layout/top_part" />
 
-    <TextView
-        android:id="@+id/add_step1_text"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="@string/add_step_1"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        tools:text="1. choose a Line" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/top_part_height_no_padding"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/padding_app"
+        android:paddingEnd="@dimen/padding_app">
 
-    <Spinner
-        android:id="@+id/add_stop_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:spinnerMode="dialog" />
+        <TextView
+            android:id="@+id/main_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/bottom_title_margin"
+            android:fontFamily="@font/nunito_bold"
+            android:text="@string/add_fav_title"
+            android:textColor="@color/colorOnPrimary"
+            android:textSize="@dimen/title_font_size" />
 
-    <TextView
-        android:id="@+id/add_step2_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="@string/add_step_2"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        tools:text="2. Choose a stop" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/add_fav_choose_line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/component_padding"
+            android:layout_marginBottom="@dimen/component_padding"
+            android:background="@color/elementBackground"
+            app:cardCornerRadius="@dimen/component_border_radius"
+            app:cardElevation="@dimen/add_fav_elevation">
 
-    <Spinner
-        android:id="@+id/add_direction_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:spinnerMode="dialog" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/component_padding">
 
-    <Button
-        android:id="@+id/add_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add_button_text"
-        android:textColor="@android:color/black"
-        tools:text="ADD" />
+                <TextView
+                    android:id="@+id/add_step1_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/component_padding"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:text="@string/add_step_1"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+
+                <Spinner
+                    android:id="@+id/add_line_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="0dp"
+                    android:spinnerMode="dialog" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/add_fav_choose_stop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/component_padding"
+            android:layout_marginBottom="@dimen/component_padding"
+            android:background="@color/elementBackground"
+            app:cardCornerRadius="@dimen/component_border_radius"
+            app:cardElevation="@dimen/add_fav_elevation">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/component_padding">
+
+                <TextView
+                    android:id="@+id/add_step2_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/component_padding"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:text="@string/add_step_2"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+
+                <Spinner
+                    android:id="@+id/add_direction_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="0dp"
+                    android:spinnerMode="dialog" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/add_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_fav_button_height"
+            android:background="@drawable/element_background"
+            android:elevation="@dimen/add_fav_elevation"
+            android:fontFamily="@font/nunito_extrabold"
+            android:text="@string/add_button_text"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"
+            tools:text="ADD" />
+
+    </LinearLayout>
 </LinearLayout>

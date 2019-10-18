@@ -303,16 +303,16 @@ public class OptymoNetwork {
         OptymoStop result = null, tmp;
         int i = 0;
         Object[] keys = stops.keySet().toArray();
-        do
-        {
+
+        while (result == null && i < keys.length) {
             //noinspection SuspiciousMethodCalls
             tmp = stops.get(keys[i]);
-            if(tmp != null && tmp.getSlug().equals(slug)) {
+            if (tmp != null && tmp.getSlug().equals(slug)) {
                 result = tmp;
             }
 
             ++i;
-        } while (result == null && i < keys.length);
+        }
 
         return result;
     }
