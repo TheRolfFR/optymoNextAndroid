@@ -13,4 +13,5 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="splash_loading_text">Loading network</string>
     <string name="main_all_stops">All stops</string>
+    <string name="content_description_background">Superb background</string>
 </resources>

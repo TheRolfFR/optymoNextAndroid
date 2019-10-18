@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/grad_bg_rectangle"
+    android:background="@drawable/ic_splash_screen_bg"
     android:fitsSystemWindows="true"
     android:gravity="center"
     android:orientation="vertical"
@@ -44,4 +44,11 @@
         android:layout_marginBottom="10dp"
         android:indeterminate="false"
         android:progressTint="#FFFFFF" />
+
+    <ProgressBar
+        android:id="@+id/splash_progress_2"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progressTint="@android:color/white" />
 </LinearLayout>

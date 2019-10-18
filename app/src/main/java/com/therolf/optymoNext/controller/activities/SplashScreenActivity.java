@@ -34,6 +34,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
 
         final ProgressBar genProgressBar = findViewById(R.id.splash_generation_progress_bar);
+        final ProgressBar roundProgressBar = findViewById(R.id.splash_progress_2);
 
         networkController = OptymoNetworkController.getInstance();
         networkController.setProgressListener(new OptymoNetwork.ProgressListener() {
@@ -41,8 +42,10 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void OnProgressUpdate(float progress) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     genProgressBar.setProgress(Math.round(progress*100), true);
+                    roundProgressBar.setProgress(Math.round(progress*100), true);
                 } else {
                     genProgressBar.setProgress(Math.round(progress*100));
+                    roundProgressBar.setProgress(Math.round(progress*100));
                 }
             }
 
@@ -50,8 +53,10 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void OnGenerationEnd(boolean returnValue) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     genProgressBar.setProgress(100, true);
+                    roundProgressBar.setProgress(100, true);
                 } else {
                     genProgressBar.setProgress(100);
+                    roundProgressBar.setProgress(100);
                 }
                 if(returnValue)
                     goToMain();

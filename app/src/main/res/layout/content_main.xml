@@ -41,7 +41,7 @@
             android:maxHeight="42dp"
             android:padding="0dp"
             android:scaleType="fitEnd"
-            app:srcCompat="@drawable/ic_refresh" />
+            app:srcCompat="@drawable/ic_bookmark_plus" />
 
     </LinearLayout>
 
@@ -83,7 +83,7 @@
             android:maxHeight="42dp"
             android:padding="0dp"
             android:scaleType="fitEnd"
-            app:srcCompat="@drawable/ic_refresh" />
+            app:srcCompat="@drawable/ic_bookmark_plus" />
 
     </LinearLayout>
 
