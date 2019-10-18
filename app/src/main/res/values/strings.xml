@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">OptymoNext</string>
+    <string name="action_settings">Settings</string>
+    <string name="favorites">Favorites</string>
+    <string name="refresh_button">Refresh Button</string>
+    <string name="add_favorite">Add favorite</string>
+    <string name="add_step_1">1. choose a Line</string>
+    <string name="add_step_2">2. Choose a stop</string>
+    <string name="add_button_text">ADD</string>
+
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="splash_loading_text">Loading network</string>
+    <string name="main_all_stops">All stops</string>
+</resources>
