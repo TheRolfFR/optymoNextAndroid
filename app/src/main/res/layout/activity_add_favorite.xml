@@ -36,8 +36,7 @@
             android:id="@+id/add_fav_choose_line"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/component_padding"
-            android:layout_marginBottom="@dimen/component_padding"
+            android:layout_marginBottom="@dimen/component_vertical_margin"
             android:background="@color/elementBackground"
             app:cardCornerRadius="@dimen/component_border_radius"
             app:cardElevation="@dimen/add_fav_elevation">
@@ -75,8 +74,7 @@
             android:id="@+id/add_fav_choose_stop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/component_padding"
-            android:layout_marginBottom="@dimen/component_padding"
+            android:layout_marginBottom="@dimen/component_vertical_margin"
             android:background="@color/elementBackground"
             app:cardCornerRadius="@dimen/component_border_radius"
             app:cardElevation="@dimen/add_fav_elevation">

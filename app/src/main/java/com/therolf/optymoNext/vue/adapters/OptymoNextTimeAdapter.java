@@ -6,14 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.therolf.optymoNext.R;
-
 import com.therolf.optymoNextModel.OptymoNextTime;
 
 @SuppressWarnings("unused")
@@ -50,31 +49,8 @@ public class OptymoNextTimeAdapter extends BaseAdapter {
         LayoutInflater inflater = LayoutInflater.from(context);
         convertView = inflater.inflate(R.layout.next_element_list, parent, false);
 
-        // change color
-        int colorId = R.color.colorLine3;
-        switch (nextTimes[position].getLineNumber()) {
-            case 1:
-                colorId = R.color.colorLine1;
-                break;
-            case 2:
-                colorId = R.color.colorLine2;
-                break;
-            case 3:
-                colorId = R.color.colorLine3;
-                break;
-            case 4:
-                colorId = R.color.colorLine4;
-                break;
-            case 5:
-                colorId = R.color.colorLine5;
-                break;
-            case 8:
-                colorId = R.color.colorLine8;
-                break;
-            default:
-                break;
-        }
-        ((LinearLayout) convertView.findViewById(R.id.next_el_line)).setBackgroundColor(colorId);
+        int id = context.getResources().getIdentifier("colorLine" + nextTimes[position].getLineNumber(), "color", context.getPackageName());
+        convertView.findViewById(R.id.next_el_line).setBackgroundColor(ContextCompat.getColor(context, id));
 
         // change line number
         ((TextView) convertView.findViewById(R.id.next_el_line_number)).setText("" + nextTimes[position].getLineNumber());

@@ -56,6 +56,7 @@ public class MainActivity extends TopViewActivity {
                 R.color.colorPrimaryOnElement,
                 R.color.colorPrimaryOnElement,
                 R.color.colorPrimaryOnElement);
+
         refreshFavoriteList();
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

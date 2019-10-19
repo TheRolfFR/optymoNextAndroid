@@ -44,6 +44,7 @@
         android:layout_height="@dimen/splash_icon_height"
         android:layout_marginTop="@dimen/splash_icon_margin_vertical"
         android:layout_marginBottom="@dimen/splash_icon_margin_vertical"
+        android:contentDescription="@string/icon_app_description"
         app:srcCompat="@drawable/ic_logo_form" />
 
     <TextView

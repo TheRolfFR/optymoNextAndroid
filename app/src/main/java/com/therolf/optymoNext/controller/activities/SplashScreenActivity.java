@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,15 +36,22 @@ public class SplashScreenActivity extends AppCompatActivity {
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
         final ProgressBar roundProgressBar = findViewById(R.id.splash_progress);
+        final TextView loadingText = findViewById(R.id.splash_loading_text);
 
         networkController = OptymoNetworkController.getInstance();
         networkController.setProgressListener(new OptymoNetwork.ProgressListener() {
             @Override
-            public void OnProgressUpdate(float progress) {
+            public void OnProgressUpdate(float progress, String method) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     roundProgressBar.setProgress(Math.round(progress*100), true);
                 } else {
                     roundProgressBar.setProgress(Math.round(progress*100));
+                }
+
+                if(method.equals("XML")) {
+                    loadingText.setText(R.string.splash_xml_generation_text);
+                } else if(method.equals("JSON")) {
+                    loadingText.setText(R.string.splash_json_loading_text);
                 }
             }
 

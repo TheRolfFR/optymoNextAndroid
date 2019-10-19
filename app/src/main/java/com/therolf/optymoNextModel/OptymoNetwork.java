@@ -79,7 +79,7 @@ public class OptymoNetwork {
 
             for (int i = 0; i < array.length(); i++) {
                 if(networkGenerationListener != null) {
-                    networkGenerationListener.OnProgressUpdate((float)i / array.length());
+                    networkGenerationListener.OnProgressUpdate((float)i / array.length(), "JSON");
                 }
 
                 JSONObject stopObject = array.getJSONObject(i);
@@ -164,7 +164,7 @@ public class OptymoNetwork {
                 }
                 if(doc != null && doc.getElementsByTag("h3").size() == 0) {
                     if(networkGenerationListener != null) {
-                        networkGenerationListener.OnProgressUpdate((float) i / names.getLength());
+                        networkGenerationListener.OnProgressUpdate((float) i / names.getLength(), "XML");
                     }
                     stringer
                             .object()
@@ -318,7 +318,7 @@ public class OptymoNetwork {
     }
 
     public interface ProgressListener {
-        void OnProgressUpdate(float progress);
+        void OnProgressUpdate(float progress, String method);
         void OnGenerationEnd(boolean returnValue);
     }
 }

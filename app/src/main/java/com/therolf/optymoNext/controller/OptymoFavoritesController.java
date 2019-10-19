@@ -1,5 +1,7 @@
 package com.therolf.optymoNext.controller;
 
+import android.util.ArrayMap;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.therolf.optymoNextModel.OptymoDirection;
@@ -17,6 +19,7 @@ public class OptymoFavoritesController {
     private final static String DIRECTION_KEY = "direction";
 
     private ArraySharedPreferences preferences;
+    private ArrayMap<String, OptymoDirection> directionsList;
 
     private static OptymoFavoritesController favoritesController = null;
 
@@ -28,37 +31,43 @@ public class OptymoFavoritesController {
 
     private OptymoFavoritesController(AppCompatActivity context) {
         preferences = new ArraySharedPreferences(context, "favorites");
+        loadFavorites();
+        System.out.println("Loaded " + size() + " favorites");
     }
 
     public int size() {
-        return preferences.size();
+        return directionsList.size();
     }
 
-    public OptymoDirection[] getFavorites() {
-        int size = this.size();
+    private void loadFavorites() {
+        int size = preferences.size();
 
         // potential result
-        OptymoDirection[] result = new OptymoDirection[size];
+        ArrayMap<String, OptymoDirection> map = new ArrayMap<>();
         OptymoDirection tmp = null;
 
         // loop and add while no tmp element is null or the size done
         int i = 0;
         if(size > 0) {
+            tmp = getElementAt(i);
             do {
-                tmp = getElementAt(i);
-                if(tmp != null)
-                    result[i] = tmp;
+                if(tmp != null && !map.containsKey(tmp.toString()))
+                    map.put(tmp.toString(), tmp);
 
                 ++i;
+                tmp = getElementAt(i);
             } while (tmp != null && i < size);
         }
 
-        // if tmp was never null return result
+        // if tmp was never null result is correct
         if(size == 0 || tmp != null)
-            return result;
+            directionsList = map;
+        else
+            directionsList = new ArrayMap<>();
+    }
 
-        // else return empty array
-        return new OptymoDirection[0];
+    public OptymoDirection[] getFavorites() {
+        return directionsList.values().toArray(new OptymoDirection[0]);
     }
 
     public int removeFavoriteAt(int index) {
@@ -66,6 +75,9 @@ public class OptymoFavoritesController {
     }
 
     public int addElement(OptymoDirection direction) {
+        if(!directionsList.containsKey(direction.toString()))
+            directionsList.put(direction.toString(), direction);
+
         try {
             JSONStringer stringer = new JSONStringer().object()
                 .key(STOP_KEY_KEY).value(direction.getStopSlug())

@@ -16,6 +16,7 @@
     <dimen name="component_padding">12dp</dimen>
     <dimen name="component_padding_half">6dp</dimen>
     <dimen name="component_content_font_size">18sp</dimen>
+    <dimen name="component_vertical_margin">10dp</dimen>
 
     <dimen name="floating_button_height">51dp</dimen>
     <dimen name="floating_button_margin_bottom">30dp</dimen>

@@ -21,12 +21,13 @@
         <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/floating_button_height"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="@dimen/padding_app"
             android:layout_marginBottom="@dimen/floating_button_margin_bottom"
+            android:fontFamily="@font/nunito_bold"
             android:text="@string/add_button_text"
-            android:textColor="@android:color/transparent"
+            android:textColor="@color/colorOnPrimary"
             app:fabColor="@color/colorPrimaryOnElement"
             app:fabIcon="@drawable/ic_bookmark_plus" />
 

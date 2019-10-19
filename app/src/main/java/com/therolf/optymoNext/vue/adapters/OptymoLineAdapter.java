@@ -54,7 +54,6 @@ public class OptymoLineAdapter extends BaseAdapter {
         ((TextView) convertView.findViewById(R.id.next_el_time)).setText("");
 
         int id = context.getResources().getIdentifier("colorLine" + optymoLines[position].getNumber(), "color", context.getPackageName());
-        System.out.println(id);
         convertView.findViewById(R.id.next_el_line).setBackgroundColor(ContextCompat.getColor(context, id));
 
         return convertView;

@@ -10,9 +10,9 @@
     <color name="colorPrimaryOnElement">#D2392E</color>
 
     <color name="colorLineDefault">#A8A8A8</color>
-    <color name="colorLine1">#dc002e</color>
-    <color name="colorLine2">#fabe19</color>
-    <color name="colorLine3">#009cda</color>
+    <color name="colorLine1">#B71C1C</color>
+    <color name="colorLine2">#E4DD23</color>
+    <color name="colorLine3">#0076D1</color>
     <color name="colorLine4">#9d5b9c</color>
     <color name="colorLine5">#96be0d</color>
     <color name="colorLine8">#b07e5b</color>
