@@ -13,25 +13,28 @@ public class ArraySharedPreferences {
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
+
     private String nameKeyPrefix;
-    private String lengthKey;
+    private String LENGTH_KEY;
 
     @SuppressLint("CommitPrefEdits")
     public ArraySharedPreferences(AppCompatActivity context, String name) {
         preferences = context.getPreferences(Context.MODE_PRIVATE);
         editor = preferences.edit();
         nameKeyPrefix = ARRAY_KEY + name + ".";
-        lengthKey = nameKeyPrefix + "length";
+        LENGTH_KEY = nameKeyPrefix + "length";
     }
 
     public int size() {
-        return preferences.getInt(lengthKey, 0);
+        return preferences.getInt(LENGTH_KEY, 0);
     }
 
     public int addElement(String content) {
+        System.out.println(content);
         int size = size();
         editor.putString(nameKeyPrefix + size, content).apply();
-        return size;
+        editor.putInt(LENGTH_KEY, size + 1).apply();
+        return size+1;
     }
 
     public String getElement(int index, String defaultValue) {
@@ -43,13 +46,13 @@ public class ArraySharedPreferences {
         if(size == 0) {
             return 0;
         } else if(index < size) {
-            // shift everything
+            // shift everything to the left
             for (int i = index; i < size-1; i++) {
                 editor.putString(nameKeyPrefix + i, preferences.getString(nameKeyPrefix + (i+1), ""));
             }
 
             // returns the new size
-            editor.putInt(lengthKey, size-1);
+            editor.putInt(LENGTH_KEY, size-1);
             return size-1;
         }
 
@@ -61,7 +64,7 @@ public class ArraySharedPreferences {
         String[] result = new String[this.size()];
 
         for(int i = 0; i < result.length; i++) {
-            result[i] = preferences.getString(nameKeyPrefix + i, defaultValue);
+            result[i] = getElement(i, defaultValue);
         }
 
         return result;
@@ -73,6 +76,6 @@ public class ArraySharedPreferences {
             this.removeElementAt(i);
         }
 
-        editor.putInt(lengthKey, 0);
+        editor.putInt(LENGTH_KEY, 0);
     }
 }

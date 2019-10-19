@@ -45,20 +45,18 @@ public class OptymoNetworkController {
         InputStream xmlInputStream;
         String stopsJsonString = "";
         boolean jsonParsingWentWell = false;
-        boolean xmlParsingWentWell = false;
 
         // try to parse JSON
-        if(!forceXml) {
-            try {
-                FileInputStream fis = context.openFileInput(jsonFileName);
-                byte[] buffer = new byte[fis.available()];
-                //noinspection ResultOfMethodCallIgnored
-                fis.read(buffer);
-                stopsJsonString = new String(buffer);
-                jsonParsingWentWell = true;
-            } catch (IOException e) {
-                Log.e(TAG, Objects.requireNonNull(e.getMessage()));
-            }
+        try {
+            FileInputStream fis = context.openFileInput(jsonFileName);
+            System.out.println();
+            byte[] buffer = new byte[fis.available()];
+            //noinspection ResultOfMethodCallIgnored
+            fis.read(buffer);
+            stopsJsonString = new String(buffer);
+            jsonParsingWentWell = true;
+        } catch (IOException e) {
+            Log.e(TAG, Objects.requireNonNull(e.getMessage()));
         }
 
 //        Log.i("OptymoNetworkController", "jsonParsingWentWell : " + jsonParsingWentWell);
@@ -70,7 +68,7 @@ public class OptymoNetworkController {
         if(forceXml || jsonParsingWentWell) {
             network.begin(stopsJsonString, xmlInputStream, forceXml);
         } else {
-            Log.e(TAG, "Failed to parse XML: " + xmlParsingWentWell + "or JSON: " + jsonParsingWentWell);
+            Log.e(TAG, "Failed to parse XML or JSON: " + jsonParsingWentWell);
         }
 
         // save json resulting if xml was generated

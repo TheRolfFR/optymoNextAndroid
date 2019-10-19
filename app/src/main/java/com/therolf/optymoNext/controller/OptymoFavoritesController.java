@@ -49,7 +49,7 @@ public class OptymoFavoritesController {
         // loop and add while no tmp element is null or the size done
         int i = 0;
         if(size > 0) {
-            tmp = getElementAt(i);
+            tmp = this.getElementAt(i);
             do {
                 if(tmp != null && !map.containsKey(tmp.toString()))
                     map.put(tmp.toString(), tmp);
@@ -86,6 +86,8 @@ public class OptymoFavoritesController {
                 .key(DIRECTION_KEY).value(direction.getDirection())
             .endObject();
 
+            System.out.println(stringer.toString());
+
             preferences.addElement(stringer.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -96,6 +98,7 @@ public class OptymoFavoritesController {
 
     public OptymoDirection getElementAt(int index) {
         String el = preferences.getElement(index, "");
+        System.out.println("favo " + el);
         OptymoDirection result = null;
 
         try {

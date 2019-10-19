@@ -1,21 +1,23 @@
 <resources>
-    <string name="app_name">OptymoNext</string>
-    <string name="app_name_loading">ptymoNext</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name" translatable="false">OptymoNext</string>
+
+    <string name="app_name_loading" translatable="false">ptymoNext</string>
+    <string name="splash_error_loading_text">Error loading network</string>
+    <string name="splash_xml_generation_text">Generating network from XML</string>
+    <string name="splash_json_loading_text">Loading network from JSON</string>
+    <string name="splash_line">Line %1$d/%2$d</string>
+    <string name="splash_stop">Stop %1$d/%2$d</string>
+
     <string name="favorites">Favorites</string>
-    <string name="refresh_button">Refresh Button</string>
-    <string name="add_favorite">Add favorite</string>
+
     <string name="add_step_1">1. Choose a line</string>
     <string name="add_step_2">2. Choose a stop</string>
     <string name="add_button_text">ADD</string>
 
-    <string name="title_activity_splash_screen">SplashScreenActivity</string>
-    <string name="splash_loading_text">Loading network</string>
-    <string name="splash_xml_generation_text">Loading network from JSON</string>
-    <string name="splash_json_loading_text">Generating network from XML</string>
     <string name="main_all_stops">All stops</string>
     <string name="content_description_background">Superb background</string>
     <string name="icon_app_description">Icon app</string>
     <string name="search_icon_description">Search icon</string>
     <string name="add_fav_title">Add favorite</string>
+    <string name="splash_loading_text">Loading network</string>
 </resources>

@@ -14,9 +14,9 @@
 
         <include
             android:id="@+id/content_main"
+            layout="@layout/content_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/content_main" />
+            android:layout_height="match_parent" />
 
         <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
             android:id="@+id/fab"

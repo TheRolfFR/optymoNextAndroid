@@ -58,7 +58,8 @@ public class OptymoNetwork {
         begin(stopsJson, linesXml, false);
     }
     public void begin(String stopsJson, InputStream linesXml, boolean forceXml) {
-        if(forceXml || !decodeJSON(stopsJson)) {
+        boolean result = decodeJSON(stopsJson);
+        if(forceXml || !result) {
             generateFromXML(linesXml);
         }
     }
@@ -79,7 +80,7 @@ public class OptymoNetwork {
 
             for (int i = 0; i < array.length(); i++) {
                 if(networkGenerationListener != null) {
-                    networkGenerationListener.OnProgressUpdate((float)i / array.length(), "JSON");
+                    networkGenerationListener.OnProgressUpdate(i, array.length(), "stop");
                 }
 
                 JSONObject stopObject = array.getJSONObject(i);
@@ -100,6 +101,9 @@ public class OptymoNetwork {
             OptymoStop foundStop;
 
             for(int i = 0; i < linesArray.length(); ++i) {
+                if(networkGenerationListener != null) {
+                    networkGenerationListener.OnProgressUpdate(i, linesArray.length(), "line");
+                }
                 lineObject = linesArray.getJSONObject(i);
                 createdLine = getLine("" + lineObject.getInt("number"), lineObject.getString("name"));
                 stopsOfLine = lineObject.getJSONArray("stops");
@@ -145,6 +149,7 @@ public class OptymoNetwork {
             Elements lines, directions;
             String cleanedName, name;
 
+            //noinspection RedundantCast
             JSONStringer stringer = (JSONStringer) new JSONStringer()
                     .object()
                     .key("stops")
@@ -164,7 +169,7 @@ public class OptymoNetwork {
                 }
                 if(doc != null && doc.getElementsByTag("h3").size() == 0) {
                     if(networkGenerationListener != null) {
-                        networkGenerationListener.OnProgressUpdate((float) i / names.getLength(), "XML");
+                        networkGenerationListener.OnProgressUpdate(i, names.getLength(), "line");
                     }
                     stringer
                             .object()
@@ -318,7 +323,7 @@ public class OptymoNetwork {
     }
 
     public interface ProgressListener {
-        void OnProgressUpdate(float progress, String method);
+        void OnProgressUpdate(int current, int total, String message);
         void OnGenerationEnd(boolean returnValue);
     }
 }

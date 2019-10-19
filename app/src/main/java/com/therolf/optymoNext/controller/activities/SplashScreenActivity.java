@@ -41,17 +41,24 @@ public class SplashScreenActivity extends AppCompatActivity {
         networkController = OptymoNetworkController.getInstance();
         networkController.setProgressListener(new OptymoNetwork.ProgressListener() {
             @Override
-            public void OnProgressUpdate(float progress, String method) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    roundProgressBar.setProgress(Math.round(progress*100), true);
-                } else {
-                    roundProgressBar.setProgress(Math.round(progress*100));
-                }
-
-                if(method.equals("XML")) {
-                    loadingText.setText(R.string.splash_xml_generation_text);
-                } else if(method.equals("JSON")) {
-                    loadingText.setText(R.string.splash_json_loading_text);
+            public void OnProgressUpdate(int current, int total, String message) {
+                switch (message) {
+                    case "XML":
+                        loadingText.setText(R.string.splash_xml_generation_text);
+                        break;
+                    case "JSON":
+                        loadingText.setText(R.string.splash_json_loading_text);
+                        break;
+                    case "line":
+                        loadingText.setText(getResources().getString(R.string.splash_line, current, total));
+                        break;
+                    case "stop":
+                        loadingText.setText(getResources().getString(R.string.splash_stop, current, total));
+                        break;
+                    default:
+                        System.err.println(message);
+                        loadingText.setText(R.string.splash_error_loading_text);
+                        break;
                 }
             }
 
