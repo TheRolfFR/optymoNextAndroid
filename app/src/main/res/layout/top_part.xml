@@ -35,4 +35,14 @@
         android:visibility="gone"
         app:srcCompat="@drawable/ic_search" />
 
+    <ImageView
+        android:id="@+id/top_close_icon"
+        android:layout_width="@dimen/search_icon_size"
+        android:layout_height="@dimen/logo_icon_size"
+        android:layout_gravity="top|end"
+        android:layout_margin="@dimen/padding_app"
+        android:contentDescription="@string/search_icon_description"
+        android:visibility="visible"
+        app:srcCompat="@drawable/ic_close_icon" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

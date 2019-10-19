@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
+import com.therolf.optymoNext.R;
 import com.therolf.optymoNextModel.OptymoLine;
 
 @SuppressWarnings("unused")
@@ -45,9 +47,15 @@ public class OptymoLineAdapter extends BaseAdapter {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        convertView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+        convertView = inflater.inflate(R.layout.next_element_list, parent, false);
 
-        ((TextView) convertView.findViewById(android.R.id.text1)).setText(optymoLines[position].toString());
+        ((TextView) convertView.findViewById(R.id.next_el_line_number)).setText("" + optymoLines[position].getNumber());
+        ((TextView) convertView.findViewById(R.id.next_el_title)).setText("" + optymoLines[position].getName());
+        ((TextView) convertView.findViewById(R.id.next_el_time)).setText("");
+
+        int id = context.getResources().getIdentifier("colorLine" + optymoLines[position].getNumber(), "color", context.getPackageName());
+        System.out.println(id);
+        convertView.findViewById(R.id.next_el_line).setBackgroundColor(ContextCompat.getColor(context, id));
 
         return convertView;
     }

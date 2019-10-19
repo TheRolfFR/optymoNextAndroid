@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.therolf.optymoNext.R;
@@ -22,7 +21,7 @@ import com.therolf.optymoNextModel.OptymoNextTime;
 
 @SuppressLint("StaticFieldLeak")
 @SuppressWarnings("unused")
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends TopViewActivity {
 
     private static OptymoNetworkController networkController = null;
 
@@ -38,10 +37,10 @@ public class MainActivity extends AppCompatActivity {
         addFavoriteActivity = null;
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState, R.layout.activity_main, true);
 
         // data part (BEFORE REFRESH LAYOUT)
         favoriteManager   = OptymoFavoritesController.getInstance(this);
