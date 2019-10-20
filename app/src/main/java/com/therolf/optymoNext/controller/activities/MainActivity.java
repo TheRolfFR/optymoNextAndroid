@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.OptymoFavoritesController;
+import com.therolf.optymoNext.controller.FavoritesController;
 import com.therolf.optymoNext.controller.OptymoNetworkController;
 import com.therolf.optymoNext.vue.adapters.OptymoDirectionAdapter;
 import com.therolf.optymoNext.vue.adapters.OptymoNextTimeAdapter;
@@ -31,8 +31,6 @@ public class MainActivity extends TopViewActivity {
 
     private static Intent addFavoriteActivity = null;
 
-    private OptymoFavoritesController favoriteManager;
-
     public static void destroyIntent() {
         addFavoriteActivity = null;
     }
@@ -41,9 +39,6 @@ public class MainActivity extends TopViewActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_main, true);
-
-        // data part (BEFORE REFRESH LAYOUT)
-        favoriteManager   = OptymoFavoritesController.getInstance(this);
         networkController = OptymoNetworkController.getInstance();
         Log.e("lines number", "" + networkController.getLines().length);
 
@@ -94,7 +89,7 @@ public class MainActivity extends TopViewActivity {
 
     private void refreshFavoriteList() {
         Toast.makeText(this, "Loading favorites...", Toast.LENGTH_SHORT).show();
-        favoriteList.setAdapter(new OptymoDirectionAdapter(this, favoriteManager.getFavorites()));
+        favoriteList.setAdapter(new OptymoDirectionAdapter(this, FavoritesController.getInstance(this).getFavorites()));
         refreshLayout.setRefreshing(false);
     }
 

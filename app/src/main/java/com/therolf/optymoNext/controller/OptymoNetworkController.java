@@ -21,6 +21,8 @@ public class OptymoNetworkController {
     private OptymoNetwork network;
     private String jsonFileName;
 
+    private OptymoNetwork.ProgressListener progressListener;
+
     private static OptymoNetworkController networkController = new OptymoNetworkController();
 
     public static OptymoNetworkController getInstance() {
@@ -49,7 +51,6 @@ public class OptymoNetworkController {
         // try to parse JSON
         try {
             FileInputStream fis = context.openFileInput(jsonFileName);
-            System.out.println();
             byte[] buffer = new byte[fis.available()];
             //noinspection ResultOfMethodCallIgnored
             fis.read(buffer);
@@ -59,12 +60,13 @@ public class OptymoNetworkController {
             Log.e(TAG, Objects.requireNonNull(e.getMessage()));
         }
 
-//        Log.i("OptymoNetworkController", "jsonParsingWentWell : " + jsonParsingWentWell);
-//        Log.i("OptymoNetworkController", stopsJsonString);
+        if(!jsonParsingWentWell)
+            forceXml = true;
 
         // parse XML
         xmlInputStream = (context.getResources().openRawResource(context.getResources().getIdentifier("belfort", "raw", context.getPackageName())));
 
+        //noinspection ConstantConditions
         if(forceXml || jsonParsingWentWell) {
             network.begin(stopsJsonString, xmlInputStream, forceXml);
         } else {
@@ -99,6 +101,7 @@ public class OptymoNetworkController {
     }
 
     public void setProgressListener(OptymoNetwork.ProgressListener listener) {
+        progressListener = listener;
         network.setNetworkGenerationListener(listener);
     }
 

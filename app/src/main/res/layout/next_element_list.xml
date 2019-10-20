@@ -14,7 +14,8 @@
     <LinearLayout
         android:id="@+id/next_el_line"
         android:layout_width="43dp"
-        android:layout_height="26dp"
+        android:layout_height="wrap_content"
+        android:minHeight="26dp"
         android:orientation="horizontal"
         android:paddingLeft="13dp"
         tools:ignore="RtlHardcoded,RtlSymmetry">

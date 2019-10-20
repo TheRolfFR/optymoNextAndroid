@@ -10,6 +10,7 @@
     android:orientation="vertical"
     android:paddingStart="@dimen/padding_app"
     android:paddingEnd="@dimen/padding_app"
+    android:configChanges="orientation|screenSize"
     tools:context=".controller.activities.SplashScreenActivity">
 
     <LinearLayout
@@ -36,6 +37,7 @@
             android:textColor="@android:color/white"
             android:textSize="32sp"
             android:textStyle="bold" />
+
     </LinearLayout>
 
     <ImageView
@@ -54,7 +56,16 @@
         android:fontFamily="@font/nunito_bold"
         android:text="@string/splash_loading_text"
         android:textAlignment="center"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorOnPrimary"
         android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/splash_error_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nunito_regular"
+        android:textColor="@color/colorOnPrimary"
+        android:textSize="12sp"
+        android:visibility="gone" />
 
 </LinearLayout>

@@ -9,7 +9,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.OptymoFavoritesController;
+import com.therolf.optymoNext.controller.FavoritesController;
 import com.therolf.optymoNext.controller.OptymoNetworkController;
 import com.therolf.optymoNext.vue.adapters.OptymoLineAdapter;
 import com.therolf.optymoNext.vue.adapters.OptymoStopAdapter;
@@ -53,15 +53,19 @@ public class FavoritesActivity extends TopViewActivity {
             @Override
             public void onClick(View view) {
                 if (stopsOfTheLine != null && stopsOfTheLine.length != 0 && stopSpinner.getSelectedItemPosition() < stopsOfTheLine.length) {
-                    OptymoFavoritesController.getInstance(FavoritesActivity.this).addElement(
-                            new OptymoDirection(
-                                    lines[lineSpinner.getSelectedItemPosition()].getNumber(),
-                                    lines[lineSpinner.getSelectedItemPosition()].getName(),
-                                    stopsOfTheLine[stopSpinner.getSelectedItemPosition()].getName(),
-                                    stopsOfTheLine[stopSpinner.getSelectedItemPosition()].getSlug()
-                            )
+                    OptymoDirection newDirection = new OptymoDirection(
+                            lines[lineSpinner.getSelectedItemPosition()].getNumber(),
+                            lines[lineSpinner.getSelectedItemPosition()].getName(),
+                            stopsOfTheLine[stopSpinner.getSelectedItemPosition()].getName(),
+                            stopsOfTheLine[stopSpinner.getSelectedItemPosition()].getSlug()
                     );
-                    Toast.makeText(FavoritesActivity.this, "You have now " + OptymoFavoritesController.getInstance(FavoritesActivity.this).size() + " favorites!", Toast.LENGTH_SHORT).show();
+
+                    FavoritesController.getInstance(FavoritesActivity.this).addFavorite(newDirection, FavoritesActivity.this);
+                    for(OptymoDirection dir : FavoritesController.getInstance(FavoritesActivity.this).getFavorites()) {
+                        System.out.println(dir);
+                    }
+
+                    Toast.makeText(FavoritesActivity.this, "You have now " + FavoritesController.getInstance(FavoritesActivity.this).size() + " favorites!", Toast.LENGTH_SHORT).show();
                 }
             }
         });

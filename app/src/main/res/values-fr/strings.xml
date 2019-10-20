@@ -6,13 +6,15 @@
     <string name="main_all_stops">Tous les stops</string>
     <string name="search_icon_description">Icone de recherche</string>
     <string name="splash_json_loading_text">Chargement du réseau depuis le JSON</string>
-    <string name="splash_line">Ligne %1$d/%2$d</string>
+    <string name="splash_line_loading">Chargement ligne %1$d/%2$d</string>
     <string name="splash_error_loading_text">Erreur lors du chargement du réseau</string>
-    <string name="splash_stop">Arrêt %1$d/%2$d</string>
+    <string name="splash_stop_loading">Chargement arrêt %1$d/%2$d</string>
     <string name="add_step_2">2. Choisir un arrêt</string>
     <string name="add_step_1">1. Choisir une ligne</string>
     <string name="add_fav_title">Ajouter un favoris</string>
     <string name="add_button_text">AJOUTER</string>
     <string name="splash_xml_generation_text">Génération du réseau depuis le XML</string>
     <string name="splash_loading_text">Chargement du réseau</string>
+    <string name="splash_error_text">erreur : \"%1$s\"</string>
+    <string name="splash_favorite_loading">Chargement du favoris %1$d/%2$d</string>
 </resources>
