@@ -2,19 +2,24 @@ package com.therolf.optymoNext.controller.activities;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.ferfalk.simplesearchview.SimpleSearchView;
 import com.therolf.optymoNext.R;
 import com.therolf.optymoNext.controller.FavoritesController;
 import com.therolf.optymoNext.controller.OptymoNetworkController;
@@ -29,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Objects;
 
 
 @SuppressLint("StaticFieldLeak")
@@ -41,11 +47,17 @@ public class MainActivity extends TopViewActivity {
     private SwipeRefreshLayout refreshLayout;
     private TextView lastUpdateText;
 
+    // favorites
     int numberOfUpdated = 0;
     private ArrayList<OptymoGetNextTime> nextTimeRequests = new ArrayList<>();
     private ArrayList<OptymoNextTime> nextTimes = new ArrayList<>();
     private OptymoNextTimeAdapter favoritesAdapter;
     private DateFormat dateFormat;
+
+    // search part
+    private ImageView searchButton;
+    private Dialog searchDialog;
+    private com.ferfalk.simplesearchview.SimpleSearchView searchView;
 
     private static Intent addFavoriteActivity = null;
 
@@ -131,16 +143,39 @@ public class MainActivity extends TopViewActivity {
                 }
             }
         });
-        /*fab.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN ) {
-                    enableFloatingButton(false);
-                }
 
-                return true;
+        // search part
+        searchDialog = new Dialog(this);
+        searchDialog.setContentView(R.layout.dialog_search);
+        Objects.requireNonNull(searchDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        searchView = searchDialog.findViewById(R.id.searchView);
+        System.out.println("" + searchButton + "" + searchDialog + searchView);
+        searchView.setOnQueryTextListener(new SimpleSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("SimpleSearchView", "Submit:" + query);
+                return false;
             }
-        });*/
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.d("SimpleSearchView", "Text changed:" + newText);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextCleared() {
+                Log.d("SimpleSearchView", "Text cleared");
+                return false;
+            }
+        });
+        searchButton = findViewById(R.id.top_search_icon);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchDialog.show();
+            }
+        });
     }
 
     private void refreshFavoriteList() {

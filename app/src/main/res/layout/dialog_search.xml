@@ -5,16 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.mypopsy.widget.FloatingSearchView
-        android:id="@+id/search"
+    <com.ferfalk.simplesearchview.SimpleSearchView
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="16dp"
-        android:paddingRight="8dp"
-        android:paddingLeft="8dp"
-        android:background="#90000000"
-        android:hint="@string/hint"
-        app:logo="@drawable/ic_logo_form"
-        app:fsv_menu="@menu/search"/>
+        android:background="@color/colorPrimary" />
 
 </LinearLayout>
