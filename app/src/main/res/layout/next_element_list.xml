@@ -15,6 +15,7 @@
         android:id="@+id/next_el_line"
         android:layout_width="43dp"
         android:layout_height="wrap_content"
+        android:background="@color/colorLine1"
         android:minHeight="26dp"
         android:orientation="horizontal"
         android:paddingLeft="13dp"

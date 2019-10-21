@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/nunito_bold"
-        android:text="@string/splash_loading_text"
+        android:text="@string/splash_loading_network"
         android:textAlignment="center"
         android:textColor="@color/colorOnPrimary"
         android:textSize="22sp" />

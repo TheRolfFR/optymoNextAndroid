@@ -81,17 +81,19 @@ public class SplashScreenActivity extends AppCompatActivity implements OptymoNet
 
     void updateUI(int current, int total, String message) {
         switch (message) {
+            case "gen_stop":
+                loadingText.setText(getResources().getString(R.string.splash_generating_stop, current, total));
             case "XML":
-                loadingText.setText(R.string.splash_xml_generation_text);
+                loadingText.setText(R.string.splash_generating_xml);
                 break;
             case "JSON":
                 loadingText.setText(R.string.splash_json_loading_text);
                 break;
             case "line":
-                loadingText.setText(getResources().getString(R.string.splash_line_loading, current, total));
+                loadingText.setText(getResources().getString(R.string.splash_loading_line, current, total));
                 break;
             case "stop":
-                loadingText.setText(getResources().getString(R.string.splash_stop_loading, current, total));
+                loadingText.setText(getResources().getString(R.string.splash_loading_stop, current, total));
                 break;
             case "favorite":
                 loadingText.setText(getResources().getString(R.string.splash_favorite_loading, current, total));

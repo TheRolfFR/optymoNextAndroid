@@ -169,7 +169,7 @@ public class OptymoNetwork {
                 }
                 if(doc != null && doc.getElementsByTag("h3").size() == 0) {
                     if(networkGenerationListener != null) {
-                        networkGenerationListener.OnProgressUpdate(i, names.getLength(), "stop");
+                        networkGenerationListener.OnProgressUpdate(i, names.getLength(), "gen_stop");
                     }
                     stringer
                             .object()

@@ -15,26 +15,29 @@ import androidx.core.content.ContextCompat;
 import com.therolf.optymoNext.R;
 import com.therolf.optymoNextModel.OptymoNextTime;
 
+import java.util.ArrayList;
+
 @SuppressWarnings("unused")
 public class OptymoNextTimeAdapter extends BaseAdapter {
 
     private static final String TAG = "OptymoNextTimeAdapter";
 
     private Context context;
-    private OptymoNextTime[] nextTimes;
+    private ArrayList<OptymoNextTime> nextTimes;
 
-    public OptymoNextTimeAdapter(@NonNull Context context, OptymoNextTime[] nextTimes) {
+    public OptymoNextTimeAdapter(@NonNull Context context, ArrayList<OptymoNextTime> nextTimes) {
         this.context = context;
         this.nextTimes = nextTimes;
     }
+
     @Override
     public int getCount() {
-        return nextTimes.length;
+        return nextTimes.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return nextTimes[i];
+        return nextTimes.get(i);
     }
 
     @Override
@@ -49,17 +52,17 @@ public class OptymoNextTimeAdapter extends BaseAdapter {
         LayoutInflater inflater = LayoutInflater.from(context);
         convertView = inflater.inflate(R.layout.next_element_list, parent, false);
 
-        int id = context.getResources().getIdentifier("colorLine" + nextTimes[position].getLineNumber(), "color", context.getPackageName());
+        int id = context.getResources().getIdentifier("colorLine" + nextTimes.get(position).getLineNumber(), "color", context.getPackageName());
         convertView.findViewById(R.id.next_el_line).setBackgroundColor(ContextCompat.getColor(context, id));
 
         // change line number
-        ((TextView) convertView.findViewById(R.id.next_el_line_number)).setText("" + nextTimes[position].getLineNumber());
+        ((TextView) convertView.findViewById(R.id.next_el_line_number)).setText("" + nextTimes.get(position).getLineNumber());
 
         // change title
-        ((TextView) convertView.findViewById(R.id.next_el_title)).setText(nextTimes[position].getStopName() + " - Dir. " + nextTimes[position].getDirection());
+        ((TextView) convertView.findViewById(R.id.next_el_title)).setText(nextTimes.get(position).getStopName() + " - Dir. " + nextTimes.get(position).getDirection());
 
         // change time
-        ((TextView) convertView.findViewById(R.id.next_el_time)).setText("" + nextTimes[position].getNextTime());
+        ((TextView) convertView.findViewById(R.id.next_el_time)).setText(nextTimes.get(position).getNextTime());
 
         return convertView;
     }

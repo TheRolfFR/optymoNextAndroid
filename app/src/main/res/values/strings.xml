@@ -3,10 +3,10 @@
 
     <string name="app_name_loading" translatable="false">ptymoNext</string>
     <string name="splash_error_loading_text">Error loading network</string>
-    <string name="splash_xml_generation_text">Generating network from XML</string>
+    <string name="splash_generating_xml">Generating network from XML</string>
     <string name="splash_json_loading_text">Loading network from JSON</string>
-    <string name="splash_line_loading">loading line %1$d/%2$d</string>
-    <string name="splash_stop_loading">Chargement stop %1$d/%2$d</string>
+    <string name="splash_loading_line">loading line %1$d/%2$d</string>
+    <string name="splash_loading_stop">Chargement stop %1$d/%2$d</string>
 
     <string name="favorites">Favorites</string>
 
@@ -19,7 +19,16 @@
     <string name="icon_app_description">Icon app</string>
     <string name="search_icon_description">Search icon</string>
     <string name="add_fav_title">Add favorite</string>
-    <string name="splash_loading_text">Loading network</string>
+    <string name="splash_loading_network">Loading network</string>
     <string name="splash_error_text">error: \"%1$s\"</string>
     <string name="splash_favorite_loading">Loading favorite %1$d/%2$d</string>
+    <string name="main_last_updated">Updated at %1$s</string>
+    <string name="main_never_updated">Never updated</string>
+    <string name="splash_generating_stop">Generating stop from point %1$d/%2$d</string>
+    <string name="main_toast_loading_favorites">Loading favorites...</string>
+    <string name="add_fav_toast_nb_of_fav">You have now %1$d favorites</string>
+    <string name="dialog_del_fav_title">Are your sure?</string>
+    <string name="dialog_del_fav_message">Do you want to delete %1$s?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 </resources>

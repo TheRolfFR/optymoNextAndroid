@@ -5,6 +5,7 @@ import android.util.ArrayMap;
 
 import com.therolf.optymoNextModel.OptymoDirection;
 import com.therolf.optymoNextModel.OptymoNetwork;
+import com.therolf.optymoNextModel.OptymoNextTime;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -115,6 +116,12 @@ public class FavoritesController {
     @SuppressWarnings("unused")
     public void removeAt(int index, Context context) {
         favorites.removeAt(index);
+        writeFile(context);
+    }
+
+    @SuppressWarnings("unused")
+    public void remove(OptymoNextTime nextTime, Context context) {
+        favorites.remove(nextTime.directionToString());
         writeFile(context);
     }
 
