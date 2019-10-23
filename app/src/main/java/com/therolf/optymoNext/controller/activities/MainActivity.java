@@ -3,6 +3,11 @@ package com.therolf.optymoNext.controller.activities;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -19,17 +24,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.NotificationCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ferfalk.simplesearchview.SimpleSearchView;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 import com.therolf.optymoNext.R;
 import com.therolf.optymoNext.controller.FavoritesController;
-import com.therolf.optymoNext.controller.GlobalApplication;
-import com.therolf.optymoNext.controller.NetworkRunnable;
 import com.therolf.optymoNext.controller.OptymoNetworkController;
 import com.therolf.optymoNext.controller.Utility;
+import com.therolf.optymoNext.controller.activities.Main.SnackBarController;
 import com.therolf.optymoNext.vue.adapters.OptymoNextTimeAdapter;
 import com.therolf.optymoNextModel.OptymoDirection;
 import com.therolf.optymoNextModel.OptymoNetwork;
@@ -176,58 +179,49 @@ public class MainActivity extends TopViewActivity {
         searchButton.setOnClickListener(view -> searchDialog.show());
 
         // snackbar
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout), getResources().getString(R.string.splash_loading_network), Snackbar.LENGTH_INDEFINITE);
-        snackbar.getView().setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-        snackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
-                super.onDismissed(transientBottomBar, event);
-            }
+        SnackBarController.run(this, searchButton, fab);
 
-            @Override
-            public void onShown(Snackbar transientBottomBar) {
-                super.onShown(transientBottomBar);
-            }
-        });
-        snackbar.show();
-        NetworkRunnable.getInstance(new OptymoNetwork.ProgressListener() {
-            @Override
-            public void OnProgressUpdate(int current, int total, String message) {
-                MainActivity.this.runOnUiThread(() -> {
-                    switch (message) {
-                        case "gen_stop":
-                            snackbar.setText(getResources().getString(R.string.splash_generating_stop, current, total));
-                        case "XML":
-                            snackbar.setText(R.string.splash_generating_xml);
-                            break;
-                        case "JSON":
-                            snackbar.setText(R.string.splash_json_loading_text);
-                            break;
-                        case "line":
-                            snackbar.setText(getResources().getString(R.string.splash_loading_line, current, total));
-                            break;
-                        case "stop":
-                            snackbar.setText(getResources().getString(R.string.splash_loading_stop, current, total));
-                            break;
-                        case "favorite":
-                            snackbar.setText(getResources().getString(R.string.splash_favorite_loading, current, total));
-                            break;
-                        default:
-                            snackbar.setText(R.string.splash_error_loading_text);
-                            break;
-                    }
-                });
-            }
+        // notifications
+        int NOTIFICATION_ID = 234;
 
-            @Override
-            public void OnGenerationEnd(boolean returnValue) {
-                MainActivity.this.runOnUiThread(() -> {
-                    snackbar.dismiss();
-                    searchButton.setEnabled(true);
-                    fab.setEnabled(true);
-                });
+        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+
+        String CHANNEL_ID = "my_channel_01";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+
+            CharSequence name = "my_channel";
+            String Description = "This is my channel";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+            mChannel.setDescription(Description);
+            mChannel.enableLights(true);
+            mChannel.setLightColor(Color.RED);
+            mChannel.enableVibration(true);
+            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            mChannel.setShowBadge(false);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(mChannel);
             }
-        }, GlobalApplication.getContext()).run();
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("title")
+                .setContentText("message");
+
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setContentIntent(resultPendingIntent);
+
+        if (notificationManager != null) {
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
+        }
     }
 
     private void refreshFavoriteList() {
