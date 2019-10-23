@@ -108,53 +108,10 @@ public class OptymoStop implements Comparable<OptymoStop> {
     }
 
     public OptymoNextTime[] getNextTimes() {
-        return getNextTimes(0);
+        return OptymoNetwork.getNextTimes(this.slug, 0);
     }
 
-    @SuppressWarnings("StringOperationCanBeSimplified")
     public OptymoNextTime[] getNextTimes(int lineFilter) {
-        OptymoNextTime[] result = new OptymoNextTime[0];
-
-        org.jsoup.nodes.Document doc;
-        Elements errorTitle, directions, nextTimes, lines;
-        doc = null;
-        try {
-            doc = Jsoup.connect("https://siv.optymo.fr/passage.php?ar=" + this.getSlug() + "&type=1").get();
-        } catch (IOException ignored) {}
-
-        if(doc != null) {
-            errorTitle = doc.getElementsByTag("h3");
-            if(errorTitle.size() == 0) {
-
-                lines = doc.getElementsByClass("f1");
-                directions = doc.getElementsByClass("f2");
-                nextTimes = doc.getElementsByClass("f3");
-
-                HashMap<String, OptymoNextTime> resultMap = new HashMap<>();
-
-                for(int directionIndex = 0; directionIndex < directions.size(); directionIndex++) {
-                    if((lineFilter == 0 || lineFilter == Integer.parseInt(lines.get(directionIndex).text())) && !resultMap.containsKey(directions.get(directionIndex).text())) {
-                        resultMap.put(
-                                directions.get(directionIndex).text(),
-                                new OptymoNextTime(
-                                        Integer.parseInt(lines.get(directionIndex).text()),
-                                        directions.get(directionIndex).text(),
-                                        new String(this.name),
-                                        new String(this.slug),
-                                        nextTimes.get(directionIndex).text()
-                                )
-                        );
-                    }
-                }
-
-                result = resultMap.values().toArray(new OptymoNextTime[0]);
-            } else {
-                System.err.println("stop not found");
-            }
-        } else {
-            System.err.println("cannot access page");
-        }
-
-        return result;
+        return OptymoNetwork.getNextTimes(this.slug, lineFilter);
     }
 }

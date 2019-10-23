@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:id="@+id/main_refresh_layout"
     android:layout_height="match_parent"
-    android:configChanges="orientation|screenSize"
     tools:context=".controller.activities.MainActivity"
-    android:backgroundTint="@android:color/black">
+    android:background="@color/colorBackground">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/coordinator_layout">
 
         <include
             android:id="@+id/content_main"

@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -16,7 +17,6 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,6 +24,16 @@ import javax.xml.parsers.ParserConfigurationException;
 
 @SuppressWarnings({"unused"})
 public class OptymoNetwork {
+
+    private static final String STOPS_ARRAY_KEY = "stops";
+    private static final String STOP_SLUG_KEY = "slug";
+    private static final String STOP_NAME_KEY = "name";
+
+    private static final String LINES_ARRAY_KEY = "lines";
+    private static final String LINE_NUMBER_KEY = "number";
+    private static final String LINE_NAME_KEY = STOP_NAME_KEY;
+    private static final String LINE_STOPS_ARRAY_KEY = STOPS_ARRAY_KEY;
+
     private HashMap<String, OptymoLine> lines;
     private HashMap<String, OptymoStop> stops;
 
@@ -76,24 +86,19 @@ public class OptymoNetwork {
         try {
 
             JSONObject jsonDecoded = new JSONObject(stopsJson);
-            JSONArray array = jsonDecoded.getJSONArray("stops");
+            JSONArray stopsArray = jsonDecoded.getJSONArray(STOPS_ARRAY_KEY);
+            JSONObject stopObject;
 
-            for (int i = 0; i < array.length(); i++) {
+            for (int i = 0; i < stopsArray.length(); i++) {
                 if(networkGenerationListener != null) {
-                    networkGenerationListener.OnProgressUpdate(i, array.length(), "stop");
+                    networkGenerationListener.OnProgressUpdate(i, stopsArray.length(), "stop");
                 }
 
-                JSONObject stopObject = array.getJSONObject(i);
-                Iterator<String> itr = stopObject.keys();
-
-                while(itr.hasNext()) {
-                    JSONObject stop = stopObject.getJSONObject(itr.next());
-
-                    addOptymoStop(stop.getString("name"), false);
-                }
+                stopObject = stopsArray.getJSONObject(i);
+                addOptymoStop(stopObject.getString(STOP_NAME_KEY), stopObject.getString(STOP_SLUG_KEY), false);
             }
 
-            JSONArray linesArray = jsonDecoded.getJSONArray("lines");
+            JSONArray linesArray = jsonDecoded.getJSONArray(LINES_ARRAY_KEY);
             JSONObject lineObject;
             OptymoLine createdLine;
             JSONArray stopsOfLine;
@@ -105,8 +110,8 @@ public class OptymoNetwork {
                     networkGenerationListener.OnProgressUpdate(i, linesArray.length(), "line");
                 }
                 lineObject = linesArray.getJSONObject(i);
-                createdLine = getLine("" + lineObject.getInt("number"), lineObject.getString("name"));
-                stopsOfLine = lineObject.getJSONArray("stops");
+                createdLine = getLine("" + lineObject.getInt(LINE_NUMBER_KEY), lineObject.getString(LINE_NAME_KEY));
+                stopsOfLine = lineObject.getJSONArray(LINE_STOPS_ARRAY_KEY);
                 //noinspection UnusedAssignment
                 foundStop = null;
 
@@ -152,7 +157,7 @@ public class OptymoNetwork {
             //noinspection RedundantCast
             JSONStringer stringer = (JSONStringer) new JSONStringer()
                     .object()
-                    .key("stops")
+                    .key(STOPS_ARRAY_KEY)
                         .array();
 
             System.err.println(names.getLength());
@@ -171,38 +176,25 @@ public class OptymoNetwork {
                     if(networkGenerationListener != null) {
                         networkGenerationListener.OnProgressUpdate(i, names.getLength(), "gen_stop");
                     }
-                    stringer
-                            .object()
-                            .key(cleanedName)
-                            .object()
-                            .key("name").value(name)
-                            .key("directions").array();
-
-                    lines = doc.getElementsByClass("f1");
-                    directions = doc.getElementsByClass("f2");
-
-                    for(int a  = 0; a < lines.size(); ++a) {
-                        stringer.value(lines.get(a).text() + " - " + directions.get(a).text());
-                    }
-
-                    stringer.endArray()
-                            .endObject()
-                            .endObject();
+                    stringer.object()
+                        .key(STOP_SLUG_KEY).value(cleanedName)
+                        .key(STOP_NAME_KEY).value(name)
+                    .endObject();
                     addOptymoStop(name);
                 }
             }
 
             stringer.endArray();
-            stringer.key("lines").array();
+            stringer.key(LINES_ARRAY_KEY).array();
 
             OptymoLine[] myLines = getLines();
             OptymoStop[] lineStops;
 
             for(OptymoLine line : myLines) {
                 stringer.object()
-                        .key("number").value(line.getNumber())
-                        .key("name").value(line.getName())
-                        .key("stops").array();
+                        .key(LINE_NUMBER_KEY).value(line.getNumber())
+                        .key(LINE_NAME_KEY).value(line.getName())
+                        .key(LINE_STOPS_ARRAY_KEY).array();
 
                 lineStops = line.getStops();
 
@@ -225,7 +217,7 @@ public class OptymoNetwork {
     }
 
     private void addOptymoStop(String stopName) {
-        this.addOptymoStop(stopName, false);
+        this.addOptymoStop(stopName, null, false);
     }
 
     /**
@@ -233,25 +225,35 @@ public class OptymoNetwork {
      * @param stopName the name of the stops
      */
     @SuppressWarnings("SameParameterValue")
-    private void addOptymoStop(String stopName, boolean fromJSON) {
-        String cleanedName = Normalizer.normalize(stopName, Normalizer.Form.NFD).replaceAll("[^A-Za-z0-9]", "").toLowerCase();
+    private void addOptymoStop(String stopName, String stopSlug, boolean fromJSON) {
+        String cleanedName;
+        if(stopSlug == null) {
+            cleanedName = Normalizer.normalize(stopName, Normalizer.Form.NFD).replaceAll("[^A-Za-z0-9]", "").toLowerCase();
+        } else {
+            cleanedName = stopSlug;
+        }
 
         org.jsoup.nodes.Document doc = null;
-        try {
-            doc = Jsoup.connect("https://siv.optymo.fr/passage.php?ar=" + cleanedName + "&type=1").get(); // get the page
-        } catch (IOException ignored) {}
-        if(!fromJSON && doc != null && doc.getElementsByTag("h3").size() == 0) { // if not error page
-            OptymoStop newStop = new OptymoStop(cleanedName, stopName); // create a new stop
-            stops.put(cleanedName, newStop); // add the stop to the global list
+        if(!fromJSON) {
+            try {
+                doc = Jsoup.connect("https://siv.optymo.fr/passage.php?ar=" + cleanedName + "&type=1").get(); // get the page
+            } catch (IOException ignored) {}
+            if(doc != null && doc.getElementsByTag("h3").size() == 0) { // if not error page
+                OptymoStop newStop = new OptymoStop(cleanedName, stopName); // create a new stop
+                stops.put(cleanedName, newStop); // add the stop to the global list
 
-            // add the new lines to the global list
-            Elements lines = doc.getElementsByClass("f1"), directions = doc.getElementsByClass("f2");
-            for(int i = 0; i < lines.size(); ++i) {
-                OptymoLine l = getLine(lines.get(i).text(), directions.get(i).text());
-                if(l != null) {
-                    l.addStopToLine(newStop); // add the stop to the line
+                // add the new lines to the global list
+                Elements lines = doc.getElementsByClass("f1"), directions = doc.getElementsByClass("f2");
+                for(int i = 0; i < lines.size(); ++i) {
+                    OptymoLine l = getLine(lines.get(i).text(), directions.get(i).text());
+                    if(l != null) {
+                        l.addStopToLine(newStop); // add the stop to the line
+                    }
                 }
             }
+        } else {
+            OptymoStop newStop = new OptymoStop(cleanedName, stopName); // create a new stop
+            stops.put(cleanedName, newStop); // add the stop to the global list
         }
     }
 
@@ -267,7 +269,7 @@ public class OptymoNetwork {
         if(lines.containsKey(key)) { // if the line already exists
             return lines.get(key); // get the line
         } else { // else
-            if(!lineDirection.equals("Dépôt")) {
+            if(!lineDirection.contains("Dépôt")) {
                 OptymoLine newLine = new OptymoLine(Integer.parseInt(lineNumber), lineDirection); // create it
                 lines.put(key, newLine); // and add it to the global list
 
@@ -317,6 +319,59 @@ public class OptymoNetwork {
             }
 
             ++i;
+        }
+
+        return result;
+    }
+
+    public static OptymoNextTime[] getNextTimes(String stopSlug) {
+        return getNextTimes(stopSlug, 0);
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static OptymoNextTime[] getNextTimes(String stopSlug, int lineFilter) {
+        OptymoNextTime[] result = new OptymoNextTime[0];
+
+        org.jsoup.nodes.Document doc;
+        Elements errorTitle, directions, nextTimes, lines;
+        Element title;
+        doc = null;
+        try {
+            doc = Jsoup.connect("https://siv.optymo.fr/passage.php?ar=" + stopSlug + "&type=1").get();
+        } catch (IOException ignored) {}
+
+        if(doc != null) {
+            errorTitle = doc.getElementsByTag("h3");
+            if(errorTitle.size() == 0) {
+
+                title = doc.getElementsByTag("h1").get(0);
+                lines = doc.getElementsByClass("f1");
+                directions = doc.getElementsByClass("f2");
+                nextTimes = doc.getElementsByClass("f3");
+
+                HashMap<String, OptymoNextTime> resultMap = new HashMap<>();
+
+                for(int directionIndex = 0; directionIndex < directions.size(); directionIndex++) {
+                    if((lineFilter == 0 || lineFilter == Integer.parseInt(lines.get(directionIndex).text())) && !resultMap.containsKey(directions.get(directionIndex).text())) {
+                        resultMap.put(
+                                directions.get(directionIndex).text(),
+                                new OptymoNextTime(
+                                        Integer.parseInt(lines.get(directionIndex).text()),
+                                        directions.get(directionIndex).text(),
+                                        title.text().substring(6),
+                                        stopSlug,
+                                        nextTimes.get(directionIndex).text()
+                                )
+                        );
+                    }
+                }
+
+                result = resultMap.values().toArray(new OptymoNextTime[0]);
+            } else {
+                System.err.println("stop not found");
+            }
+        } else {
+            System.err.println("cannot access page");
         }
 
         return result;

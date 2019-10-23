@@ -19,9 +19,9 @@ public class FavoritesController {
     private static FavoritesController controller = null;
 
     @SuppressWarnings("unused")
-    public static FavoritesController getInstance(Context context) {
+    public static FavoritesController getInstance() {
         if(controller == null)
-            controller = new FavoritesController(context);
+            controller = new FavoritesController();
         return controller;
     }
 
@@ -30,12 +30,9 @@ public class FavoritesController {
     private OptymoNetwork.ProgressListener progressListener;
 
     @SuppressWarnings("unused")
-    public void setProgressListener(OptymoNetwork.ProgressListener progressListener) {
+    public FavoritesController setProgressListener(OptymoNetwork.ProgressListener progressListener) {
         this.progressListener = progressListener;
-    }
-
-    private FavoritesController(Context context) {
-        readFile(context);
+        return this;
     }
 
     private static String escapeQuotes(String str) {
@@ -45,7 +42,8 @@ public class FavoritesController {
         return "";
     }
 
-    public void readFile(Context context) {
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
+    public FavoritesController readFile(Context context) {
         if(!isFileRead) {
             try {
                 FileInputStream fis = context.openFileInput(PATH);
@@ -81,13 +79,19 @@ public class FavoritesController {
                         progressListener.OnGenerationEnd(true);
                 }
 
+                fis.close();
+
             } catch (java.io.IOException e) {
                 e.printStackTrace();
             }
 
+            if(progressListener != null)
+                progressListener.OnGenerationEnd(true);
             System.out.println("Loaded " + size() + " favorites!");
             isFileRead = true;
         }
+
+        return this;
     }
 
     public void writeFile(Context context) {
@@ -100,6 +104,8 @@ public class FavoritesController {
                 if(tmp != null)
                     fos.write((tmp.getLineNumber() + "|" + tmp.getDirection() + "|" + tmp.getStopName() + "|" + tmp.getStopSlug() + "!").getBytes());
             }
+
+            fos.close();
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }

@@ -27,24 +27,30 @@ public class OptymoNextTime extends OptymoDirection implements Comparable<Optymo
 
     @Override
     public int compareTo(OptymoNextTime other) {
-        if(this.nextTime.equals(NULL_TIME_VALUE))
+        String myStringToCompare = this.nextTime;
+        String otherStringToCompare = other.nextTime;
+        if(myStringToCompare.charAt(0) == '>' && otherStringToCompare.charAt(0) == '>') {
+            myStringToCompare = myStringToCompare.substring(2);
+            otherStringToCompare = otherStringToCompare.substring(2);
+        }
+        if(myStringToCompare.charAt(0) == '>' || myStringToCompare.equals(NULL_TIME_VALUE))
             return +1;
-        if(other.nextTime.equals(NULL_TIME_VALUE))
+        if(otherStringToCompare.charAt(0) == '>' || otherStringToCompare.equals(NULL_TIME_VALUE))
             return -1;
 
-        if(this.nextTime.charAt(0) == 'A')
+        if(myStringToCompare.charAt(0) == 'A')
             return -1;
-        if(other.nextTime.charAt(0) == 'A')
+        if(otherStringToCompare.charAt(0) == 'A')
             return +1;
 
-        boolean myMin = this.nextTime.contains("min");
-        boolean otherMin = other.nextTime.contains("min");
+        boolean myMin = myStringToCompare.contains("min");
+        boolean otherMin = otherStringToCompare.contains("min");
         // i am coming in less than 10 min
         if(myMin) {
             // the other too, then compare the number of minutes
             if(otherMin) {
-                int myNumber = Integer.parseInt(this.nextTime.split(" ")[0]);
-                int otherNumber = Integer.parseInt(other.nextTime.split(" ")[0]);
+                int myNumber = Integer.parseInt(myStringToCompare.split(" ")[0]);
+                int otherNumber = Integer.parseInt(otherStringToCompare.split(" ")[0]);
 
                 if(myNumber > otherNumber) {
                     return 1;
@@ -65,8 +71,8 @@ public class OptymoNextTime extends OptymoDirection implements Comparable<Optymo
             }
             // and the other yes, then compare hour or eventually minutes
             else {
-                String[] myNumbers = this.nextTime.split(":");
-                String[] otherNumbers = this.nextTime.split(":");
+                String[] myNumbers = myStringToCompare.split(":");
+                String[] otherNumbers = myStringToCompare.split(":");
                 if(Integer.parseInt(myNumbers[0]) < Integer.parseInt(otherNumbers[0])) {
                     return -1;
                 } else if(Integer.parseInt(myNumbers[0]) > Integer.parseInt(otherNumbers[0])) {

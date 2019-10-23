@@ -6,15 +6,16 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
 
-    <style name="CustomDialog" parent="Theme.AppCompat.Dialog.Alert">
+    <style name="AppTheme.CustomDialog" parent="Theme.AppCompat.Dialog.Alert">
         <item name="dialogCornerRadius">@dimen/component_border_radius</item>
         <item name="colorPrimary">@color/colorOnPrimary</item>
         <item name="colorPrimaryDark">@color/colorOnPrimary</item>
         <item name="colorAccent">@color/colorOnPrimary</item>
         <item name="android:textColor">@color/colorOnPrimary</item>
-        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

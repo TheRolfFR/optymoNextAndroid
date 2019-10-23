@@ -49,24 +49,21 @@ public class FavoritesActivity extends TopViewActivity {
             }
         });
 
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (stopsOfTheLine != null && stopsOfTheLine.length != 0 && stopSpinner.getSelectedItemPosition() < stopsOfTheLine.length) {
-                    OptymoDirection newDirection = new OptymoDirection(
-                            lines[lineSpinner.getSelectedItemPosition()].getNumber(),
-                            lines[lineSpinner.getSelectedItemPosition()].getName(),
-                            stopsOfTheLine[stopSpinner.getSelectedItemPosition()].getName(),
-                            stopsOfTheLine[stopSpinner.getSelectedItemPosition()].getSlug()
-                    );
+        addButton.setOnClickListener(view -> {
+            if (stopsOfTheLine != null && stopsOfTheLine.length != 0 && stopSpinner.getSelectedItemPosition() < stopsOfTheLine.length) {
+                OptymoDirection newDirection = new OptymoDirection(
+                        lines[lineSpinner.getSelectedItemPosition()].getNumber(),
+                        lines[lineSpinner.getSelectedItemPosition()].getName(),
+                        stopsOfTheLine[stopSpinner.getSelectedItemPosition()].getName(),
+                        stopsOfTheLine[stopSpinner.getSelectedItemPosition()].getSlug()
+                );
 
-                    FavoritesController.getInstance(FavoritesActivity.this).addFavorite(newDirection, FavoritesActivity.this);
-                    for(OptymoDirection dir : FavoritesController.getInstance(FavoritesActivity.this).getFavorites()) {
-                        System.out.println(dir);
-                    }
-
-                    Toast.makeText(FavoritesActivity.this, getResources().getString(R.string.add_fav_toast_nb_of_fav, FavoritesController.getInstance(FavoritesActivity.this).size()), Toast.LENGTH_SHORT).show();
+                FavoritesController.getInstance().addFavorite(newDirection, FavoritesActivity.this);
+                for(OptymoDirection dir : FavoritesController.getInstance().getFavorites()) {
+                    System.out.println(dir);
                 }
+
+                Toast.makeText(FavoritesActivity.this, getResources().getString(R.string.add_fav_toast_nb_of_fav, FavoritesController.getInstance().size()), Toast.LENGTH_SHORT).show();
             }
         });
     }

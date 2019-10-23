@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:configChanges="orientation|screenSize"
     android:gravity="center"
-    tools:context=".controller.activities.FavoritesActivity">
+    tools:context=".controller.activities.FavoritesActivity"
+    android:background="@color/colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"

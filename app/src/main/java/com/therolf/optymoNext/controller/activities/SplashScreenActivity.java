@@ -1,9 +1,7 @@
 package com.therolf.optymoNext.controller.activities;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -16,16 +14,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.therolf.optymoNext.R;
 import com.therolf.optymoNext.controller.FavoritesController;
-import com.therolf.optymoNext.controller.OptymoNetworkController;
 import com.therolf.optymoNextModel.OptymoNetwork;
 
 public class SplashScreenActivity extends AppCompatActivity implements OptymoNetwork.ProgressListener {
 
     @SuppressWarnings("unused")
     private static final String TAG = "splash";
-
-    private OptymoNetworkController networkController;
-    private boolean generatedNetwork = false;
 
     private TextView loadingText;
     private TextView errorText;
@@ -44,16 +38,7 @@ public class SplashScreenActivity extends AppCompatActivity implements OptymoNet
         loadingText = findViewById(R.id.splash_loading_text);
         errorText = findViewById(R.id.splash_error_text);
 
-        FavoritesController.getInstance(this).setProgressListener(this);
-
-        networkController = OptymoNetworkController.getInstance();
-        networkController.setProgressListener(this);
-
-        if(generatedNetwork) {
-            goToMain();
-        } else {
-            new OptymoNetworkGen().execute(SplashScreenActivity.this);
-        }
+        FavoritesController.getInstance().setProgressListener(this).readFile(this);
     }
 
     void goToMain() {
@@ -71,12 +56,7 @@ public class SplashScreenActivity extends AppCompatActivity implements OptymoNet
     }
 
     public void OnProgressUpdate(final int current, final int total, final String message) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                updateUI(current, total, message);
-            }
-        });
+        runOnUiThread(() -> updateUI(current, total, message));
     }
 
     void updateUI(int current, int total, String message) {
@@ -108,22 +88,7 @@ public class SplashScreenActivity extends AppCompatActivity implements OptymoNet
 
     @Override
     public void OnGenerationEnd(boolean returnValue) {
-        generatedNetwork = true;
         if(returnValue)
             goToMain();
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    class OptymoNetworkGen extends AsyncTask<Context, Void, Void> {
-        @Override
-        protected Void doInBackground(Context... contexts) {
-            networkController.generate(contexts[0]);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
     }
 }

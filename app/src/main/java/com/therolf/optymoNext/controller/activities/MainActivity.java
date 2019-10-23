@@ -3,15 +3,17 @@ package com.therolf.optymoNext.controller.activities;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.AdapterView;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,28 +22,29 @@ import android.widget.Toast;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ferfalk.simplesearchview.SimpleSearchView;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.therolf.optymoNext.R;
 import com.therolf.optymoNext.controller.FavoritesController;
+import com.therolf.optymoNext.controller.GlobalApplication;
+import com.therolf.optymoNext.controller.NetworkRunnable;
 import com.therolf.optymoNext.controller.OptymoNetworkController;
 import com.therolf.optymoNext.controller.Utility;
 import com.therolf.optymoNext.vue.adapters.OptymoNextTimeAdapter;
 import com.therolf.optymoNextModel.OptymoDirection;
+import com.therolf.optymoNextModel.OptymoNetwork;
 import com.therolf.optymoNextModel.OptymoNextTime;
-import com.therolf.optymoNextModel.OptymoStop;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Objects;
 
 
 @SuppressLint("StaticFieldLeak")
 @SuppressWarnings("unused")
 public class MainActivity extends TopViewActivity {
-
-    private static OptymoNetworkController networkController = null;
 
     private ListView favoriteList;
     private SwipeRefreshLayout refreshLayout;
@@ -57,6 +60,7 @@ public class MainActivity extends TopViewActivity {
     // search part
     private ImageView searchButton;
     private Dialog searchDialog;
+    @SuppressWarnings("FieldCanBeLocal")
     private com.ferfalk.simplesearchview.SimpleSearchView searchView;
 
     private static Intent addFavoriteActivity = null;
@@ -65,11 +69,17 @@ public class MainActivity extends TopViewActivity {
         addFavoriteActivity = null;
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        this.updateListHeight();
+    }
+
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_main, true);
-        networkController = OptymoNetworkController.getInstance();
+        OptymoNetworkController networkController = OptymoNetworkController.getInstance();
         Log.e("lines number", "" + networkController.getLines().length);
 
         // favorite list (BEFORE refreshFavoriteList)
@@ -91,42 +101,30 @@ public class MainActivity extends TopViewActivity {
         dateFormat = new SimpleDateFormat("HH:mm", getResources().getConfiguration().locale);
 
         refreshFavoriteList();
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshLayout.setRefreshing(true);
-                refreshFavoriteList();
-            }
+        refreshLayout.setOnRefreshListener(() -> {
+            refreshLayout.setRefreshing(true);
+            refreshFavoriteList();
         });
 
         // favoriteList on long press delete element
-        favoriteList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-                final int pos = position;
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.CustomDialog);
-                builder.setCancelable(true);
-                builder.setTitle(R.string.dialog_del_fav_title);
-                builder.setMessage(getResources().getString(R.string.dialog_del_fav_message, nextTimes.get(pos).directionToString()));
-                builder.setPositiveButton(R.string.yes,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                FavoritesController.getInstance(MainActivity.this).remove(nextTimes.get(pos), MainActivity.this);
-                                refreshFavoriteList();
-                            }
-                        });
-                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
+        favoriteList.setOnItemLongClickListener((adapterView, view, position, id) -> {
+            final int pos = position;
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppTheme_CustomDialog);
+            builder.setCancelable(true);
+            builder.setTitle(R.string.dialog_del_fav_title);
+            builder.setMessage(getResources().getString(R.string.dialog_del_fav_message, nextTimes.get(pos).directionToString()));
+            builder.setPositiveButton(R.string.yes,
+                    (dialog, which) -> {
+                        FavoritesController.getInstance().remove(nextTimes.get(pos), MainActivity.this);
+                        refreshFavoriteList();
+                    });
+            builder.setNegativeButton(R.string.no, (dialog, which) -> {
+            });
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
+            AlertDialog dialog = builder.create();
+            dialog.show();
 
-                return true;
-            }
+            return true;
         });
 
         // search icon
@@ -134,20 +132,24 @@ public class MainActivity extends TopViewActivity {
 
         // bottom floating button
         com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(addFavoriteActivity == null) {
-                    addFavoriteActivity = new Intent(MainActivity.this, FavoritesActivity.class);
-                    startActivity(addFavoriteActivity);
-                }
+        fab.setEnabled(false);
+        fab.setOnClickListener(view -> {
+            if(addFavoriteActivity == null) {
+                addFavoriteActivity = new Intent(MainActivity.this, FavoritesActivity.class);
+                startActivity(addFavoriteActivity);
             }
         });
 
         // search part
         searchDialog = new Dialog(this);
         searchDialog.setContentView(R.layout.dialog_search);
-        Objects.requireNonNull(searchDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Window window = searchDialog.getWindow();
+        if(window != null) {
+            WindowManager.LayoutParams wlp = window.getAttributes();
+            wlp.gravity = Gravity.TOP;
+            window.setAttributes(wlp);
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
         searchView = searchDialog.findViewById(R.id.searchView);
         System.out.println("" + searchButton + "" + searchDialog + searchView);
         searchView.setOnQueryTextListener(new SimpleSearchView.OnQueryTextListener() {
@@ -170,18 +172,68 @@ public class MainActivity extends TopViewActivity {
             }
         });
         searchButton = findViewById(R.id.top_search_icon);
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        searchButton.setEnabled(false);
+        searchButton.setOnClickListener(view -> searchDialog.show());
+
+        // snackbar
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout), getResources().getString(R.string.splash_loading_network), Snackbar.LENGTH_INDEFINITE);
+        snackbar.getView().setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        snackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
             @Override
-            public void onClick(View view) {
-                searchDialog.show();
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+            }
+
+            @Override
+            public void onShown(Snackbar transientBottomBar) {
+                super.onShown(transientBottomBar);
             }
         });
+        snackbar.show();
+        NetworkRunnable.getInstance(new OptymoNetwork.ProgressListener() {
+            @Override
+            public void OnProgressUpdate(int current, int total, String message) {
+                MainActivity.this.runOnUiThread(() -> {
+                    switch (message) {
+                        case "gen_stop":
+                            snackbar.setText(getResources().getString(R.string.splash_generating_stop, current, total));
+                        case "XML":
+                            snackbar.setText(R.string.splash_generating_xml);
+                            break;
+                        case "JSON":
+                            snackbar.setText(R.string.splash_json_loading_text);
+                            break;
+                        case "line":
+                            snackbar.setText(getResources().getString(R.string.splash_loading_line, current, total));
+                            break;
+                        case "stop":
+                            snackbar.setText(getResources().getString(R.string.splash_loading_stop, current, total));
+                            break;
+                        case "favorite":
+                            snackbar.setText(getResources().getString(R.string.splash_favorite_loading, current, total));
+                            break;
+                        default:
+                            snackbar.setText(R.string.splash_error_loading_text);
+                            break;
+                    }
+                });
+            }
+
+            @Override
+            public void OnGenerationEnd(boolean returnValue) {
+                MainActivity.this.runOnUiThread(() -> {
+                    snackbar.dismiss();
+                    searchButton.setEnabled(true);
+                    fab.setEnabled(true);
+                });
+            }
+        }, GlobalApplication.getContext()).run();
     }
 
     private void refreshFavoriteList() {
         Toast.makeText(this, R.string.main_toast_loading_favorites, Toast.LENGTH_SHORT).show();
 
-        OptymoDirection[] directions = FavoritesController.getInstance(this).getFavorites();
+        OptymoDirection[] directions = FavoritesController.getInstance().getFavorites();
 //        System.out.println(Arrays.toString(directions));
 
         // if you have no favorites
@@ -192,7 +244,7 @@ public class MainActivity extends TopViewActivity {
             // update data
             favoritesAdapter.notifyDataSetChanged();
             // update height
-            Utility.setListViewHeightBasedOnChildren(favoriteList);
+            this.updateListHeight();
         }
 
         // we reset number of updated
@@ -230,26 +282,35 @@ public class MainActivity extends TopViewActivity {
         super.onDestroy();
     }
 
+    private void updateListHeight() {
+        Utility.setListViewHeightBasedOnChildren(favoriteList);
+    }
+
     class OptymoGetNextTime extends AsyncTask<OptymoDirection, Void, OptymoNextTime> {
         @Override
         protected OptymoNextTime doInBackground(OptymoDirection... optymoDirections) {
             OptymoNextTime result = null;
+            OptymoNextTime latestResult = null;
 
-            OptymoStop stop = networkController.getStopByKey(optymoDirections[0].getStopSlug());
-            if(stop != null) {
-                OptymoNextTime[] nextTimes = stop.getNextTimes();
-
-                int i = 0;
-                while(i < nextTimes.length && result == null) {
-                    if(nextTimes[i].getLineNumber() == optymoDirections[0].getLineNumber() && nextTimes[i].getDirection().equals(optymoDirections[0].getDirection()))
-                        result = nextTimes[i];
-                    ++i;
-                }
+            OptymoNextTime[]nextTimes = OptymoNetwork.getNextTimes(optymoDirections[0].getStopSlug());
+            int i = 0;
+            while(i < nextTimes.length && result == null) {
+                if(optymoDirections[0].toString().equals(nextTimes[i].directionToString()))
+                    result = nextTimes[i];
+                if(latestResult == null) {
+                    latestResult = nextTimes[i];
+                } else if(latestResult.compareTo(nextTimes[i]) < 0)
+                    latestResult = nextTimes[i];
+                ++i;
             }
 
-            // provide default result
-            if(result == null)
-                result = new OptymoNextTime(optymoDirections[0].getLineNumber(), optymoDirections[0].getDirection(), optymoDirections[0].getStopName(), optymoDirections[0].getStopSlug(), OptymoNextTime.NULL_TIME_VALUE);
+            // provide default result > last time got
+            if(result == null) {
+                String nullResult = OptymoNextTime.NULL_TIME_VALUE;
+                if(latestResult != null)
+                    nullResult = "> " + latestResult.getNextTime();
+                result = new OptymoNextTime(optymoDirections[0].getLineNumber(), optymoDirections[0].getDirection(), optymoDirections[0].getStopName(), optymoDirections[0].getStopSlug(), nullResult);
+            }
 
             return result;
         }
@@ -279,9 +340,7 @@ public class MainActivity extends TopViewActivity {
 
             // update data
             favoritesAdapter.notifyDataSetChanged();
-
-            // update height
-            Utility.setListViewHeightBasedOnChildren(favoriteList);
+            MainActivity.this.updateListHeight();
         }
     }
 }
