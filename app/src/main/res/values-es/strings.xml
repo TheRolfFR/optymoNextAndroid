@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_button_text">AÑADIR</string>
+    <string name="add_fav_title">Añadir un favirito</string>
+    <string name="add_fav_toast_nb_of_fav">Ahoro tienes %1$d favoritos</string>
+    <string name="add_step_1">1. Eligir una línea</string>
+    <string name="add_step_2">2. Eligir una parada de bus</string>
+    <string name="content_description_background">Hermoso fondo</string>
+    <string name="dialog_del_fav_message">¿ Estás seguro de eleminar %1$s ?</string>
+    <string name="dialog_del_fav_title">¿ Estás seguro ?</string>
+    <string name="favorites">Favoritos</string>
+    <string name="icon_app_description">Icono de la applicación</string>
+    <string name="main_all_stops">Todas las paradas</string>
+    <string name="update_last">Actualizado a %1$s</string>
+    <string name="update_never">Nunca actualizado</string>
+    <string name="main_toast_loading_favorites">Cargando los favoritos</string>
+    <string name="dialog_no">no</string>
+    <string name="notification_content_text">Extender para ver los favoritos</string>
+    <string name="notification_refresh_button_text">Actualizar</string>
+    <string name="search_icon_description">Icono de busqueda</string>
+    <string name="splash_error_loading_text">Error durante el cargamento del red</string>
+    <string name="splash_error_text">error: \"%1$s\"</string>
+    <string name="splash_favorite_loading">Cargamento del favorito %1$d/%2$d</string>
+    <string name="splash_generating_stop">Cargamento de la parada con el punto  %1$d/%2$d</string>
+    <string name="splash_generating_xml">Generación del red con el XML</string>
+    <string name="splash_json_loading_text">Generación del red con el JSON</string>
+    <string name="splash_loading_line">Cargamento de la línea %1$d/%2$d</string>
+    <string name="splash_loading_network">Cargamento del red</string>
+    <string name="splash_loading_stop">Cargamento de la parada %1$d/%2$d</string>
+    <string name="dialog_yes">si</string>
+    <string name="update_pending">actualización en curso...</string>
+</resources>

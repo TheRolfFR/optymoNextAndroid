@@ -6,7 +6,7 @@
     <string name="main_all_stops">Tous les stops</string>
     <string name="search_icon_description">Icone de recherche</string>
     <string name="splash_json_loading_text">Chargement du réseau depuis le JSON</string>
-    <string name="splash_loading_line">Chargement ligne %1$d/%2$d</string>
+    <string name="splash_loading_line">Chargement de la ligne %1$d/%2$d</string>
     <string name="splash_error_loading_text">Erreur lors du chargement du réseau</string>
     <string name="splash_loading_stop">Chargement arrêt %1$d/%2$d</string>
     <string name="add_step_2">2. Choisir un arrêt</string>
@@ -17,13 +17,16 @@
     <string name="splash_loading_network">Chargement du réseau</string>
     <string name="splash_error_text">erreur : \"%1$s\"</string>
     <string name="splash_favorite_loading">Chargement du favoris %1$d/%2$d</string>
-    <string name="main_last_updated">Mis à jour à %1$s</string>
-    <string name="main_never_updated">Jamais mis à jour</string>
+    <string name="update_last">Mis à jour à %1$s</string>
+    <string name="update_never">Jamais mis à jour</string>
     <string name="splash_generating_stop">Génération de l\'arrêt depuis le point %1$d/%2$d</string>
     <string name="main_toast_loading_favorites">Chargement des favoris...</string>
-    <string name="add_fav_toast_nb_of_fav">Vous avez maintenant %1$d favoris</string>
+    <string name="add_fav_toast_nb_of_fav">Tuas maintenant %1$d favoris</string>
     <string name="dialog_del_fav_title">Tu es sûr ?</string>
     <string name="dialog_del_fav_message">Tu es sûr sûr de supprimer %1$s ?</string>
-    <string name="yes">oui</string>
-    <string name="no">non</string>
+    <string name="dialog_yes">oui</string>
+    <string name="dialog_no">non</string>
+    <string name="notification_refresh_button_text">Actualiser</string>
+    <string name="notification_content_text">Étendre pour voir les favoris</string>
+    <string name="update_pending">Mise à jour en cours...</string>
 </resources>

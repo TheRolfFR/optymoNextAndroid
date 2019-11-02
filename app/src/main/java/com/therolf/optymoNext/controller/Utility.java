@@ -21,15 +21,8 @@ public class Utility {
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
-            if(i > 0) {
-                totalHeight += listItem.getPaddingTop();
-            }
 
             totalHeight +=  +  listItem.getMeasuredHeight();
-
-            if(i < listAdapter.getCount() - 1) {
-                totalHeight += listItem.getPaddingBottom();
-            }
         }
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();

@@ -32,7 +32,7 @@ public class OptymoDirection {
 
     @Override
     public String toString() {
-        return "[" + lineNumber + "] " + stopSlug + " - Dir. " + direction;
+        return "[" + lineNumber + "] " + stopName + " - Dir. " + direction;
     }
 
     @Override

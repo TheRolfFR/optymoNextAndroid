@@ -49,7 +49,7 @@
                 android:layout_marginBottom="@dimen/bottom_title_margin"
                 android:alpha="0.85"
                 android:fontFamily="@font/nunito_semibold"
-                android:text="@string/main_never_updated"
+                android:text="@string/update_never"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorOnPrimary" />
 
@@ -59,10 +59,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/component_padding"
                 android:background="@drawable/element_background"
+                android:divider="@null"
                 android:elevation="6dp"
                 android:minWidth="100dp"
                 android:nestedScrollingEnabled="true"
-                android:padding="@dimen/component_padding" />
+                android:paddingStart="0dp"
+                android:paddingTop="@dimen/component_padding"
+                android:paddingEnd="0dp"
+                android:paddingBottom="@dimen/component_padding" />
 
         </LinearLayout>
     </LinearLayout>

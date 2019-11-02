@@ -15,6 +15,7 @@ public class FavoritesController {
 
     private static final String PATH = "favorites.txt";
     private static final char LINE_SEPARATOR = '!';
+    private static final String LINE_SEPARATOR_REGEX = "!";
     private static final char FIELD_SEPARATOR = '|';
     private static FavoritesController controller = null;
 
@@ -56,10 +57,14 @@ public class FavoritesController {
                 String[] lines, parts;
                 OptymoDirection tmp;
 
-                lines = result.split("" + LINE_SEPARATOR);
-                if(lines.length > 1) {
+//                System.err.println(result);
+
+                lines = result.split(LINE_SEPARATOR_REGEX);
+//                System.err.println(lines.length);
+                if(result.indexOf(LINE_SEPARATOR) != -1) {
                     for (int i = 0; i < lines.length; i++) {
                         String line = lines[i];
+//                        System.err.println(line);
                         if (line.length() != 0) {
                             if(progressListener != null)
                                 progressListener.OnProgressUpdate(i, Math.max(i, lines.length-1), "favorite");
@@ -83,6 +88,7 @@ public class FavoritesController {
 
             } catch (java.io.IOException e) {
                 e.printStackTrace();
+                System.err.println(e.getMessage());
             }
 
             if(progressListener != null)

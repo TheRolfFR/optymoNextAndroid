@@ -3,11 +3,6 @@ package com.therolf.optymoNext.controller.activities;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -24,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.app.NotificationCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ferfalk.simplesearchview.SimpleSearchView;
@@ -33,6 +27,7 @@ import com.therolf.optymoNext.controller.FavoritesController;
 import com.therolf.optymoNext.controller.OptymoNetworkController;
 import com.therolf.optymoNext.controller.Utility;
 import com.therolf.optymoNext.controller.activities.Main.SnackBarController;
+import com.therolf.optymoNext.controller.notifications.NotificationController;
 import com.therolf.optymoNext.vue.adapters.OptymoNextTimeAdapter;
 import com.therolf.optymoNextModel.OptymoDirection;
 import com.therolf.optymoNextModel.OptymoNetwork;
@@ -41,6 +36,7 @@ import com.therolf.optymoNextModel.OptymoNextTime;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 
@@ -103,6 +99,9 @@ public class MainActivity extends TopViewActivity {
         // date format
         dateFormat = new SimpleDateFormat("HH:mm", getResources().getConfiguration().locale);
 
+        // notifications (BEFORE refreshFavoriteList)
+        NotificationController.run(this);
+
         refreshFavoriteList();
         refreshLayout.setOnRefreshListener(() -> {
             refreshLayout.setRefreshing(true);
@@ -116,12 +115,12 @@ public class MainActivity extends TopViewActivity {
             builder.setCancelable(true);
             builder.setTitle(R.string.dialog_del_fav_title);
             builder.setMessage(getResources().getString(R.string.dialog_del_fav_message, nextTimes.get(pos).directionToString()));
-            builder.setPositiveButton(R.string.yes,
+            builder.setPositiveButton(R.string.dialog_yes,
                     (dialog, which) -> {
                         FavoritesController.getInstance().remove(nextTimes.get(pos), MainActivity.this);
                         refreshFavoriteList();
                     });
-            builder.setNegativeButton(R.string.no, (dialog, which) -> {
+            builder.setNegativeButton(R.string.dialog_no, (dialog, which) -> {
             });
 
             AlertDialog dialog = builder.create();
@@ -180,55 +179,13 @@ public class MainActivity extends TopViewActivity {
 
         // snackbar
         SnackBarController.run(this, searchButton, fab);
-
-        // notifications
-        int NOTIFICATION_ID = 234;
-
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-
-
-        String CHANNEL_ID = "my_channel_01";
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-
-
-            CharSequence name = "my_channel";
-            String Description = "This is my channel";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
-            mChannel.setDescription(Description);
-            mChannel.enableLights(true);
-            mChannel.setLightColor(Color.RED);
-            mChannel.enableVibration(true);
-            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-            mChannel.setShowBadge(false);
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(mChannel);
-            }
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("title")
-                .setContentText("message");
-
-        Intent resultIntent = new Intent(this, MainActivity.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        builder.setContentIntent(resultPendingIntent);
-
-        if (notificationManager != null) {
-            notificationManager.notify(NOTIFICATION_ID, builder.build());
-        }
     }
 
     private void refreshFavoriteList() {
         Toast.makeText(this, R.string.main_toast_loading_favorites, Toast.LENGTH_SHORT).show();
 
         OptymoDirection[] directions = FavoritesController.getInstance().getFavorites();
-//        System.out.println(Arrays.toString(directions));
+        System.out.println(Arrays.toString(directions));
 
         // if you have no favorites
         // BUG FIX no favorite infinite refreshing
@@ -245,8 +202,15 @@ public class MainActivity extends TopViewActivity {
         numberOfUpdated = 0;
         nextTimes.clear();
 
+        // empty notification body
+        NotificationController.resetNotificationBody();
+        // change title
+        NotificationController.updateTitle(this.getString(R.string.update_pending));
+
+        // tell user that update is pending
+        lastUpdateText.setText(getResources().getString(R.string.update_pending));
+
         // we add all the new favorites
-        // TODO Add the ones you have and remove the old ones
         // 1. Stop the remaining requests
         OptymoGetNextTime tmp;
         while (nextTimeRequests.size() > 0){
@@ -324,13 +288,15 @@ public class MainActivity extends TopViewActivity {
 
                 Date date = new Date();
                 String dateFormatted = dateFormat.format(date);
-                lastUpdateText.setText(getResources().getString(R.string.main_last_updated, dateFormatted));
+                lastUpdateText.setText(getResources().getString(R.string.update_last, dateFormatted));
+                NotificationController.setUpdatedAtTitle(MainActivity.this);
             }
             Log.d("nope", "Loaded favorite " + numberOfUpdated + "/" + nextTimeRequests.size() + " " + nextTime + " " + nextTimes.size());
 //            Toast.makeText(MainActivity.this, "Loaded favorite " + numberOfUpdated + "/" + nextTimeRequests.size() + " " + nextTime, Toast.LENGTH_SHORT).show();
 
             // sort nextTimes by time
             Collections.sort(nextTimes);
+            NotificationController.updateBody(nextTimes);
 
             // update data
             favoritesAdapter.notifyDataSetChanged();

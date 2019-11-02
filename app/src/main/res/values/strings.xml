@@ -22,13 +22,16 @@
     <string name="splash_loading_network">Loading network</string>
     <string name="splash_error_text">error: \"%1$s\"</string>
     <string name="splash_favorite_loading">Loading favorite %1$d/%2$d</string>
-    <string name="main_last_updated">Updated at %1$s</string>
-    <string name="main_never_updated">Never updated</string>
+    <string name="update_last">Updated at %1$s</string>
+    <string name="update_never">Never updated</string>
     <string name="splash_generating_stop">Generating stop from point %1$d/%2$d</string>
     <string name="main_toast_loading_favorites">Loading favorites...</string>
     <string name="add_fav_toast_nb_of_fav">You have now %1$d favorites</string>
     <string name="dialog_del_fav_title">Are your sure?</string>
     <string name="dialog_del_fav_message">Do you want to delete %1$s?</string>
-    <string name="yes">yes</string>
-    <string name="no">no</string>
+    <string name="dialog_yes">yes</string>
+    <string name="dialog_no">no</string>
+    <string name="notification_refresh_button_text">Refresh</string>
+    <string name="notification_content_text">Expand to see favorites</string>
+    <string name="update_pending">Update pending...</string>
 </resources>

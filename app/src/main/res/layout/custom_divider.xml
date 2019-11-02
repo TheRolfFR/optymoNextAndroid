@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingStart="@dimen/component_padding"
+    android:paddingEnd="@dimen/component_padding">
+
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp" android:background="@color/colorPrimary"/>
+</View>
