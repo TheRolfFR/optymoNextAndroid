@@ -1,6 +1,5 @@
 package com.therolf.optymoNext.controller.notifications;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -23,16 +22,18 @@ import java.util.Date;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class NotificationController {
 
-    private static NotificationManager notificationManager;
-    @SuppressLint("StaticFieldLeak")
-    private static NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
+    private NotificationCompat.Builder builder;
 
-    private static StringBuilder buffer = new StringBuilder();
-    private static DateFormat dateFormat;
+    private StringBuilder buffer = new StringBuilder();
+    private DateFormat dateFormat;
 
-    private static final int NOTIFICATION_ID = 234;
+    private final int NOTIFICATION_ID = 234;
+    private final String NOTIFICATION_CHANNEL_ID = "my_channel_01";
+    private final CharSequence NOTIFICATION_CHANNEL_NAME = "my_channel";
+    private final String NOTIFICATION_CHANNEL_DESCRIPTION = "This is my channel";
 
-    public static void run(Context context) {
+    public void run(Context context) {
         if(builder != null) {
             return;
         }
@@ -42,15 +43,12 @@ public class NotificationController {
 
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        String CHANNEL_ID = "my_channel_01";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 
-
-            CharSequence name = "my_channel";
-            String Description = "This is my channel";
+            // cannot be stored as constant because require api 24 min
             int importance = NotificationManager.IMPORTANCE_LOW;
-            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
-            mChannel.setDescription(Description);
+            NotificationChannel mChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, importance);
+            mChannel.setDescription(NOTIFICATION_CHANNEL_DESCRIPTION);
             mChannel.setShowBadge(false);
             if (notificationManager != null) {
                 notificationManager.createNotificationChannel(mChannel);
@@ -61,9 +59,10 @@ public class NotificationController {
         PendingIntent pIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), resultIntent, 0);
 
         Intent refreshIntent = new Intent(context.getApplicationContext(), OnBoot.class);
+        refreshIntent.setAction(NotificationService.REFRESH_ACTION);
         PendingIntent refreshPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), (int) System.currentTimeMillis(), refreshIntent, 0);
 
-        builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+        builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_logo_form)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(context.getString(R.string.update_never))
@@ -83,7 +82,7 @@ public class NotificationController {
         }
     }
 
-    public static void updateBody(ArrayList<OptymoNextTime> nextTimes) {
+    public void updateBody(ArrayList<OptymoNextTime> nextTimes) {
         StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < nextTimes.size(); i++) {
             OptymoNextTime nextTime = nextTimes.get(i);
@@ -97,7 +96,7 @@ public class NotificationController {
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
-    public static void resetNotificationBody() {
+    public void resetNotificationBody() {
         buffer.setLength(0);
         if(builder != null) {
             builder
@@ -106,7 +105,7 @@ public class NotificationController {
         }
     }
 
-    public static void appendToNotificationBody(String line) {
+    public void appendToNotificationBody(String line) {
         if(buffer.length() != 0) {
             buffer.append('\n');
         }
@@ -118,16 +117,16 @@ public class NotificationController {
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
-    public static void updateTitle(String title) {
+    public void updateTitle(String title) {
         builder.setContentTitle(title);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
-    public static void setNeverUpdatedTitle(Context context) {
+    public void setNeverUpdatedTitle(Context context) {
         updateTitle(context.getString(R.string.update_pending));
     }
 
-    public static void setUpdatedAtTitle(Context context) {
+    public void setUpdatedAtTitle(Context context) {
         Date date = new Date();
         String dateFormatted = dateFormat.format(date);
         updateTitle(context.getString(R.string.update_last, dateFormatted));

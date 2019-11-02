@@ -14,7 +14,7 @@
     <LinearLayout
         android:id="@+id/next_el_line"
         android:layout_width="43dp"
-        android:layout_height="wrap_content"
+        android:layout_height="28dp"
         android:background="@color/colorLine1"
         android:minHeight="26dp"
         android:orientation="horizontal"
@@ -37,9 +37,12 @@
     <TextView
         android:id="@+id/next_el_title"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="28dp"
         android:layout_weight="5"
+        android:ellipsize="end"
         android:fontFamily="@font/nunito_light"
+        android:gravity="center_vertical"
+        android:maxLines="1"
         android:paddingStart="10dp"
         android:paddingEnd="0dp"
         android:textAlignment="textStart"
@@ -51,10 +54,13 @@
     <TextView
         android:id="@+id/next_el_time"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="28dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="0dp"
+        android:ellipsize="end"
         android:fontFamily="@font/nunito_regular"
+        android:gravity="center_vertical"
+        android:maxLines="1"
         android:textAlignment="textEnd"
         android:textColor="@android:color/black"
         tools:text="7 min" />

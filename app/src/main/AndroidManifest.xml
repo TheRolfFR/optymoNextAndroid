@@ -37,6 +37,8 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <service android:name=".controller.notifications.NotificationService" />
+        <service android:name=".controller.notifications.NotificationService"
+            android:exported="false"
+            android:enabled="true"/>
     </application>
 </manifest>

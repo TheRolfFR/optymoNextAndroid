@@ -12,6 +12,9 @@ public class OnBoot extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent startServiceIntent = new Intent(context, NotificationService.class);
+        if(intent.getAction() != null) {
+            startServiceIntent.setAction(intent.getAction());
+        }
         context.startService(startServiceIntent);
 
 

@@ -16,6 +16,10 @@ import java.util.ArrayList;
 
 public class NotificationService extends IntentService {
 
+    private NotificationController notificationController = new NotificationController();
+
+    public static final String REFRESH_ACTION = "refresh_action";
+
     private int numberOfRequests;
     private ArrayList<NotificationService.OptymoGetNextTime> lastRequests = new ArrayList<>();
 
@@ -24,8 +28,18 @@ public class NotificationService extends IntentService {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
+    protected void onHandleIntent(@Nullable Intent workIntent) {
+
+        if(workIntent != null && workIntent.getAction() != null && workIntent.getAction().equals(REFRESH_ACTION)) {
+            refreshNotif();
+        }
+    }
+
+
+    private void refreshNotif() {
+
+        // try to run notification
+        notificationController.run(this);
 
         // get favorites
         OptymoDirection[] favorites = FavoritesController.getInstance().readFile(this).getFavorites();
@@ -36,13 +50,13 @@ public class NotificationService extends IntentService {
         while(lastRequests.size() > 0) {
             NotificationService.OptymoGetNextTime request = lastRequests.get(0);
             request.cancel(true);
-            lastRequests.remove(0);
+            lastRequests.remove(request);
         }
 
         // empty notification body
-        NotificationController.resetNotificationBody();
+        notificationController.resetNotificationBody();
         // change title to pending
-        NotificationController.setNeverUpdatedTitle(this);
+        notificationController.setNeverUpdatedTitle(this);
 
         // reset number of requests
         numberOfRequests = 0;
@@ -55,6 +69,13 @@ public class NotificationService extends IntentService {
             lastRequests.add(tmp);
             tmp.execute(favorite);
         }
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        refreshNotif();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -94,16 +115,11 @@ public class NotificationService extends IntentService {
 
             numberOfRequests++;
             if (numberOfRequests >= lastRequests.size())
-                NotificationController.setUpdatedAtTitle(NotificationService.this);
+                notificationController.setUpdatedAtTitle(NotificationService.this);
 
             // update notification
-            NotificationController.appendToNotificationBody(nextTime.toString());
+            notificationController.appendToNotificationBody(nextTime.toString());
         }
 
-    }
-
-    @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-        return;
     }
 }

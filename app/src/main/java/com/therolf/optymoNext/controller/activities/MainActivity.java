@@ -45,6 +45,8 @@ import java.util.Date;
 @SuppressWarnings("unused")
 public class MainActivity extends TopViewActivity {
 
+    private NotificationController notificationController = new NotificationController();
+
     private ListView favoriteList;
     private SwipeRefreshLayout refreshLayout;
     private TextView lastUpdateText;
@@ -100,7 +102,7 @@ public class MainActivity extends TopViewActivity {
         dateFormat = new SimpleDateFormat("HH:mm", getResources().getConfiguration().locale);
 
         // notifications (BEFORE refreshFavoriteList)
-        NotificationController.run(this);
+        notificationController.run(this);
 
         refreshFavoriteList();
         refreshLayout.setOnRefreshListener(() -> {
@@ -203,9 +205,9 @@ public class MainActivity extends TopViewActivity {
         nextTimes.clear();
 
         // empty notification body
-        NotificationController.resetNotificationBody();
+        notificationController.resetNotificationBody();
         // change title
-        NotificationController.updateTitle(this.getString(R.string.update_pending));
+        notificationController.updateTitle(this.getString(R.string.update_pending));
 
         // tell user that update is pending
         lastUpdateText.setText(getResources().getString(R.string.update_pending));
@@ -289,14 +291,14 @@ public class MainActivity extends TopViewActivity {
                 Date date = new Date();
                 String dateFormatted = dateFormat.format(date);
                 lastUpdateText.setText(getResources().getString(R.string.update_last, dateFormatted));
-                NotificationController.setUpdatedAtTitle(MainActivity.this);
+                notificationController.setUpdatedAtTitle(MainActivity.this);
             }
             Log.d("nope", "Loaded favorite " + numberOfUpdated + "/" + nextTimeRequests.size() + " " + nextTime + " " + nextTimes.size());
 //            Toast.makeText(MainActivity.this, "Loaded favorite " + numberOfUpdated + "/" + nextTimeRequests.size() + " " + nextTime, Toast.LENGTH_SHORT).show();
 
             // sort nextTimes by time
             Collections.sort(nextTimes);
-            NotificationController.updateBody(nextTimes);
+            notificationController.updateBody(nextTimes);
 
             // update data
             favoritesAdapter.notifyDataSetChanged();
