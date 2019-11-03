@@ -70,6 +70,7 @@ public class OptymoNetwork {
     public void begin(String stopsJson, InputStream linesXml, boolean forceXml) {
         boolean result = decodeJSON(stopsJson);
         if(forceXml || !result) {
+            // lol
             generateFromXML(linesXml);
         }
     }
@@ -95,7 +96,7 @@ public class OptymoNetwork {
                 }
 
                 stopObject = stopsArray.getJSONObject(i);
-                addOptymoStop(stopObject.getString(STOP_NAME_KEY), stopObject.getString(STOP_SLUG_KEY), false);
+                addOptymoStop(stopObject.getString(STOP_NAME_KEY), stopObject.getString(STOP_SLUG_KEY), true);
             }
 
             JSONArray linesArray = jsonDecoded.getJSONArray(LINES_ARRAY_KEY);
@@ -315,6 +316,24 @@ public class OptymoNetwork {
             //noinspection SuspiciousMethodCalls
             tmp = stops.get(keys[i]);
             if (tmp != null && tmp.getSlug().equals(slug)) {
+                result = tmp;
+            }
+
+            ++i;
+        }
+
+        return result;
+    }
+
+    public OptymoLine getLineByNumberAndName(int number, String name) {
+        OptymoLine result = null, tmp;
+        int i = 0;
+        Object[] keys = lines.keySet().toArray();
+
+        while (result == null && i < keys.length) {
+            //noinspection SuspiciousMethodCalls
+            tmp = lines.get(keys[i]);
+            if (tmp != null && tmp.getNumber() == number && tmp.getName().equals(name)) {
                 result = tmp;
             }
 

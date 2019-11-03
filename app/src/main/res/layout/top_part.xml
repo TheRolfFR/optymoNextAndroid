@@ -14,7 +14,7 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/content_description_background"
         android:cropToPadding="false"
-        android:maxHeight="330dp"
+        android:maxHeight="@dimen/top_part_max_height"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/top_background" />
 

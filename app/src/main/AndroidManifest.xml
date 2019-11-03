@@ -16,7 +16,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".controller.activities.SplashScreenActivity" android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".controller.activities.StopActivity"
+            android:theme="@style/AppTheme.NoActionBar"  />
+        <activity android:name=".controller.activities.LineActivity"
+            android:theme="@style/AppTheme.NoActionBar"  />
+        <activity
+            android:name=".controller.activities.SplashScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,13 +38,17 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <receiver android:name=".controller.notifications.OnBoot">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <service android:name=".controller.notifications.NotificationService"
-            android:exported="false"
-            android:enabled="true"/>
+
+        <service
+            android:name=".controller.notifications.NotificationService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
+
 </manifest>

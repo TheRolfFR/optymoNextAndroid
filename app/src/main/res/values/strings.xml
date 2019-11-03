@@ -35,4 +35,7 @@
     <string name="notification_content_text">Expand to see favorites</string>
     <string name="update_pending">Update pending…</string>
     <string name="dialog_search_input_hint">Search stop, line…</string>
+    <string name="line_stops">Stops</string>
+    <string name="stop_next_stops">Next stops</string>
+    <string name="stop_toast_loading_stop">Loading next times…</string>
 </resources>

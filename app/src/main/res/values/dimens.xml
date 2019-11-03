@@ -9,6 +9,7 @@
     <dimen name="search_icon_size">30dp</dimen>
 
     <dimen name="top_part_height_no_padding">-224dp</dimen>
+    <dimen name="top_part_max_height">330dp</dimen>
     <dimen name="title_font_size">37sp</dimen>
     <dimen name="bottom_title_margin">37dp</dimen>
 

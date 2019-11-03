@@ -91,14 +91,14 @@ public class OptymoNetworkController {
     public OptymoStop[] getStops() {
         return network.getStops();
     }
-
     public OptymoLine[] getLines() {
         return network.getLines();
     }
 
-    public OptymoStop getStopByKey(String key) {
+    public OptymoStop getStopBySlug(String key) {
         return network.getStopBySlug(key);
     }
+    public OptymoLine getLineByNumberAndName(int number, String name) { return network.getLineByNumberAndName(number, name); }
 
     public void setProgressListener(OptymoNetwork.ProgressListener listener) {
         progressListener = listener;

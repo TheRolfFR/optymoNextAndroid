@@ -1,6 +1,7 @@
 package com.therolf.optymoNext.controller.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -59,6 +60,8 @@ public class MainActivity extends TopViewActivity {
     private ListView favoriteList;
     private SwipeRefreshLayout refreshLayout;
     private TextView lastUpdateText;
+
+    private SearchController searchController;
 
     // favorites
     int numberOfUpdated = 0;
@@ -169,12 +172,13 @@ public class MainActivity extends TopViewActivity {
             searchDialog.findViewById(R.id.dialog_search_search_input).requestFocus();
         });
         // initialize search controller
-        SearchController searchController = new SearchController(
+        Activity ac = this;
+        searchController = new SearchController(
                 searchDialog.findViewById(R.id.dialog_search_search_input),
                 searchDialog.findViewById(R.id.dialog_search_search_or_remove_button),
                 searchDialog.findViewById(R.id.dialog_search_line_list_view),
                 searchDialog.findViewById(R.id.dialog_search_stop_list_view),
-                this);
+                ac);
 
         // snackbar
         SnackBarController.run(this, searchButton, fab);

@@ -30,4 +30,7 @@
     <string name="notification_content_text">Étendre pour voir les favoris</string>
     <string name="update_pending">Mise à jour en cours…</string>
     <string name="dialog_search_input_hint">Chercher un arrêt, un stop…</string>
+    <string name="line_stops">Arrêts</string>
+    <string name="stop_next_stops">Prochains arrêts</string>
+    <string name="stop_toast_loading_stop">Chargement des prochains horaires…</string>
 </resources>

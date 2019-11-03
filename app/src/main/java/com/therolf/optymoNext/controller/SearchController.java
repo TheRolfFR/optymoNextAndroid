@@ -1,14 +1,18 @@
 package com.therolf.optymoNext.controller;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.therolf.optymoNext.R;
+import com.therolf.optymoNext.controller.activities.LineActivity;
+import com.therolf.optymoNext.controller.activities.StopActivity;
 import com.therolf.optymoNext.vue.adapters.OptymoLineAdapter;
 import com.therolf.optymoNext.vue.adapters.OptymoStopAdapter;
 import com.therolf.optymoNextModel.OptymoLine;
@@ -16,7 +20,9 @@ import com.therolf.optymoNextModel.OptymoStop;
 
 import java.util.ArrayList;
 
-public class SearchController implements android.text.TextWatcher {
+public class SearchController implements TextWatcher {
+    Activity activity;
+
     private EditText searchInput;
 
     private ImageView searchIcon;
@@ -34,7 +40,9 @@ public class SearchController implements android.text.TextWatcher {
     private boolean searching;
 
     @SuppressWarnings("unused")
-    public SearchController(EditText searchInput, ImageView searchIcon, ListView linesResultListView, ListView stopsResultListView, Context context) {
+    public SearchController(EditText searchInput, ImageView searchIcon, ListView linesResultListView, ListView stopsResultListView, Activity context) {
+        this.activity = context;
+
         this.searchInput = searchInput;
         this.searchIcon = searchIcon;
         this.stopsResultListView = stopsResultListView;
@@ -54,6 +62,26 @@ public class SearchController implements android.text.TextWatcher {
         // set adapters to lists
         this.stopsResultListView.setAdapter(this.stopsResultsAdapter);
         this.linesResultListView.setAdapter(this.linesResultsAdapter);
+
+        // set on item click listeners
+        this.stopsResultListView.setOnItemClickListener((parent, view, position, id) -> {
+            Object o = SearchController.this.stopsResultsAdapter.getItem(position);
+//            Log.d("search", o.toString());
+            if(o instanceof OptymoStop) {
+                OptymoStop s = (OptymoStop) o;
+//                Log.d("search", s.toString());
+                StopActivity.launchStopActivity(this.activity, s.getSlug());
+            }
+        });
+        this.linesResultListView.setOnItemClickListener((parent, view, position, id) -> {
+            Object o = SearchController.this.linesResultsAdapter.getItem(position);
+            Log.d("search", o.toString());
+            if(o instanceof OptymoLine) {
+                OptymoLine l = (OptymoLine) o;
+                Log.d("search", l.toString());
+                LineActivity.launchLineActivity(this.activity, l.getNumber(), l.getName());
+            }
+        });
 
         // and hide completely
         this.stopsResultListView.setVisibility(View.GONE);

@@ -11,7 +11,7 @@
     <string name="favorites">Favoritos</string>
     <string name="icon_app_description">Icono de la applicación</string>
     <string name="main_all_stops">Todas las paradas</string>
-    <string name="update_last">Actualizado a %1$s</string>
+    <string name="update_last">Actualizado a las %1$s</string>
     <string name="update_never">Nunca actualizado</string>
     <string name="main_toast_loading_favorites">Cargando los favoritos</string>
     <string name="dialog_no">no</string>
@@ -30,4 +30,7 @@
     <string name="dialog_yes">si</string>
     <string name="update_pending">actualización en curso…</string>
     <string name="dialog_search_input_hint">Buscar una parada, una línea</string>
+    <string name="line_stops">Paradas</string>
+    <string name="stop_next_stops">Proximos horarios</string>
+    <string name="stop_toast_loading_stop">Cargamento de los horarios…</string>
 </resources>
