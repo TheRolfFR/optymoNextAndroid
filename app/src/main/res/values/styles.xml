@@ -43,4 +43,12 @@
         <item name="colorAccent">@color/colorOnPrimary</item>
     </style>
 
+    <style name="AppTheme.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textColorHint">#B9B9B9</item>
+        <item name="android:backgroundTint">@android:color/transparent</item>
+        <item name="android:fontFamily">@font/nunito_regular</item>
+        <item name="android:colorAccent">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/dialog_search_input_text_size</item>
+    </style>
+
 </resources>

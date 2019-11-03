@@ -49,7 +49,8 @@
         android:textColor="@android:color/black"
         android:textSize="@dimen/component_content_font_size"
         android:textStyle="bold"
-        tools:text="Sample text" />
+        tools:text="Sample text"
+        tools:ignore="RtlCompat" />
 
     <TextView
         android:id="@+id/next_el_time"
@@ -63,6 +64,7 @@
         android:maxLines="1"
         android:textAlignment="textEnd"
         android:textColor="@android:color/black"
-        tools:text="7 min" />
+        tools:text="7 min"
+        tools:ignore="RtlCompat" />
 
 </LinearLayout>

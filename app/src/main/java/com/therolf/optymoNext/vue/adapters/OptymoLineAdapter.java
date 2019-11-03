@@ -23,6 +23,10 @@ public class OptymoLineAdapter extends BaseAdapter {
     private Context context;
     private OptymoLine[] optymoLines;
 
+    public void setData(OptymoLine[] arr) {
+        this.optymoLines = arr;
+    }
+
     public OptymoLineAdapter(@NonNull Context context, OptymoLine[] optymoLines) {
         this.context = context;
         this.optymoLines = optymoLines;
@@ -47,7 +51,7 @@ public class OptymoLineAdapter extends BaseAdapter {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        convertView = inflater.inflate(R.layout.next_element_list, parent, false);
+        convertView = inflater.inflate(R.layout.item_next_stop, parent, false);
 
         ((TextView) convertView.findViewById(R.id.next_el_line_number)).setText("" + optymoLines[position].getNumber());
         ((TextView) convertView.findViewById(R.id.next_el_title)).setText("" + optymoLines[position].getName());

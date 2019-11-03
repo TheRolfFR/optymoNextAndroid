@@ -50,7 +50,7 @@ public class OptymoNextTimeAdapter extends BaseAdapter {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        convertView = inflater.inflate(R.layout.next_element_list, parent, false);
+        convertView = inflater.inflate(R.layout.item_next_stop, parent, false);
 
         int id = context.getResources().getIdentifier("colorLine" + nextTimes.get(position).getLineNumber(), "color", context.getPackageName());
         convertView.findViewById(R.id.next_el_line).setBackgroundColor(ContextCompat.getColor(context, id));

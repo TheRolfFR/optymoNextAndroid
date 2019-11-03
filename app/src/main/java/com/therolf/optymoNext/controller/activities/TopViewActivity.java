@@ -35,12 +35,7 @@ public abstract class TopViewActivity extends AppCompatActivity {
         }
 
         if(!enableSearchIcon && topCloseButton != null) {
-            topCloseButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finish();
-                }
-            });
+            topCloseButton.setOnClickListener(view -> finish());
         }
     }
 }

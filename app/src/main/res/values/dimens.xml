@@ -23,4 +23,6 @@
 
     <dimen name="add_fav_elevation">5dp</dimen>
     <dimen name="add_fav_button_height">38dp</dimen>
+
+    <dimen name="dialog_search_input_text_size">16sp</dimen>
 </resources>

@@ -5,47 +5,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="start|top"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/padding_app">
 
-    <com.ferfalk.simplesearchview.SimpleSearchView
-        android:id="@+id/searchView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary" />
-
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:minHeight="100dp"
-        android:padding="@dimen/component_padding"
-        app:cardCornerRadius="@dimen/component_border_radius">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/component_padding"
+        android:paddingLeft="@dimen/component_padding"
+        android:paddingEnd="@dimen/component_padding"
+        android:paddingRight="@dimen/component_padding"
+        android:layout_marginBottom="@dimen/component_padding_half"
+        android:background="@drawable/element_background">
+
+        <EditText
+            android:id="@+id/dialog_search_search_input"
+            style="@style/AppTheme.EditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/dialog_search_input_hint"
+            android:inputType="textPersonName"
+            android:paddingStart="0dp"
+            android:paddingLeft="0dp"
+            android:selectAllOnFocus="true"
+            tools:ignore="RtlHardcoded,RtlSymmetry,UnusedAttribute" />
+
+        <ImageView
+            android:id="@+id/dialog_search_search_or_remove_button"
+            android:layout_width="@dimen/search_icon_size"
+            android:layout_height="@dimen/search_icon_size"
+            android:contentDescription="@string/search_icon_description"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_search_red" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/dialog_search_search_input"
-                android:layout_width="0dp"
+            <ListView
+                android:id="@+id/dialog_search_stop_list_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:autofillHints="Search stop, line..."
-                android:ems="10"
-                android:hint="Search stop, line..."
-                android:inputType="textPersonName"
-                tools:ignore="HardcodedText,UnusedAttribute" />
+                android:layout_marginBottom="@dimen/component_padding_half"
+                android:background="@drawable/element_background"
+                android:paddingTop="@dimen/component_padding_half"
+                android:paddingBottom="@dimen/component_padding_half" />
 
-            <ImageView
-                android:id="@+id/dialog_search_search_or_remove_button"
-                android:layout_width="@dimen/search_icon_size"
-                android:layout_height="@dimen/search_icon_size"
-                android:contentDescription="@string/search_icon_description"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/ic_search_black_24dp" />
+            <ListView
+                android:id="@+id/dialog_search_line_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/component_padding_half"
+                android:background="@drawable/element_background"
+                android:paddingTop="@dimen/component_padding_half"
+                android:paddingBottom="@dimen/component_padding_half" />
+
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
 
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

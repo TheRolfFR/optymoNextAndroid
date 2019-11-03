@@ -28,5 +28,6 @@
     <string name="splash_loading_network">Cargamento del red</string>
     <string name="splash_loading_stop">Cargamento de la parada %1$d/%2$d</string>
     <string name="dialog_yes">si</string>
-    <string name="update_pending">actualización en curso...</string>
+    <string name="update_pending">actualización en curso…</string>
+    <string name="dialog_search_input_hint">Buscar una parada, una línea</string>
 </resources>

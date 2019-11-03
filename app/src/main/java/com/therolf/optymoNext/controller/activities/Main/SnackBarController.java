@@ -2,9 +2,9 @@ package com.therolf.optymoNext.controller.activities.Main;
 
 import android.widget.ImageView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton;
 import com.therolf.optymoNext.R;
 import com.therolf.optymoNext.controller.GlobalApplication;
 import com.therolf.optymoNext.controller.NetworkRunnable;

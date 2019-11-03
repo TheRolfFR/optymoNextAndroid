@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.therolf.optymoNext.R;
 import com.therolf.optymoNextModel.OptymoStop;
 
 @SuppressWarnings("unused")
@@ -20,6 +21,10 @@ public class OptymoStopAdapter extends BaseAdapter {
 
     private Context context;
     private OptymoStop[] nextStops;
+
+    public void setData(OptymoStop[] arr) {
+        this.nextStops = arr;
+    }
 
     public OptymoStopAdapter(@NonNull Context context, OptymoStop[] nextStops) {
         this.context = context;
@@ -45,9 +50,9 @@ public class OptymoStopAdapter extends BaseAdapter {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        convertView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+        convertView = inflater.inflate(R.layout.item_stop, parent, false);
 
-        ((TextView) convertView.findViewById(android.R.id.text1)).setText(nextStops[position].toString());
+        ((TextView) convertView.findViewById(R.id.text1)).setText(nextStops[position].toString());
 
         return convertView;
     }

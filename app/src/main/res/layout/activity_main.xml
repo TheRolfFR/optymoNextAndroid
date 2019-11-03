@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/main_refresh_layout"
@@ -19,18 +18,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="@dimen/padding_app"
             android:layout_marginBottom="@dimen/floating_button_margin_bottom"
-            android:fontFamily="@font/nunito_bold"
-            android:text="@string/add_button_text"
-            android:textColor="@color/colorOnPrimary"
-            app:fabColor="@color/colorPrimaryOnElement"
-            app:fabIcon="@drawable/ic_bookmark_plus" />
+            android:backgroundTint="@color/colorPrimaryOnElement"
+            android:elevation="10dp"
+            android:src="@drawable/ic_bookmark_plus" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

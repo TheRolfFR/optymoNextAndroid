@@ -3,7 +3,7 @@ package com.therolf.optymoNextModel;
 import java.text.Normalizer;
 import java.util.Arrays;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class OptymoLine implements Comparable<OptymoLine> {
     private int number;
     private String name;
@@ -48,6 +48,7 @@ public class OptymoLine implements Comparable<OptymoLine> {
         return Normalizer.normalize(this.toString(), Normalizer.Form.NFD).replaceAll("[^A-Za-z0-9]", "").toLowerCase();
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString() {
         return "[" + this.number + "] " + this.name;
