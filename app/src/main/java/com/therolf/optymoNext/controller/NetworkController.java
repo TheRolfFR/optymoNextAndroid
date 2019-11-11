@@ -81,9 +81,9 @@ public class NetworkController {
                 FileOutputStream fos = context.openFileOutput(jsonFileName, Context.MODE_PRIVATE);
                 fos.write(network.getResultJson().getBytes());
                 fos.close();
-                Log.d("stops", network.getResultJson());
+//                Log.d("stops", network.getResultJson());
             } catch (java.io.IOException e) {
-                Log.e(TAG, Objects.requireNonNull(e.getMessage()));
+//                Log.e(TAG, Objects.requireNonNull(e.getMessage()));
             }
         }
     }

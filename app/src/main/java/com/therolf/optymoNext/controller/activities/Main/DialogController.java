@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -109,10 +108,10 @@ public class DialogController implements TextWatcher {
         });
         this.linesResultListView.setOnItemClickListener((parent, view, position, id) -> {
             Object o = DialogController.this.linesResultsAdapter.getItem(position);
-            Log.d("search", o.toString());
+//            Log.d("search", o.toString());
             if(o instanceof OptymoLine) {
                 OptymoLine l = (OptymoLine) o;
-                Log.d("search", l.toString());
+//                Log.d("search", l.toString());
                 LineActivity.launchLineActivity(this.activity, l.getNumber(), l.getName());
             }
         });

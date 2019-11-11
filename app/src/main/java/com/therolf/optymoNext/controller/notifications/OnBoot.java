@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 @SuppressWarnings("unused")
 public class OnBoot extends BroadcastReceiver {
@@ -27,7 +26,7 @@ public class OnBoot extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent startServiceIntent = new Intent(context, NotificationService.class);
-        Log.d("optymo", "" + index);
+//        Log.d("optymo", "" + index);
         if(intent.getAction() != null) {
             startServiceIntent.setAction(intent.getAction());
         }

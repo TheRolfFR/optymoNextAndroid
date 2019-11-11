@@ -76,7 +76,7 @@ public class LineActivity extends TopViewActivity {
 
     @SuppressWarnings("unused")
     public static void launchLineActivity(Activity context, int lineNumber, String lineName) {
-        Log.d("line", lineNumber + " " + lineName);
+//        Log.d("line", lineNumber + " " + lineName);
         Intent intent = new Intent(context, LineActivity.class);
         intent.putExtra(LINE_NUMBER_KEY_DATA, lineNumber);
         intent.putExtra(LINE_NAME_KEY_DATA, lineName);

@@ -31,10 +31,9 @@ import com.therolf.optymoNext.controller.NetworkController;
 import com.therolf.optymoNext.controller.Utility;
 import com.therolf.optymoNext.controller.activities.Main.DialogController;
 import com.therolf.optymoNext.controller.activities.Main.SnackBarController;
-import com.therolf.optymoNext.controller.notifications.NotificationController;
+import com.therolf.optymoNext.controller.notifications.NotificationService;
 import com.therolf.optymoNext.vue.adapters.LineNextTimeAdapter;
 import com.therolf.optymoNext.vue.adapters.LinePdfAdapter;
-import com.therolf.optymoNext.vue.adapters.NextTimeItemAdapter;
 import com.therolf.optymoNextModel.OptymoDirection;
 import com.therolf.optymoNextModel.OptymoNetwork;
 import com.therolf.optymoNextModel.OptymoNextTime;
@@ -48,8 +47,6 @@ import java.util.Date;
 
 @SuppressWarnings("unused")
 public class MainActivity extends TopViewActivity {
-
-    private NotificationController notificationController = new NotificationController();
 
     private ListView favoriteList;
     private SwipeRefreshLayout refreshLayout;
@@ -106,9 +103,6 @@ public class MainActivity extends TopViewActivity {
         // date format
         dateFormat = new SimpleDateFormat("HH:mm", getResources().getConfiguration().locale);
 
-        // notifications (BEFORE refreshFavoriteList)
-        notificationController.run(this);
-
         refreshFavoriteList();
         refreshLayout.setOnRefreshListener(() -> {
             refreshLayout.setRefreshing(true);
@@ -116,28 +110,25 @@ public class MainActivity extends TopViewActivity {
         });
 
         // favoriteList on long press delete element
-        favoritesAdapter.setOnItemLongClickListener(new NextTimeItemAdapter.ItemLongClickListener() {
-            @Override
-            public void onItemLongClick(Object nextTime) {
-                if(!(nextTime instanceof OptymoNextTime))return;
+        favoritesAdapter.setOnItemLongClickListener(nextTime -> {
+            if(!(nextTime instanceof OptymoNextTime))return;
 
-                OptymoNextTime n = (OptymoNextTime) nextTime;
+            OptymoNextTime n = (OptymoNextTime) nextTime;
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppTheme_CustomDialog);
-                builder.setCancelable(true);
-                builder.setTitle(R.string.dialog_del_fav_title);
-                builder.setMessage(getResources().getString(R.string.dialog_del_fav_message, n.directionToString()));
-                builder.setPositiveButton(R.string.dialog_yes,
-                        (dialog, which) -> {
-                            FavoritesController.getInstance().remove(n, MainActivity.this);
-                            refreshFavoriteList();
-                        });
-                builder.setNegativeButton(R.string.dialog_no, (dialog, which) -> {
-                });
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppTheme_CustomDialog);
+            builder.setCancelable(true);
+            builder.setTitle(R.string.dialog_del_fav_title);
+            builder.setMessage(getResources().getString(R.string.dialog_del_fav_message, n.directionToString()));
+            builder.setPositiveButton(R.string.dialog_yes,
+                    (dialog, which) -> {
+                        FavoritesController.getInstance().remove(n, MainActivity.this);
+                        refreshFavoriteList();
+                    });
+            builder.setNegativeButton(R.string.dialog_no, (dialog, which) -> {
+            });
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
 
         // search icon
@@ -223,6 +214,10 @@ public class MainActivity extends TopViewActivity {
 
         OptymoDirection[] directions = FavoritesController.getInstance().getFavorites();
 
+        Intent refreshIntent = new Intent(this.getApplicationContext(), NotificationService.class);
+        refreshIntent.setAction(NotificationService.REFRESH_ACTION);
+        startService(refreshIntent);
+
         // if you have no favorites
         // BUG FIX no favorite infinite refreshing
         if(directions.length == 0) {
@@ -237,11 +232,6 @@ public class MainActivity extends TopViewActivity {
         // we reset number of updated
         numberOfUpdated = 0;
         favoritesAdapter.clear();
-
-        // empty notification body
-        notificationController.resetNotificationBody();
-        // change title
-        notificationController.updateTitle(this.getString(R.string.update_pending));
 
         // tell user that update is pending
         lastUpdateText.setText(getResources().getString(R.string.update_pending));
@@ -341,7 +331,6 @@ public class MainActivity extends TopViewActivity {
                 Date date = new Date();
                 String dateFormatted = activity.dateFormat.format(date);
                 activity.lastUpdateText.setText(activity.getResources().getString(R.string.update_last, dateFormatted));
-                activity.notificationController.setUpdatedAtTitle(activity);
             }
         }
     }
