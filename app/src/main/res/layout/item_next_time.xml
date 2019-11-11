@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="5"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/component_padding"
+    android:paddingTop="@dimen/component_padding_half"
+    android:paddingEnd="@dimen/component_padding"
+    android:paddingBottom="@dimen/component_padding_half">
+
+    <LinearLayout
+        android:id="@+id/next_time_line_bg"
+        android:layout_width="43dp"
+        android:layout_height="28dp"
+        android:background="@color/colorLine1"
+        android:minHeight="26dp"
+        android:orientation="horizontal"
+        android:paddingLeft="13dp"
+        tools:ignore="RtlHardcoded,RtlSymmetry">
+
+        <TextView
+            android:id="@+id/next_time_line_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000000"
+            android:fontFamily="@font/nunito_extrabold"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="#FFFFFFFF"
+            android:textSize="17sp"
+            tools:text="1" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/next_time_line_name"
+        android:layout_width="0dp"
+        android:layout_height="28dp"
+        android:layout_weight="5"
+        android:ellipsize="end"
+        android:fontFamily="@font/nunito_light"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="0dp"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/component_content_font_size"
+        android:textStyle="bold"
+        tools:text="Sample text"
+        tools:ignore="RtlCompat" />
+
+    <TextView
+        android:id="@+id/next_time_time"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="0dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/nunito_regular"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:textAlignment="textEnd"
+        android:textColor="@android:color/black"
+        tools:text="7 min"
+        tools:ignore="RtlCompat" />
+
+</LinearLayout>

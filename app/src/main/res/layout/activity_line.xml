@@ -6,13 +6,15 @@
     android:layout_height="match_parent"
     android:gravity="center"
     tools:context=".controller.activities.LineActivity"
-    android:background="@color/colorBackground">
+    android:background="@color/colorBackground"
+    android:id="@+id/line_nestedscrollview">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/top_part_max_height"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:descendantFocusability="blocksDescendants">
 
         <include
             android:id="@+id/top_part"
@@ -28,15 +30,47 @@
             android:paddingStart="@dimen/padding_app"
             android:paddingEnd="@dimen/padding_app">
 
-            <TextView
-                android:id="@+id/line_main_title"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/bottom_title_margin"
-                android:fontFamily="@font/nunito_bold"
-                android:textColor="@color/colorOnPrimary"
-                android:textSize="@dimen/title_font_size"
-                tools:text="Sample text" />
+                android:gravity="top|left"
+                android:orientation="horizontal"
+                tools:ignore="RtlHardcoded">
+
+                <LinearLayout
+                    android:id="@+id/line_icon_bg"
+                    android:layout_width="48dp"
+                    android:layout_height="36dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="@dimen/component_padding"
+                    android:background="@color/colorLine1"
+                    android:orientation="horizontal"
+                    android:paddingLeft="12dp"
+                    tools:ignore="RtlHardcoded,RtlSymmetry">
+
+                    <TextView
+                        android:id="@+id/line_icon_number"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/colorLineBlackBackground"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:textColor="@color/colorLineOnBackground"
+                        android:textSize="23dp"
+                        tools:text="1" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/line_main_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_bold"
+                    android:textColor="@color/colorOnPrimary"
+                    android:textSize="@dimen/title_font_size"
+                    tools:text="Sample text" />
+            </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -57,11 +91,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/component_padding"
-                        android:fontFamily="@font/nunito_semibold"
+                        android:fontFamily="@font/nunito_bold"
                         android:paddingStart="@dimen/component_padding"
                         android:paddingEnd="@dimen/component_padding"
-                        android:text="@string/line_stops"
-                        android:textColor="#000000"
+                        android:text="@string/stops"
+                        android:textColor="@color/colorPrimaryOnElement"
                         android:textSize="20sp" />
 
                     <ListView

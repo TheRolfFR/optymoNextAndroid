@@ -39,6 +39,7 @@ public class OptymoStop implements Comparable<OptymoStop> {
         lines = newTable;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString() {
         return this.name;
@@ -107,11 +108,11 @@ public class OptymoStop implements Comparable<OptymoStop> {
         return result;
     }
 
-    public OptymoNextTime[] getNextTimes() {
+    public OptymoNextTime[] getNextTimes() throws IOException {
         return OptymoNetwork.getNextTimes(this.slug, 0);
     }
 
-    public OptymoNextTime[] getNextTimes(int lineFilter) {
+    public OptymoNextTime[] getNextTimes(int lineFilter) throws IOException {
         return OptymoNetwork.getNextTimes(this.slug, lineFilter);
     }
 }

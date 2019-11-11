@@ -343,21 +343,19 @@ public class OptymoNetwork {
         return result;
     }
 
-    public static OptymoNextTime[] getNextTimes(String stopSlug) {
+    public static OptymoNextTime[] getNextTimes(String stopSlug) throws IOException {
         return getNextTimes(stopSlug, 0);
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static OptymoNextTime[] getNextTimes(String stopSlug, int lineFilter) {
+    public static OptymoNextTime[] getNextTimes(String stopSlug, int lineFilter) throws IOException {
         OptymoNextTime[] result = new OptymoNextTime[0];
 
         org.jsoup.nodes.Document doc;
         Elements errorTitle, directions, nextTimes, lines;
         Element title;
         doc = null;
-        try {
-            doc = Jsoup.connect("https://siv.optymo.fr/passage.php?ar=" + stopSlug + "&type=1").get();
-        } catch (IOException ignored) {}
+        doc = Jsoup.connect("https://siv.optymo.fr/passage.php?ar=" + stopSlug + "&type=1").get();
 
         if(doc != null) {
             errorTitle = doc.getElementsByTag("h3");

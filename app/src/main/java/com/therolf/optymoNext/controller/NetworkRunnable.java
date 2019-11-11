@@ -6,7 +6,8 @@ import android.os.AsyncTask;
 
 import com.therolf.optymoNextModel.OptymoNetwork;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+import java.lang.ref.WeakReference;
+
 public class NetworkRunnable implements Runnable {
 
     @SuppressLint("StaticFieldLeak")
@@ -17,7 +18,7 @@ public class NetworkRunnable implements Runnable {
     public static NetworkRunnable getInstance(OptymoNetwork.ProgressListener listener, Context context) {
         if(instance.generatedOnce)
             listener.OnGenerationEnd(true);
-        OptymoNetworkController.getInstance().setProgressListener(listener);
+        NetworkController.getInstance().setProgressListener(listener);
         return getInstance(context);
     }
 
@@ -30,17 +31,27 @@ public class NetworkRunnable implements Runnable {
     @Override
     public void run() {
         if(!generatedOnce) {
-            GenerationRequest gRequest = new GenerationRequest();
+            GenerationRequest gRequest = new GenerationRequest(this);
             gRequest.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             generatedOnce = true;
         }
     }
 
-    private class GenerationRequest extends AsyncTask<Void, Void, Void> {
+    private static class GenerationRequest extends AsyncTask<Void, Void, Void> {
+
+        private WeakReference<NetworkRunnable> activityReference;
+
+        GenerationRequest(NetworkRunnable runnable) {
+            this.activityReference = new WeakReference<>(runnable);
+        }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            OptymoNetworkController.getInstance().generate(context);
+            // get runnable
+            NetworkRunnable runnable = activityReference.get();
+            if (runnable == null) return null;
+
+            NetworkController.getInstance().generate(runnable.context);
             return null;
         }
     }

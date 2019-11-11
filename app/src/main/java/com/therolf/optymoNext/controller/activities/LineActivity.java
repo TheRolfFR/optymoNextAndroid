@@ -5,14 +5,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.OptymoNetworkController;
+import com.therolf.optymoNext.controller.NetworkController;
 import com.therolf.optymoNext.controller.Utility;
-import com.therolf.optymoNext.vue.adapters.OptymoStopAdapter;
+import com.therolf.optymoNext.vue.adapters.StopAdapter;
 import com.therolf.optymoNextModel.OptymoLine;
+import com.therolf.optymoNextModel.OptymoStop;
 
 public class LineActivity extends TopViewActivity {
 
@@ -29,22 +34,42 @@ public class LineActivity extends TopViewActivity {
         String lineName = getIntent().getStringExtra(LINE_NAME_KEY_DATA);
         int lineNumber = getIntent().getIntExtra(LINE_NUMBER_KEY_DATA, LINE_NUMBER_DEFAULT_VALUE);
 
-        if(OptymoNetworkController.getInstance().isGenerated() && lineNumber != LINE_NUMBER_DEFAULT_VALUE && lineName != null) {
-            OptymoLine line = OptymoNetworkController.getInstance().getLineByNumberAndName(lineNumber, lineName);
+        if(NetworkController.getInstance().isGenerated() && lineNumber != LINE_NUMBER_DEFAULT_VALUE && lineName != null) {
+            OptymoLine line = NetworkController.getInstance().getLineByNumberAndName(lineNumber, lineName);
 
             if(line != null) {
                 notFinishedWell = false;
 
-                ((TextView) findViewById(R.id.line_main_title)).setText("" + line.getNumber() + " - " + line.getName());
+                // update title
+                ((TextView) findViewById(R.id.line_icon_number)).setText("" + line.getNumber());
+                int colorId = getResources().getIdentifier("colorLine" + line.getNumber(), "color", getPackageName());
+                findViewById(R.id.line_icon_bg).setBackgroundColor(ContextCompat.getColor(this, colorId));
+                ((TextView) findViewById(R.id.line_main_title)).setText(line.getName());
 
+                // update listview
                 ListView stopsListView = findViewById(R.id.line_stops_listview);
-                stopsListView.setAdapter(new OptymoStopAdapter(this, line.getStops()));
+                StopAdapter stopAdapter = new StopAdapter(this, line.getStops());
+                stopsListView.setAdapter(stopAdapter);
+                stopsListView.setOnItemClickListener((parent, view, position, id) -> {
+                    Object o = stopAdapter.getItem(position);
+//            Log.d("line", o.toString());
+                    if(o instanceof OptymoStop) {
+                        OptymoStop s = (OptymoStop) o;
+//                Log.d("line", s.toString());
+                        StopActivity.launchStopActivity(LineActivity.this, s.getSlug());
+                    }
+                });
                 Utility.setListViewHeightBasedOnChildren(stopsListView);
+
+                // scroll to top
+                NestedScrollView nestedScrollView = findViewById(R.id.line_nestedscrollview);
+                nestedScrollView.fullScroll(View.FOCUS_UP);
+                nestedScrollView.fullScroll(View.FOCUS_UP);
             }
         }
 
         if(notFinishedWell) {
-            Log.e("line", "I didn't find tour fucking line");
+            Log.e("line", "I didn't find your fucking line");
             finish();
         }
     }

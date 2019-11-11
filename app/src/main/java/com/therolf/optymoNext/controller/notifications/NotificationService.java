@@ -1,6 +1,5 @@
 package com.therolf.optymoNext.controller.notifications;
 
-import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -12,16 +11,18 @@ import com.therolf.optymoNextModel.OptymoDirection;
 import com.therolf.optymoNextModel.OptymoNetwork;
 import com.therolf.optymoNextModel.OptymoNextTime;
 
+import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class NotificationService extends IntentService {
 
+    public static final String REFRESH_ACTION = "refresh_action";
+    public static final String NEXT_SIX_GET = "next_six_get";
     private NotificationController notificationController = new NotificationController();
 
-    public static final String REFRESH_ACTION = "refresh_action";
-
     private int numberOfRequests;
-    private ArrayList<NotificationService.OptymoGetNextTime> lastRequests = new ArrayList<>();
+    private ArrayList<NextTimeRequest> lastRequests = new ArrayList<>();
 
     public NotificationService() {
         super("MyNotificationService");
@@ -29,64 +30,87 @@ public class NotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent workIntent) {
-
-        if(workIntent != null && workIntent.getAction() != null && workIntent.getAction().equals(REFRESH_ACTION)) {
-            refreshNotif();
+        if(workIntent != null && workIntent.getAction() != null) {
+            if(workIntent.getAction().equals(REFRESH_ACTION) || workIntent.getAction().equals(NEXT_SIX_GET)) {
+                handleAction(workIntent.getAction());
+            }
         }
     }
 
+    private void handleAction(String action) {
+        //  get the favorites
+        OptymoDirection[] fav = FavoritesController.getInstance().readFile(this).getFavorites();
+//        Log.d("optymo", "" + fav.length);
 
-    private void refreshNotif() {
+        // reset index if refresh
+        if(action.equals(REFRESH_ACTION))
+            OnBoot.setIndex(0);
+        else { // else its next
+            // increase index of 6
+            OnBoot.increaseIndex(6);
+//            Log.d("optymo", "" + OnBoot.getIndex());
 
-        // try to run notification
-        notificationController.run(this);
-
-        // get favorites
-        OptymoDirection[] favorites = FavoritesController.getInstance().readFile(this).getFavorites();
-
-//        Toast.makeText(this, favorites.length + " favorites", Toast.LENGTH_SHORT).show();
-
-        // cancel all remaining requests
-        while(lastRequests.size() > 0) {
-            NotificationService.OptymoGetNextTime request = lastRequests.get(0);
-            request.cancel(true);
-            lastRequests.remove(request);
+            // but reset if greater than favorites length
+            if(OnBoot.getIndex() >= fav.length) {
+                OnBoot.setIndex(0);
+            }
+//            Log.d("optymo", "" + OnBoot.getIndex());
         }
 
-        // empty notification body
-        notificationController.resetNotificationBody();
-        // change title to pending
-        notificationController.setNeverUpdatedTitle(this);
-
-        // reset number of requests
+        // reset requests
         numberOfRequests = 0;
 
+        // run and reset notification body and title
+        notificationController.run(this);
+        notificationController.setTitlePending(this);
+        notificationController.resetNotificationBody();
 
-        // start for each direction a request
-        NotificationService.OptymoGetNextTime tmp;
-        for(OptymoDirection favorite : favorites) {
-            tmp = new NotificationService.OptymoGetNextTime();
-            lastRequests.add(tmp);
-            tmp.execute(favorite);
+        // clear requests
+        while(lastRequests.size() > 0) {
+            NextTimeRequest request = lastRequests.get(0);
+            request.cancel(true);
+            lastRequests.clear();
+        }
+
+        // make maximum 6 requests
+        int rNumber = 0;
+        int startIndex = OnBoot.getIndex();
+        while (startIndex + rNumber < fav.length && rNumber < 6) {
+
+            // make a new request
+            NextTimeRequest request = new NextTimeRequest(this);
+            request.execute(fav[startIndex + rNumber]);
+            lastRequests.add(request);
+
+            ++rNumber;
         }
     }
+
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        refreshNotif();
     }
 
-    @SuppressLint("StaticFieldLeak")
-    class OptymoGetNextTime extends AsyncTask<OptymoDirection, Void, OptymoNextTime> {
+    private static class NextTimeRequest extends AsyncTask<OptymoDirection, Void, OptymoNextTime> {
+
+        private WeakReference<NotificationService> reference;
+
+        NextTimeRequest(NotificationService service) {
+            this.reference = new WeakReference<>(service);
+        }
 
         @Override
         protected OptymoNextTime doInBackground(OptymoDirection... optymoDirections) {
             OptymoNextTime result = null;
             OptymoNextTime latestResult = null;
 
-            OptymoNextTime[] nextTimes = OptymoNetwork.getNextTimes(optymoDirections[0].getStopSlug());
+            OptymoNextTime[] nextTimes = new OptymoNextTime[0];
+            try {
+                nextTimes = OptymoNetwork.getNextTimes(optymoDirections[0].getStopSlug());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             int i = 0;
             while (i < nextTimes.length && result == null) {
                 if (optymoDirections[0].toString().equals(nextTimes[i].directionToString()))
@@ -113,12 +137,17 @@ public class NotificationService extends IntentService {
         protected void onPostExecute(OptymoNextTime nextTime) {
             super.onPostExecute(nextTime);
 
-            numberOfRequests++;
-            if (numberOfRequests >= lastRequests.size())
-                notificationController.setUpdatedAtTitle(NotificationService.this);
+            // get activity
+            NotificationService service = reference.get();
+            if (service == null) return;
 
-            // update notification
-            notificationController.appendToNotificationBody(nextTime.toString());
+            service.numberOfRequests++;
+            if (service.numberOfRequests >= service.lastRequests.size())
+                service.notificationController.setUpdatedAtTitle(service);
+
+            // add line to notification if first 6
+            if(service.numberOfRequests < 7)
+                service.notificationController.appendToNotificationBody(nextTime.toString());
         }
 
     }

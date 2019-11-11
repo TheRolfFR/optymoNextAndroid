@@ -1,29 +1,23 @@
 package com.therolf.optymoNext.controller.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,25 +27,25 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.therolf.optymoNext.R;
 import com.therolf.optymoNext.controller.FavoritesController;
-import com.therolf.optymoNext.controller.OptymoNetworkController;
-import com.therolf.optymoNext.controller.SearchController;
+import com.therolf.optymoNext.controller.NetworkController;
 import com.therolf.optymoNext.controller.Utility;
+import com.therolf.optymoNext.controller.activities.Main.DialogController;
 import com.therolf.optymoNext.controller.activities.Main.SnackBarController;
 import com.therolf.optymoNext.controller.notifications.NotificationController;
-import com.therolf.optymoNext.vue.adapters.OptymoNextTimeAdapter;
+import com.therolf.optymoNext.vue.adapters.LineNextTimeAdapter;
+import com.therolf.optymoNext.vue.adapters.LinePdfAdapter;
+import com.therolf.optymoNext.vue.adapters.NextTimeItemAdapter;
 import com.therolf.optymoNextModel.OptymoDirection;
 import com.therolf.optymoNextModel.OptymoNetwork;
 import com.therolf.optymoNextModel.OptymoNextTime;
 
+import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 
-
-@SuppressLint("StaticFieldLeak")
 @SuppressWarnings("unused")
 public class MainActivity extends TopViewActivity {
 
@@ -61,16 +55,13 @@ public class MainActivity extends TopViewActivity {
     private SwipeRefreshLayout refreshLayout;
     private TextView lastUpdateText;
 
-    private SearchController searchController;
+    private DialogController dialogController;
 
     // favorites
-    int numberOfUpdated = 0;
-    private ArrayList<OptymoGetNextTime> nextTimeRequests = new ArrayList<>();
-    private ArrayList<OptymoNextTime> nextTimes = new ArrayList<>();
-    private OptymoNextTimeAdapter favoritesAdapter;
+    private int numberOfUpdated = 0;
+    private ArrayList<NextTimeRequest> nextTimeRequests = new ArrayList<>();
+    private LineNextTimeAdapter favoritesAdapter;
     private DateFormat dateFormat;
-
-    private Dialog searchDialog;
 
     private static Intent addFavoriteActivity = null;
 
@@ -88,12 +79,18 @@ public class MainActivity extends TopViewActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_main, true);
-        OptymoNetworkController networkController = OptymoNetworkController.getInstance();
+        NetworkController networkController = NetworkController.getInstance();
         Log.e("lines number", "" + networkController.getLines().length);
+
+        // go to map
+        topLogoIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, MapActivity.class);
+            startActivity(intent);
+        });
 
         // favorite list (BEFORE refreshFavoriteList)
         favoriteList = findViewById(R.id.main_favorite_next_stops);
-        favoritesAdapter = new OptymoNextTimeAdapter(this, nextTimes);
+        favoritesAdapter = new LineNextTimeAdapter(this, favoriteList);
         favoriteList.setAdapter(favoritesAdapter);
 
         // refresh layout
@@ -104,7 +101,7 @@ public class MainActivity extends TopViewActivity {
                 R.color.colorPrimaryOnElement);
 
         // last updated text (BEFORE refreshFavoriteList)
-        lastUpdateText = findViewById(R.id.main_last_update_text);
+        lastUpdateText = findViewById(R.id.main_favorites_last_update_text);
 
         // date format
         dateFormat = new SimpleDateFormat("HH:mm", getResources().getConfiguration().locale);
@@ -119,24 +116,28 @@ public class MainActivity extends TopViewActivity {
         });
 
         // favoriteList on long press delete element
-        favoriteList.setOnItemLongClickListener((adapterView, view, position, id) -> {
-            final int pos = position;
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppTheme_CustomDialog);
-            builder.setCancelable(true);
-            builder.setTitle(R.string.dialog_del_fav_title);
-            builder.setMessage(getResources().getString(R.string.dialog_del_fav_message, nextTimes.get(pos).directionToString()));
-            builder.setPositiveButton(R.string.dialog_yes,
-                    (dialog, which) -> {
-                        FavoritesController.getInstance().remove(nextTimes.get(pos), MainActivity.this);
-                        refreshFavoriteList();
-                    });
-            builder.setNegativeButton(R.string.dialog_no, (dialog, which) -> {
-            });
+        favoritesAdapter.setOnItemLongClickListener(new NextTimeItemAdapter.ItemLongClickListener() {
+            @Override
+            public void onItemLongClick(Object nextTime) {
+                if(!(nextTime instanceof OptymoNextTime))return;
 
-            AlertDialog dialog = builder.create();
-            dialog.show();
+                OptymoNextTime n = (OptymoNextTime) nextTime;
 
-            return true;
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppTheme_CustomDialog);
+                builder.setCancelable(true);
+                builder.setTitle(R.string.dialog_del_fav_title);
+                builder.setMessage(getResources().getString(R.string.dialog_del_fav_message, n.directionToString()));
+                builder.setPositiveButton(R.string.dialog_yes,
+                        (dialog, which) -> {
+                            FavoritesController.getInstance().remove(n, MainActivity.this);
+                            refreshFavoriteList();
+                        });
+                builder.setNegativeButton(R.string.dialog_no, (dialog, which) -> {
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
         });
 
         // search icon
@@ -153,42 +154,74 @@ public class MainActivity extends TopViewActivity {
         });
 
         // search part
-        searchDialog = new Dialog(this);
-        setMargins(searchDialog, 0, 0, 0, 0);
-        searchDialog.setContentView(R.layout.dialog_search);
-        Window window = searchDialog.getWindow();
-        if(window != null) {
-            WindowManager.LayoutParams wlp = window.getAttributes();
-            wlp.gravity = Gravity.TOP;
-            window.setAttributes(wlp);
-            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
-        // search part
         ImageView searchButton = findViewById(R.id.top_search_icon);
         searchButton.setEnabled(false);
-        searchButton.setOnClickListener(view -> {
-            searchDialog.show();
-            searchDialog.findViewById(R.id.dialog_search_search_input).setFocusableInTouchMode(true);
-            searchDialog.findViewById(R.id.dialog_search_search_input).requestFocus();
-        });
-        // initialize search controller
-        Activity ac = this;
-        searchController = new SearchController(
-                searchDialog.findViewById(R.id.dialog_search_search_input),
-                searchDialog.findViewById(R.id.dialog_search_search_or_remove_button),
-                searchDialog.findViewById(R.id.dialog_search_line_list_view),
-                searchDialog.findViewById(R.id.dialog_search_stop_list_view),
-                ac);
+        searchButton.setOnClickListener(view -> dialogController = new DialogController(MainActivity.this));
 
         // snackbar
         SnackBarController.run(this, searchButton, fab);
+
+        GridView gridView = findViewById(R.id.main_lines_pdf_gridview);
+        LinePdfAdapter.LinePdf[] arr = new LinePdfAdapter.LinePdf[] {
+                new LinePdfAdapter.LinePdf(1, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne-1_2019_09.pdf"),
+                new LinePdfAdapter.LinePdf(2, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne-2_2019_09.pdf"),
+                new LinePdfAdapter.LinePdf(3, "https://www.optymo.fr/wp-content/uploads/2019/10/fiche_web_ligne-3_2019_08.pdf"),
+                new LinePdfAdapter.LinePdf(4, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_4_2019_08.pdf"),
+                new LinePdfAdapter.LinePdf(5, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_5_2019_08.pdf"),
+                new LinePdfAdapter.LinePdf(8, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_8_2019_08.pdf"),
+                new LinePdfAdapter.LinePdf(9, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_9_2019_08.pdf")
+        };
+        gridView.setAdapter(new LinePdfAdapter(arr, this));
+        gridView.setOnItemClickListener((parent, view, position, id) -> {
+            Uri uri = Uri.parse(arr[position].getPdfUrl());
+            try
+            {
+                Intent intentUrl = new Intent(Intent.ACTION_VIEW);
+                intentUrl.setDataAndType(uri, "application/pdf");
+                intentUrl.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intentUrl);
+            }
+            catch (ActivityNotFoundException e)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppTheme_CustomDialog);
+                builder.setCancelable(true);
+                builder.setTitle(R.string.dialog_download_pdf_title);
+                builder.setMessage(R.string.dialog_download_pdf_content);
+                builder.setPositiveButton(R.string.dialog_yes,
+                        (dialog, which) -> {
+                            Intent intentUrl = new Intent(Intent.ACTION_VIEW);
+                            intentUrl.setData(uri);
+                            startActivity(intentUrl);
+                        });
+                builder.setNegativeButton(R.string.dialog_cancel, (dialog, which) -> {
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
+        TextView madeBy = findViewById(R.id.main_made_by);
+        String s = getString(R.string.main_made_by_text) + "\n" + getString(R.string.main_made_by_website);
+        SpannableString ss = new SpannableString(s);
+        ClickableSpan website = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(getString(R.string.main_made_by_website)));
+                startActivity(intent);
+            }
+        };
+        ss.setSpan(website, getString(R.string.main_made_by_text).length(), s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimaryDark)), getString(R.string.main_made_by_text).length(), s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        madeBy.setText(ss);
+        madeBy.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private void refreshFavoriteList() {
         Toast.makeText(this, R.string.main_toast_loading_favorites, Toast.LENGTH_SHORT).show();
 
         OptymoDirection[] directions = FavoritesController.getInstance().getFavorites();
-        System.out.println(Arrays.toString(directions));
 
         // if you have no favorites
         // BUG FIX no favorite infinite refreshing
@@ -203,7 +236,7 @@ public class MainActivity extends TopViewActivity {
 
         // we reset number of updated
         numberOfUpdated = 0;
-        nextTimes.clear();
+        favoritesAdapter.clear();
 
         // empty notification body
         notificationController.resetNotificationBody();
@@ -215,7 +248,7 @@ public class MainActivity extends TopViewActivity {
 
         // we add all the new favorites
         // 1. Stop the remaining requests
-        OptymoGetNextTime tmp;
+        NextTimeRequest tmp;
         while (nextTimeRequests.size() > 0){
             tmp = nextTimeRequests.get(0);
             if(tmp != null) {
@@ -227,7 +260,7 @@ public class MainActivity extends TopViewActivity {
         // 2. we add and make a request for all favorites
         for(OptymoDirection direction : directions) {
             // create a new request
-            tmp = new OptymoGetNextTime();
+            tmp = new NextTimeRequest(this);
             // save the new request
             nextTimeRequests.add(tmp);
             // execute the new request
@@ -247,13 +280,25 @@ public class MainActivity extends TopViewActivity {
         Utility.setListViewHeightBasedOnChildren(favoriteList);
     }
 
-    class OptymoGetNextTime extends AsyncTask<OptymoDirection, Void, OptymoNextTime> {
+    private static class NextTimeRequest extends AsyncTask<OptymoDirection, Void, OptymoNextTime> {
+
+        private WeakReference<MainActivity> reference;
+
+        NextTimeRequest(MainActivity activity) {
+            this.reference = new WeakReference<>(activity);
+        }
+
         @Override
         protected OptymoNextTime doInBackground(OptymoDirection... optymoDirections) {
             OptymoNextTime result = null;
             OptymoNextTime latestResult = null;
 
-            OptymoNextTime[]nextTimes = OptymoNetwork.getNextTimes(optymoDirections[0].getStopSlug());
+            OptymoNextTime[]nextTimes = new OptymoNextTime[0];
+            try {
+                nextTimes = OptymoNetwork.getNextTimes(optymoDirections[0].getStopSlug());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             int i = 0;
             while(i < nextTimes.length && result == null) {
                 if(optymoDirections[0].toString().equals(nextTimes[i].directionToString()))
@@ -269,7 +314,7 @@ public class MainActivity extends TopViewActivity {
             if(result == null) {
                 String nullResult = OptymoNextTime.NULL_TIME_VALUE;
                 if(latestResult != null)
-                    nullResult = "> " + latestResult.getNextTime();
+                    nullResult = OptymoNextTime.buildGreaterString(latestResult);
                 result = new OptymoNextTime(optymoDirections[0].getLineNumber(), optymoDirections[0].getDirection(), optymoDirections[0].getStopName(), optymoDirections[0].getStopSlug(), nullResult);
             }
 
@@ -280,106 +325,24 @@ public class MainActivity extends TopViewActivity {
         protected void onPostExecute(OptymoNextTime nextTime) {
             super.onPostExecute(nextTime);
 
+            // get activity
+            MainActivity activity = reference.get();
+            if (activity == null || activity.isFinishing()) return;
+
             // we increase the number augmented favorites;
-            numberOfUpdated++;
+            activity.numberOfUpdated++;
             if(nextTime != null)
-                nextTimes.add(nextTime);
+                activity.favoritesAdapter.addNextTime(activity, nextTime);
 
             // we possibly hide the reload button
-            if(numberOfUpdated >= nextTimeRequests.size()) {
-                refreshLayout.setRefreshing(false);
+            if(activity.numberOfUpdated >= activity.nextTimeRequests.size()) {
+                activity.refreshLayout.setRefreshing(false);
 
                 Date date = new Date();
-                String dateFormatted = dateFormat.format(date);
-                lastUpdateText.setText(getResources().getString(R.string.update_last, dateFormatted));
-                notificationController.setUpdatedAtTitle(MainActivity.this);
+                String dateFormatted = activity.dateFormat.format(date);
+                activity.lastUpdateText.setText(activity.getResources().getString(R.string.update_last, dateFormatted));
+                activity.notificationController.setUpdatedAtTitle(activity);
             }
-            Log.d("nope", "Loaded favorite " + numberOfUpdated + "/" + nextTimeRequests.size() + " " + nextTime + " " + nextTimes.size());
-//            Toast.makeText(MainActivity.this, "Loaded favorite " + numberOfUpdated + "/" + nextTimeRequests.size() + " " + nextTime, Toast.LENGTH_SHORT).show();
-
-            // sort nextTimes by time
-            Collections.sort(nextTimes);
-            notificationController.updateBody(nextTimes);
-
-            // update data
-            favoritesAdapter.notifyDataSetChanged();
-            MainActivity.this.updateListHeight();
         }
-    }
-
-
-    @SuppressLint("RtlHardcoded")
-    public static Dialog setMargins(Dialog dialog, int marginLeft, int marginTop, int marginRight, int marginBottom )
-    {
-        Window window = dialog.getWindow();
-        if ( window == null )
-        {
-            // dialog window is not available, cannot apply margins
-            return dialog;
-        }
-        Context context = dialog.getContext();
-
-        // set dialog to fullscreen
-        RelativeLayout root = new RelativeLayout( context );
-        root.setLayoutParams( new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT ) );
-        dialog.requestWindowFeature( Window.FEATURE_NO_TITLE );
-        dialog.setContentView( root );
-        // set background to get rid of additional margins
-        window.setBackgroundDrawable( new ColorDrawable( Color.WHITE ) );
-
-        // apply left and top margin directly
-        window.setGravity( Gravity.LEFT | Gravity.TOP );
-        WindowManager.LayoutParams attributes = window.getAttributes();
-        attributes.x = marginLeft;
-        attributes.y = marginTop;
-        window.setAttributes( attributes );
-
-        // set right and bottom margin implicitly by calculating width and height of dialog
-        Point displaySize = getDisplayDimensions( context );
-        int width = displaySize.x - marginLeft - marginRight;
-        int height = displaySize.y - marginTop - marginBottom;
-        window.setLayout( width, height );
-
-        return dialog;
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @NonNull
-    public static Point getDisplayDimensions( Context context )
-    {
-        WindowManager wm = ( WindowManager ) context.getSystemService( Context.WINDOW_SERVICE );
-        Display display = wm.getDefaultDisplay();
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        display.getMetrics( metrics );
-        int screenWidth = metrics.widthPixels;
-        int screenHeight = metrics.heightPixels;
-
-        // find out if status bar has already been subtracted from screenHeight
-        display.getRealMetrics( metrics );
-        int physicalHeight = metrics.heightPixels;
-        int statusBarHeight = getStatusBarHeight( context );
-        int navigationBarHeight = getNavigationBarHeight( context );
-        int heightDelta = physicalHeight - screenHeight;
-        if ( heightDelta == 0 || heightDelta == navigationBarHeight )
-        {
-            screenHeight -= statusBarHeight;
-        }
-
-        return new Point( screenWidth, screenHeight );
-    }
-
-    public static int getStatusBarHeight( Context context )
-    {
-        Resources resources = context.getResources();
-        int resourceId = resources.getIdentifier( "status_bar_height", "dimen", "android" );
-        return ( resourceId > 0 ) ? resources.getDimensionPixelSize( resourceId ) : 0;
-    }
-
-    public static int getNavigationBarHeight( Context context )
-    {
-        Resources resources = context.getResources();
-        int resourceId = resources.getIdentifier( "navigation_bar_height", "dimen", "android" );
-        return ( resourceId > 0 ) ? resources.getDimensionPixelSize( resourceId ) : 0;
     }
 }

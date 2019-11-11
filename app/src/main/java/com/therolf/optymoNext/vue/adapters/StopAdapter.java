@@ -15,9 +15,9 @@ import com.therolf.optymoNext.R;
 import com.therolf.optymoNextModel.OptymoStop;
 
 @SuppressWarnings("unused")
-public class OptymoStopAdapter extends BaseAdapter {
+public class StopAdapter extends BaseAdapter {
 
-    private static final String TAG = "OptymoStopAdapter";
+    private static final String TAG = "StopAdapter";
 
     private Context context;
     private OptymoStop[] nextStops;
@@ -26,7 +26,7 @@ public class OptymoStopAdapter extends BaseAdapter {
         this.nextStops = arr;
     }
 
-    public OptymoStopAdapter(@NonNull Context context, OptymoStop[] nextStops) {
+    public StopAdapter(@NonNull Context context, OptymoStop[] nextStops) {
         this.context = context;
         this.nextStops = nextStops;
     }

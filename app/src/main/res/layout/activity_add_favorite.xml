@@ -43,8 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/component_vertical_margin"
                 android:background="@color/elementBackground"
-                app:cardCornerRadius="@dimen/component_border_radius"
-                app:cardElevation="@dimen/add_fav_elevation">
+                app:cardCornerRadius="@dimen/component_border_radius">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -81,14 +80,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/component_vertical_margin"
                 android:background="@color/elementBackground"
-                app:cardCornerRadius="@dimen/component_border_radius"
-                app:cardElevation="@dimen/add_fav_elevation">
+                app:cardCornerRadius="@dimen/component_border_radius">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:padding="@dimen/component_padding">
+                    android:paddingTop="@dimen/component_padding"
+                    android:paddingBottom="@dimen/component_padding">
 
                     <TextView
                         android:id="@+id/add_step2_text"
@@ -96,6 +95,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/component_padding"
                         android:fontFamily="@font/nunito_semibold"
+                        android:paddingStart="@dimen/component_padding"
+                        android:paddingEnd="@dimen/component_padding"
                         android:text="@string/add_step_2"
                         android:textColor="#000000"
                         android:textSize="20sp" />
@@ -111,19 +112,27 @@
 
             </androidx.cardview.widget.CardView>
 
-            <Button
-                android:id="@+id/add_button"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/add_fav_button_height"
-                android:layout_marginBottom="@dimen/padding_app"
-                android:background="@drawable/element_background"
-                android:elevation="@dimen/add_fav_elevation"
-                android:fontFamily="@font/nunito_extrabold"
-                android:text="@string/add_button_text"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp"
-                tools:text="ADD" />
+                android:layout_marginBottom="@dimen/component_vertical_margin"
+                android:background="@color/elementBackground"
+                app:cardCornerRadius="@dimen/component_border_radius"
+                android:padding="0dp">
+
+                <Button
+                    android:id="@+id/add_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/add_fav_button_height"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:text="@string/add_button_text"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp"
+                    tools:text="ADD" />
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
+
     </LinearLayout>
 </ScrollView>

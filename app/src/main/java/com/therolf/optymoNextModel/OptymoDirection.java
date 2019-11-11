@@ -1,6 +1,6 @@
 package com.therolf.optymoNextModel;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "NullableProblems"})
 public class OptymoDirection {
     private int lineNumber;
     private String direction;
@@ -33,6 +33,10 @@ public class OptymoDirection {
     @Override
     public String toString() {
         return "[" + lineNumber + "] " + stopName + " - Dir. " + direction;
+    }
+
+    public String getLineToString() {
+        return "[" + lineNumber + "] " + direction;
     }
 
     @Override

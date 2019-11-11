@@ -14,14 +14,14 @@ import androidx.annotation.Nullable;
 import com.therolf.optymoNextModel.OptymoDirection;
 
 @SuppressWarnings("unused")
-public class OptymoDirectionAdapter extends BaseAdapter {
+public class DirectionAdapter extends BaseAdapter {
 
-    private static final String TAG = "OptymoStopAdapter";
+    private static final String TAG = "StopAdapter";
 
     private Context context;
     private OptymoDirection[] directions;
 
-    public OptymoDirectionAdapter(@NonNull Context context, OptymoDirection[] directions) {
+    public DirectionAdapter(@NonNull Context context, OptymoDirection[] directions) {
         this.context = context;
         this.directions = directions;
     }

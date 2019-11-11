@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.util.Objects;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class OptymoNetworkController {
+public class NetworkController {
 
     private static final String TAG = "NetworkGen";
 
@@ -23,13 +23,13 @@ public class OptymoNetworkController {
 
     private OptymoNetwork.ProgressListener progressListener;
 
-    private static OptymoNetworkController networkController = new OptymoNetworkController();
+    private static NetworkController networkController = new NetworkController();
 
-    public static OptymoNetworkController getInstance() {
+    public static NetworkController getInstance() {
         return networkController;
     }
 
-    private OptymoNetworkController() {
+    private NetworkController() {
         this.jsonFileName = "stops.json";
         network = new OptymoNetwork();
     }

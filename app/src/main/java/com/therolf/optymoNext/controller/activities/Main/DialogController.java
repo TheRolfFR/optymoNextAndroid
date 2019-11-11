@@ -1,27 +1,40 @@
-package com.therolf.optymoNext.controller;
+package com.therolf.optymoNext.controller.activities.Main;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import androidx.core.widget.NestedScrollView;
+
 import com.therolf.optymoNext.R;
+import com.therolf.optymoNext.controller.NetworkController;
+import com.therolf.optymoNext.controller.Utility;
 import com.therolf.optymoNext.controller.activities.LineActivity;
 import com.therolf.optymoNext.controller.activities.StopActivity;
-import com.therolf.optymoNext.vue.adapters.OptymoLineAdapter;
-import com.therolf.optymoNext.vue.adapters.OptymoStopAdapter;
+import com.therolf.optymoNext.vue.adapters.LineAdapter;
+import com.therolf.optymoNext.vue.adapters.StopAdapter;
 import com.therolf.optymoNextModel.OptymoLine;
 import com.therolf.optymoNextModel.OptymoStop;
 
 import java.util.ArrayList;
 
-public class SearchController implements TextWatcher {
-    Activity activity;
+public class DialogController implements TextWatcher {
+    private Activity activity;
+
+    private Dialog searchDialog;
 
     private EditText searchInput;
 
@@ -29,24 +42,45 @@ public class SearchController implements TextWatcher {
     private Drawable searchDrawable;
     private Drawable closeDrawable;
 
+    private NestedScrollView searchResultsView;
+
+    private LinearLayout stopsResultLayout;
     private ArrayList<OptymoStop> stopsResultsList = new ArrayList<>();
-    private OptymoStopAdapter stopsResultsAdapter;
+    private StopAdapter stopsResultsAdapter;
     private ListView stopsResultListView;
 
+    private LinearLayout linesResultLayout;
     private ArrayList<OptymoLine> linesResultsList = new ArrayList<>();
-    private OptymoLineAdapter linesResultsAdapter;
+    private LineAdapter linesResultsAdapter;
     private ListView linesResultListView;
 
     private boolean searching;
+    private boolean resultFound;
 
     @SuppressWarnings("unused")
-    public SearchController(EditText searchInput, ImageView searchIcon, ListView linesResultListView, ListView stopsResultListView, Activity context) {
+    public DialogController(Activity context) {
+
+        // search part
+        searchDialog = new Dialog(context);
+        Utility.setMargins(searchDialog, 0, 0, 0, 0);
+        searchDialog.setContentView(R.layout.dialog_search);
+        Window window = searchDialog.getWindow();
+        if(window != null) {
+            WindowManager.LayoutParams wlp = window.getAttributes();
+            wlp.gravity = Gravity.TOP;
+            window.setAttributes(wlp);
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
         this.activity = context;
 
-        this.searchInput = searchInput;
-        this.searchIcon = searchIcon;
-        this.stopsResultListView = stopsResultListView;
-        this.linesResultListView = linesResultListView;
+        this.searchInput = searchDialog.findViewById(R.id.dialog_search_search_input);
+        this.searchIcon = searchDialog.findViewById(R.id.dialog_search_search_or_remove_button);
+        this.searchResultsView = searchDialog.findViewById(R.id.dialog_search_results);
+        this.stopsResultLayout = searchDialog.findViewById(R.id.dialog_search_stops_results);
+        this.linesResultLayout = searchDialog.findViewById(R.id.dialog_search_lines_results);
+        this.stopsResultListView = searchDialog.findViewById(R.id.dialog_search_stop_list_view);
+        this.linesResultListView = searchDialog.findViewById(R.id.dialog_search_line_list_view);
 
         // set search / close drawable for image view
         this.searchDrawable = this.searchIcon.getDrawable();
@@ -56,8 +90,8 @@ public class SearchController implements TextWatcher {
         this.searchInput.addTextChangedListener(this);
 
         // initialize adapters with data
-        this.stopsResultsAdapter = new OptymoStopAdapter(context, new OptymoStop[0]);
-        this.linesResultsAdapter = new OptymoLineAdapter(context, new OptymoLine[0]);
+        this.stopsResultsAdapter = new StopAdapter(context, new OptymoStop[0]);
+        this.linesResultsAdapter = new LineAdapter(context, new OptymoLine[0]);
 
         // set adapters to lists
         this.stopsResultListView.setAdapter(this.stopsResultsAdapter);
@@ -65,7 +99,7 @@ public class SearchController implements TextWatcher {
 
         // set on item click listeners
         this.stopsResultListView.setOnItemClickListener((parent, view, position, id) -> {
-            Object o = SearchController.this.stopsResultsAdapter.getItem(position);
+            Object o = DialogController.this.stopsResultsAdapter.getItem(position);
 //            Log.d("search", o.toString());
             if(o instanceof OptymoStop) {
                 OptymoStop s = (OptymoStop) o;
@@ -74,7 +108,7 @@ public class SearchController implements TextWatcher {
             }
         });
         this.linesResultListView.setOnItemClickListener((parent, view, position, id) -> {
-            Object o = SearchController.this.linesResultsAdapter.getItem(position);
+            Object o = DialogController.this.linesResultsAdapter.getItem(position);
             Log.d("search", o.toString());
             if(o instanceof OptymoLine) {
                 OptymoLine l = (OptymoLine) o;
@@ -84,14 +118,20 @@ public class SearchController implements TextWatcher {
         });
 
         // and hide completely
-        this.stopsResultListView.setVisibility(View.GONE);
-        this.linesResultListView.setVisibility(View.GONE);
+        this.searchResultsView.setVisibility(View.GONE);
+        this.stopsResultLayout.setVisibility(View.GONE);
+        this.stopsResultLayout.setVisibility(View.GONE);
 
         // set icon click adapter
         this.searchIcon.setOnClickListener(view -> {
             if(this.searchInput.getText().length() > 0)
                 this.searchInput.setText("");
         });
+
+        // show and make focus
+        searchDialog.show();
+        searchDialog.findViewById(R.id.dialog_search_search_input).setFocusableInTouchMode(true);
+        searchDialog.findViewById(R.id.dialog_search_search_input).requestFocus();
     }
 
     private void search(String search) {
@@ -99,18 +139,19 @@ public class SearchController implements TextWatcher {
             search = search.toLowerCase();
 //            Log.d("search", search);
             searching = true;
+            resultFound = false;
 
-            if (search.length() > 1 || (search.length() == 1 && search.substring(0, 1).matches("\\d"))) {
+            if (search.length() > 0) {
                 // change icon drawable according to input
                 searchIcon.setImageDrawable(closeDrawable);
 
                 // if the network is generated
-                if (OptymoNetworkController.getInstance().isGenerated()) {
+                if (NetworkController.getInstance().isGenerated()) {
 //                    Log.d("search", "generated network");
                     // empty the previous array list
                     this.stopsResultsList.clear();
                     // get the stops starting with search
-                    OptymoStop[] stops = OptymoNetworkController.getInstance().getStops();
+                    OptymoStop[] stops = NetworkController.getInstance().getStops();
                     for (OptymoStop s : stops) {
                         if (s.getName().toLowerCase().startsWith(search))
                             this.stopsResultsList.add(s);
@@ -119,17 +160,19 @@ public class SearchController implements TextWatcher {
                     OptymoStop[] stopResults = this.stopsResultsList.toArray(new OptymoStop[0]);
                     this.stopsResultsAdapter.setData(stopResults);
                     if(stopResults.length > 0)
-                        this.stopsResultListView.setVisibility(View.VISIBLE);
+                        this.stopsResultLayout.setVisibility(View.VISIBLE);
                     else
-                        this.stopsResultListView.setVisibility(View.GONE);
+                        this.stopsResultLayout.setVisibility(View.GONE);
 
-//                    Log.d("search", "found " + this.stopsResults.length + " stops");
+                    // we found a result
+                    if(this.stopsResultsList.size() > 0)
+                        resultFound = true;
 
                     // empty the previous array list
                     this.linesResultsList.clear();
 
                     // get the line starting with search
-                    OptymoLine[] lines = OptymoNetworkController.getInstance().getLines();
+                    OptymoLine[] lines = NetworkController.getInstance().getLines();
                     for (OptymoLine l : lines) {
                         if (l.getName().toLowerCase().contains(search) || (search.length() == 1 && search.substring(0, 1).matches("\\d") && search.charAt(0) - '0' == l.getNumber()))
                             this.linesResultsList.add(l);
@@ -138,11 +181,13 @@ public class SearchController implements TextWatcher {
                     OptymoLine[] lineResults = this.linesResultsList.toArray(new OptymoLine[0]);
                     this.linesResultsAdapter.setData(lineResults);
                     if(lineResults.length > 0)
-                        this.linesResultListView.setVisibility(View.VISIBLE);
+                        this.linesResultLayout.setVisibility(View.VISIBLE);
                     else
-                        this.linesResultListView.setVisibility(View.GONE);
+                        this.linesResultLayout.setVisibility(View.GONE);
 
 //                    Log.d("search", "found " + this.stopsResults.length + " lines");
+                    if(!resultFound && this.linesResultsList.size() > 0)
+                        resultFound = true;
 
                     // out of the if it will update the adapters
                 }
@@ -155,12 +200,18 @@ public class SearchController implements TextWatcher {
                 this.stopsResultsAdapter.setData(new OptymoStop[0]);
 
                 // hide completely
-                this.stopsResultListView.setVisibility(View.GONE);
-                this.linesResultListView.setVisibility(View.GONE);
+                this.stopsResultLayout.setVisibility(View.GONE);
+                this.linesResultLayout.setVisibility(View.GONE);
             }
 
             this.linesResultsAdapter.notifyDataSetChanged();
             this.stopsResultsAdapter.notifyDataSetChanged();
+
+            // if there is any result show it
+            if(resultFound)
+                searchResultsView.setVisibility(View.VISIBLE);
+            else
+                searchResultsView.setVisibility(View.GONE);
 
             // change utility size
             Utility.setListViewHeightBasedOnChildren(this.linesResultListView);

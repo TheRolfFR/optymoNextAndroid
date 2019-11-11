@@ -16,9 +16,9 @@ import com.therolf.optymoNext.R;
 import com.therolf.optymoNextModel.OptymoLine;
 
 @SuppressWarnings("unused")
-public class OptymoLineAdapter extends BaseAdapter {
+public class LineAdapter extends BaseAdapter {
 
-    private static final String TAG = "OptymoStopAdapter";
+    private static final String TAG = "StopAdapter";
 
     private Context context;
     private OptymoLine[] optymoLines;
@@ -27,7 +27,7 @@ public class OptymoLineAdapter extends BaseAdapter {
         this.optymoLines = arr;
     }
 
-    public OptymoLineAdapter(@NonNull Context context, OptymoLine[] optymoLines) {
+    public LineAdapter(@NonNull Context context, OptymoLine[] optymoLines) {
         this.context = context;
         this.optymoLines = optymoLines;
     }
@@ -51,14 +51,14 @@ public class OptymoLineAdapter extends BaseAdapter {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        convertView = inflater.inflate(R.layout.item_next_stop, parent, false);
+        convertView = inflater.inflate(R.layout.item_line, parent, false);
 
-        ((TextView) convertView.findViewById(R.id.next_el_line_number)).setText("" + optymoLines[position].getNumber());
-        ((TextView) convertView.findViewById(R.id.next_el_title)).setText("" + optymoLines[position].getName());
-        ((TextView) convertView.findViewById(R.id.next_el_time)).setText("");
+        ((TextView) convertView.findViewById(R.id.item_next_stop_number)).setText("" + optymoLines[position].getNumber());
+        ((TextView) convertView.findViewById(R.id.item_next_stop_main)).setText("" + optymoLines[position].getName());
+        ((TextView) convertView.findViewById(R.id.item_next_stop_time)).setText("");
 
         int id = context.getResources().getIdentifier("colorLine" + optymoLines[position].getNumber(), "color", context.getPackageName());
-        convertView.findViewById(R.id.next_el_line).setBackgroundColor(ContextCompat.getColor(context, id));
+        convertView.findViewById(R.id.item_next_stop_line_bg).setBackgroundColor(ContextCompat.getColor(context, id));
 
         return convertView;
     }

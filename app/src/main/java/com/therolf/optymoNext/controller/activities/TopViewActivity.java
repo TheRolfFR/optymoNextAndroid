@@ -12,6 +12,8 @@ import com.therolf.optymoNext.R;
 @SuppressWarnings({"unused", "SameParameterValue"})
 public abstract class TopViewActivity extends AppCompatActivity {
 
+    protected ImageView topLogoIcon;
+
     protected ImageView topSearchButton;
     protected ImageView topCloseButton;
 
@@ -22,6 +24,8 @@ public abstract class TopViewActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState, int viewID, boolean enableSearchIcon) {
         super.onCreate(savedInstanceState);
         setContentView(viewID);
+
+        topLogoIcon = findViewById(R.id.top_logo_icon);
 
         topSearchButton = findViewById(R.id.top_search_icon);
         topCloseButton = findViewById(R.id.top_close_icon);

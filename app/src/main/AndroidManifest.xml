@@ -15,11 +15,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".controller.activities.StopActivity"
+        android:usesCleartextTraffic="true"
+        tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
+        <activity android:name=".controller.activities.MapActivity"
             android:theme="@style/AppTheme.NoActionBar"  />
-        <activity android:name=".controller.activities.LineActivity"
-            android:theme="@style/AppTheme.NoActionBar"  />
+        <activity
+            android:name=".controller.activities.StopActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".controller.activities.LineActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".controller.activities.SplashScreenActivity"
             android:theme="@style/AppTheme.NoActionBar">

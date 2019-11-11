@@ -10,9 +10,9 @@ import android.widget.Toast;
 
 import com.therolf.optymoNext.R;
 import com.therolf.optymoNext.controller.FavoritesController;
-import com.therolf.optymoNext.controller.OptymoNetworkController;
-import com.therolf.optymoNext.vue.adapters.OptymoLineAdapter;
-import com.therolf.optymoNext.vue.adapters.OptymoStopAdapter;
+import com.therolf.optymoNext.controller.NetworkController;
+import com.therolf.optymoNext.vue.adapters.LineAdapter;
+import com.therolf.optymoNext.vue.adapters.StopAdapter;
 import com.therolf.optymoNextModel.OptymoDirection;
 import com.therolf.optymoNextModel.OptymoLine;
 import com.therolf.optymoNextModel.OptymoStop;
@@ -29,19 +29,19 @@ public class FavoritesActivity extends TopViewActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_add_favorite);
 
-        lines = OptymoNetworkController.getInstance().getLines();
+        lines = NetworkController.getInstance().getLines();
 
         final Spinner lineSpinner = findViewById(R.id.add_line_spinner);
         stopSpinner = findViewById(R.id.add_direction_spinner);
         Button addButton = findViewById(R.id.add_button);
 
-        lineSpinner.setAdapter(new OptymoLineAdapter(this, lines));
+        lineSpinner.setAdapter(new LineAdapter(this, lines));
 
         lineSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 stopsOfTheLine = lines[position].getStops();
-                stopSpinner.setAdapter(new OptymoStopAdapter(FavoritesActivity.this, stopsOfTheLine));
+                stopSpinner.setAdapter(new StopAdapter(FavoritesActivity.this, stopsOfTheLine));
             }
 
             @Override

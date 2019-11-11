@@ -28,14 +28,24 @@
     <string name="main_toast_loading_favorites">Loading favorites…</string>
     <string name="add_fav_toast_nb_of_fav">You have now %1$d favorites</string>
     <string name="dialog_del_fav_title">Are your sure?</string>
-    <string name="dialog_del_fav_message">Do you want to delete %1$s?</string>
+    <string name="dialog_del_fav_message">Are you sure you want to delete %1$s?</string>
     <string name="dialog_yes">yes</string>
     <string name="dialog_no">no</string>
     <string name="notification_refresh_button_text">Refresh</string>
     <string name="notification_content_text">Expand to see favorites</string>
     <string name="update_pending">Update pending…</string>
     <string name="dialog_search_input_hint">Search stop, line…</string>
-    <string name="line_stops">Stops</string>
+    <string name="stops">Stops</string>
     <string name="stop_next_stops">Next stops</string>
     <string name="stop_toast_loading_stop">Loading next times…</string>
+    <string name="notification_others_button_text">Others</string>
+    <string name="map_title">Map</string>
+    <string name="main_line_pdf_title">Lines PDFs</string>
+    <string name="lines">Lines</string>
+    <string name="main_made_by_text">App made by TheRolf</string>
+    <string name="main_made_by_website" translatable="false">https://therolf.fr</string>
+    <string name="dialog_download_pdf_content">We didn\'t find any PDF viewer. Do you want to downlaod it?</string>
+    <string name="dialog_download_pdf_title">No PDF viewer found</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="error_occured">An error occured. Please try later.</string>
 </resources>

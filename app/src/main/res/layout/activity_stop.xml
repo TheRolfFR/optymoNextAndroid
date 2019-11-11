@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/stop_refresh_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,72 +9,89 @@
     android:gravity="center"
     tools:context=".controller.activities.StopActivity"
     android:background="@color/colorBackground">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/top_part_max_height"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/top_part"
-            layout="@layout/top_part"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/top_part_height_no_padding" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingStart="@dimen/padding_app"
-            android:paddingEnd="@dimen/padding_app">
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/top_part_max_height"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/stop_main_title"
+            <include
+                android:id="@+id/top_part"
+                layout="@layout/top_part"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/bottom_title_margin"
-                android:fontFamily="@font/nunito_bold"
-                android:textColor="@color/colorOnPrimary"
-                android:textSize="@dimen/title_font_size"
-                tools:text="Sample text" />
+                android:layout_marginBottom="@dimen/top_part_height_no_padding" />
 
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/component_vertical_margin"
-                android:background="@color/elementBackground"
-                app:cardCornerRadius="@dimen/component_border_radius"
-                app:cardElevation="@dimen/add_fav_elevation">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/padding_app"
+                android:paddingEnd="@dimen/padding_app">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/stop_main_title"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/component_padding"
-                    android:paddingBottom="@dimen/component_padding">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/bottom_title_margin"
+                    android:fontFamily="@font/nunito_bold"
+                    android:textColor="@color/colorOnPrimary"
+                    android:textSize="@dimen/title_font_size"
+                    tools:text="Sample text" />
 
-                    <TextView
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/component_vertical_margin"
+                    android:background="@color/elementBackground"
+                    app:cardCornerRadius="@dimen/component_border_radius"
+                    app:cardElevation="@dimen/add_fav_elevation">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/component_padding"
-                        android:fontFamily="@font/nunito_semibold"
-                        android:paddingStart="@dimen/component_padding"
-                        android:paddingEnd="@dimen/component_padding"
-                        android:text="@string/stop_next_stops"
-                        android:textColor="#000000"
-                        android:textSize="20sp" />
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:paddingTop="@dimen/component_padding"
+                        android:paddingBottom="@dimen/component_padding">
 
-                    <ListView
-                        android:id="@+id/stop_nextstops_listview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/component_padding"
+                            android:fontFamily="@font/nunito_bold"
+                            android:paddingStart="@dimen/component_padding"
+                            android:paddingEnd="@dimen/component_padding"
+                            android:text="@string/stop_next_stops"
+                            android:textColor="@color/colorPrimaryOnElement"
+                            android:textSize="20sp" />
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/stop_error_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito_regular"
+                            android:paddingStart="@dimen/component_padding"
+                            android:paddingEnd="@dimen/component_padding"
+                            android:text="@string/error_occured"
+                            android:textColor="@color/colorOnBackground"
+                            android:textSize="18sp" />
 
-            </androidx.cardview.widget.CardView>
+                        <ListView
+                            android:id="@+id/stop_nextstops_listview"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
 
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+

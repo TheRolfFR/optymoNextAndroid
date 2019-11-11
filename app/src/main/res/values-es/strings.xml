@@ -6,8 +6,8 @@
     <string name="add_step_1">1. Eligir una línea</string>
     <string name="add_step_2">2. Eligir una parada de bus</string>
     <string name="content_description_background">Hermoso fondo</string>
-    <string name="dialog_del_fav_message">¿ Estás seguro de eleminar %1$s ?</string>
-    <string name="dialog_del_fav_title">¿ Estás seguro ?</string>
+    <string name="dialog_del_fav_message">¿Estás seguro que quieres eleminar %1$s?</string>
+    <string name="dialog_del_fav_title">¿Estás seguro?</string>
     <string name="favorites">Favoritos</string>
     <string name="icon_app_description">Icono de la applicación</string>
     <string name="main_all_stops">Todas las paradas</string>
@@ -30,7 +30,16 @@
     <string name="dialog_yes">si</string>
     <string name="update_pending">actualización en curso…</string>
     <string name="dialog_search_input_hint">Buscar una parada, una línea</string>
-    <string name="line_stops">Paradas</string>
+    <string name="stops">Paradas</string>
     <string name="stop_next_stops">Proximos horarios</string>
     <string name="stop_toast_loading_stop">Cargamento de los horarios…</string>
+    <string name="notification_others_button_text">Otros</string>
+    <string name="map_title">Mapa</string>
+    <string name="main_line_pdf_title">PDFs de las líneas</string>
+    <string name="lines">Líneas</string>
+    <string name="main_made_by_text">App hecha por TheRolf</string>
+    <string name="dialog_download_pdf_content">No se encontró ningún lector de PDF. ¿Queréis descargarlo?</string>
+    <string name="dialog_download_pdf_title">No se encontró ningún lector de PDF</string>
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="error_occured">Occurió un fallo. inténtelo más tarde.</string>
 </resources>
