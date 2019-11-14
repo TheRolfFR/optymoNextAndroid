@@ -161,8 +161,6 @@ public class OptymoNetwork {
                     .key(STOPS_ARRAY_KEY)
                         .array();
 
-            System.err.println(names.getLength());
-
             for(int i = 0; i < names.getLength(); i++) {
                 name = names.item(i).getTextContent();
                 cleanedName = Normalizer.normalize(name, Normalizer.Form.NFD).replaceAll("[^A-Za-z0-9]", "").toLowerCase();

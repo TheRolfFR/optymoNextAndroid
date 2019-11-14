@@ -1,72 +1,347 @@
 package com.therolf.optymoNext.controller.activities;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Base64;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.os.Handler;
+import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.therolf.optymoNext.R;
+import com.therolf.optymoNext.controller.NetworkController;
+import com.therolf.optymoNextModel.OptymoStop;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-public class MapActivity extends TopViewActivity {
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
-    @SuppressLint({"MissingSuperCall", "SetJavaScriptEnabled"})
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+
+    private int defaultIndex = 0;
+    private Map<String, Integer> zIndexes = new HashMap<String, Integer>() {{
+        put("5", 6);
+        put("3", 5);
+        put("2", 4);
+        put("8", 3);
+        put("4", 2);
+        put("1", 1);
+    }};
+
+    private GoogleMap googleMap;
+    private ArrayList<Marker> busMarkers = new ArrayList<>();
+    private BitmapDescriptor busIcon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState, R.layout.activity_map);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_map);
 
-        WebView myWebView = findViewById(R.id.map_webview);
+        // close button
+        findViewById(R.id.map_close_button).setOnClickListener(v -> finish());
 
-//      https://therolf.fr/tools/map.html
-        WebSettings webSettings = myWebView.getSettings();
+        // load bus icon
+        busIcon = bitmapDescriptorFromVector(this, R.drawable.ic_bus);
 
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setAllowUniversalAccessFromFileURLs(true);
-        myWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return false;
+        // map view
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
+        assert mapFragment != null;
+        mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap gMap) {
+        this.googleMap = gMap;
+        googleMap.setMyLocationEnabled(true);
+        googleMap.setMapStyle(new MapStyleOptions("[\n  {\n    \"featureType\": \"administrative.locality\",\n    \"elementType\": \"labels.text\",\n    \"stylers\": [\n      {\n        \"color\": \"#a2a2a2\"\n      },\n      {\n        \"visibility\": \"simplified\"\n      }\n    ]\n  },\n  {\n    \"featureType\": \"poi\",\n    \"stylers\": [\n      {\n        \"visibility\": \"off\"\n      }\n    ]\n  },\n  {\n    \"featureType\": \"road\",\n    \"elementType\": \"labels.icon\",\n    \"stylers\": [\n      {\n        \"visibility\": \"off\"\n      }\n    ]\n  }\n]"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.63557, 6.85780), 14));
+
+        InputStream jsonInputStream = (getResources().openRawResource(getResources().getIdentifier("lines", "raw", getPackageName())));
+
+        String jsonContent = null;
+        try {
+            byte[] content = new byte[jsonInputStream.available()];
+            //noinspection ResultOfMethodCallIgnored
+            jsonInputStream.read(content);
+            jsonContent = new String(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if(jsonContent != null) {
+            try {
+                JSONObject lines = new JSONObject(jsonContent);
+
+                Iterator<String> keys = lines.keys();
+
+                JSONArray allLinesPaths, linePathPoints;
+                JSONObject linePath, point;
+                PolylineOptions polyLine;
+                String lineNumber;
+                while(keys.hasNext()) {
+                    lineNumber = keys.next();
+                    allLinesPaths = lines.getJSONArray(lineNumber);
+                    for(int b = 0; b < allLinesPaths.length(); ++b) {
+                        linePath = allLinesPaths.getJSONObject(b);
+
+                        polyLine = new PolylineOptions();
+                        polyLine.color(Color.parseColor("#" + linePath.getString("color")));
+                        polyLine.clickable(true);
+
+                        if(zIndexes.containsKey(lineNumber)) {
+                            Integer index = zIndexes.get(lineNumber);
+                            if(index != null)
+                                polyLine.zIndex(index);
+                            else
+                                polyLine.zIndex(defaultIndex);
+                        } else {
+                            polyLine.zIndex(defaultIndex);
+                        }
+
+                        linePathPoints = linePath.getJSONArray("path");
+                        for(int c = 0; c < linePathPoints.length(); ++c) {
+                            point = linePathPoints.getJSONObject(c);
+
+                            polyLine.add(new LatLng(Float.parseFloat(point.getString("lat")), Float.parseFloat(point.getString("lng"))));
+                        }
+
+                        googleMap.addPolyline(polyLine);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+        }
 
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
+        // stops belfort
+        InputStream xmlInputStream = (getResources().openRawResource(getResources().getIdentifier("belfort", "raw", getPackageName())));
 
-                injectScriptFile(view, "js/script.js"); // see below ...
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
+                .newInstance();
+        DocumentBuilder documentBuilder;
+        try {
+            documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document document = documentBuilder.parse(xmlInputStream);
 
-                // test if the script was loaded
-                view.loadUrl("javascript:setTimeout(test(), 2000)");
-            }
+            NodeList stops = document.getElementsByTagName("transitStop");
+            Node node;
+            Element element;
+            MarkerOptions marker;
+            BitmapDescriptor icon = bitmapDescriptorFromVector(this, R.drawable.ic_marker);
+            String title;
+            float lat, lon;
+            for(int i = 0; i < stops.getLength(); ++i) {
+                node = stops.item(i);
+                if(node.getNodeType() == Node.ELEMENT_NODE) {
+                    element = (Element) node;
 
-            private void injectScriptFile(WebView view, String scriptFile) {
-                InputStream input;
-                try {
-                    input = getAssets().open(scriptFile);
-                    byte[] buffer = new byte[input.available()];
-                    input.read(buffer);
-                    input.close();
+                    marker = new MarkerOptions();
 
-                    // String-ify the script byte-array using BASE64 encoding !!!
-                    String encoded = Base64.encodeToString(buffer, Base64.NO_WRAP);
-                    view.loadUrl("javascript:(function() {" +
-                            "var parent = document.getElementsByTagName('head').item(0);" +
-                            "var script = document.createElement('script');" +
-                            "script.type = 'text/javascript';" +
-                            // Tell the browser to BASE64-decode the string into your script !!!
-                            "script.innerHTML = window.atob('" + encoded + "');" +
-                            "parent.appendChild(script)" +
-                            "})()");
-                } catch (IOException e) {
-                    // Auto-generated catch block
-                    e.printStackTrace();
+                    lat = Float.parseFloat(element.getElementsByTagName("latitude").item(0).getTextContent());
+                    lon = Float.parseFloat(element.getElementsByTagName("longitude").item(0).getTextContent());
+                    title = element.getElementsByTagName("name").item(0).getTextContent();
+
+//                    Log.d("optymonext", "" + lat + ", " + lon);
+                    marker.position(new LatLng(lat, lon));
+
+                    marker.zIndex(10);
+                    marker.icon(icon);
+                    marker.title(title);
+                    marker.anchor(0.5f, 0.5f);
+
+                    googleMap.addMarker(marker);
                 }
             }
-        });
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            e.printStackTrace();
+        }
 
-        myWebView.loadUrl("https://www.optymo.fr/");
+        googleMap.setOnMarkerClickListener(this);
+        startRepeatingTask();
+    }
+
+    private static BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorId) {
+        BitmapDescriptor result = null;
+
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorId);
+        if (vectorDrawable != null) {
+            vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+
+            Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+
+            Canvas canvas = new Canvas(bitmap);
+            vectorDrawable.draw(canvas);
+
+            result = BitmapDescriptorFactory.fromBitmap(bitmap);
+        }
+
+        return result;
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if(NetworkController.getInstance().isGenerated() && NetworkController.getInstance().getStopBySlug(OptymoStop.nameToSlug(marker.getTitle())) != null)
+            StopActivity.launchStopActivity(this, OptymoStop.nameToSlug(marker.getTitle()));
+        return false;
+    }
+
+    private final static int INTERVAL = 1000 * 60; //1 minute
+    private Handler mHandler = new Handler();
+    private GetBusMarkers request = null;
+
+    private Runnable mHandlerTask = new Runnable()
+    {
+        @Override
+        public void run() {
+            Log.d("optymonext", "Querying new bus locations");
+            getBusPosition();
+            mHandler.postDelayed(mHandlerTask, INTERVAL);
+        }
+    };
+
+    private void startRepeatingTask()
+    {
+        mHandlerTask.run();
+    }
+
+    private void stopRepeatingTask()
+    {
+        mHandler.removeCallbacks(mHandlerTask);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopRepeatingTask();
+    }
+
+    private static String readUrl(String urlString) throws Exception {
+        BufferedReader reader = null;
+        try {
+            URL url = new URL(urlString);
+            reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            StringBuffer buffer = new StringBuffer();
+            int read;
+            char[] chars = new char[1024];
+            while ((read = reader.read(chars)) != -1)
+                buffer.append(chars, 0, read);
+
+            return buffer.toString();
+        } finally {
+            if (reader != null)
+                reader.close();
+        }
+    }
+
+    private void getBusPosition() {
+        // remove all markers
+        while(busMarkers.size() > 0) {
+            busMarkers.get(0).remove();
+            busMarkers.remove(0);
+        }
+
+        // stop last request
+        if(this.request != null) {
+            this.request.cancel(true);
+        }
+
+        // launch new request
+        this.request = new GetBusMarkers(this);
+        this.request.execute();
+    }
+
+    @SuppressWarnings("unused")
+    private static class GetBusMarkers extends AsyncTask<Void, Void, String> {
+
+        private WeakReference<MapActivity> reference;
+
+        public GetBusMarkers(MapActivity reference) {
+            this.reference = new WeakReference<>(reference);
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            String result = null;
+
+            try {
+                result = readUrl("https://www.optymo.fr/wp-admin/admin-ajax.php?action=getItrBus&src=itrsub/get_markers_urb.php");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            // return if map activity
+            MapActivity mapActivity = reference.get();
+            if(mapActivity == null || mapActivity.isFinishing()) return;
+
+            try {
+                if(s != null) {
+                    JSONObject buses = new JSONObject(s);
+
+                    Iterator<String> keys = buses.keys();
+                    String busNumber;
+                    JSONObject bus;
+                    MarkerOptions markerOptions;
+                    while(keys.hasNext()) {
+                        busNumber = keys.next();
+                        bus = buses.getJSONObject(busNumber);
+
+                        markerOptions = new MarkerOptions();
+                        markerOptions.title(bus.getString("ligne") + " - " + bus.getString("course"));
+                        markerOptions.position(new LatLng(Float.parseFloat(bus.getString("lat")), Float.parseFloat(bus.getString("lng"))));
+                        markerOptions.icon(mapActivity.busIcon);
+                        markerOptions.snippet("#" + bus.getString("pupitre") + " - " + bus.getString("horodate"));
+                        markerOptions.anchor(.5f, .5f);
+                        markerOptions.zIndex(100);
+
+                        mapActivity.busMarkers.add(mapActivity.googleMap.addMarker(markerOptions));
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

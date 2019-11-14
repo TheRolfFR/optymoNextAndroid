@@ -4,6 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.HashMap;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
@@ -114,5 +115,9 @@ public class OptymoStop implements Comparable<OptymoStop> {
 
     public OptymoNextTime[] getNextTimes(int lineFilter) throws IOException {
         return OptymoNetwork.getNextTimes(this.slug, lineFilter);
+    }
+
+    public static String nameToSlug(String stopName) {
+        return Normalizer.normalize(stopName, Normalizer.Form.NFD).replaceAll("[^A-Za-z0-9]", "").toLowerCase();
     }
 }
