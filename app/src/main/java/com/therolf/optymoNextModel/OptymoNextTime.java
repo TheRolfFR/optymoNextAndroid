@@ -32,16 +32,16 @@ public class OptymoNextTime extends OptymoDirection implements Comparable<Optymo
         String me = this.nextTime;
         String o = other.nextTime;
 
-        boolean me_a = me.charAt(0) == 'A';
-        boolean me_min = me.contains("min");
-        boolean me_hm = me.contains(":") && !me.startsWith(GREATER_THAN);
         boolean me_gt = me.startsWith(GREATER_THAN);
+        boolean me_a = me.charAt(0) == 'A' && !me_gt;
+        boolean me_min = me.contains("min") && !me_gt;
+        boolean me_hm = me.contains(":") && !me_gt;
         boolean me_null = me.equals(NULL_TIME_VALUE);
 
-        boolean o_a = o.charAt(0) == 'A';
-        boolean o_min = o.contains("min");
-        boolean o_hm = o.contains(":") && !o.startsWith(GREATER_THAN);
         boolean o_gt = o.startsWith(GREATER_THAN);
+        boolean o_a = o.charAt(0) == 'A' && !o_gt;
+        boolean o_min = o.contains("min") && !o_gt;
+        boolean o_hm = o.contains(":") && !o_gt;
         boolean o_null = o.equals(NULL_TIME_VALUE);
 
         // A l'approche

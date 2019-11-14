@@ -2,19 +2,25 @@ package com.therolf.optymoNext.controller.activities.Main;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.core.widget.NestedScrollView;
 
@@ -28,18 +34,21 @@ import com.therolf.optymoNext.vue.adapters.StopAdapter;
 import com.therolf.optymoNextModel.OptymoLine;
 import com.therolf.optymoNextModel.OptymoStop;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 
 public class DialogController implements TextWatcher {
     private Activity activity;
-
-    private Dialog searchDialog;
 
     private EditText searchInput;
 
     private ImageView searchIcon;
     private Drawable searchDrawable;
     private Drawable closeDrawable;
+
+    private LinearLayout inputBackground;
+    private Drawable normalInputBackgroundDrawable;
+    private Drawable searchInputTopBackgroundDrawable;
 
     private NestedScrollView searchResultsView;
 
@@ -53,22 +62,60 @@ public class DialogController implements TextWatcher {
     private LineAdapter linesResultsAdapter;
     private ListView linesResultListView;
 
+    private TextView noResultsFoundTextView;
+
     private boolean searching;
+    @SuppressWarnings("FieldCanBeLocal")
     private boolean resultFound;
 
     @SuppressWarnings("unused")
     public DialogController(Activity context) {
 
         // search part
-        searchDialog = new Dialog(context);
+        Dialog searchDialog = new Dialog(context) {
+            @Override
+            public boolean onTouchEvent(MotionEvent event) {
+                // Tap anywhere to close dialog.
+                Rect dialogBounds = new Rect();
+                Window window = this.getWindow();
+                InputMethodManager inputMethodManager = (InputMethodManager) context
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                if(window != null && inputMethodManager != null) {
+                    window.getDecorView().getHitRect(dialogBounds);
+                    if (!dialogBounds.contains((int) event.getX(), (int) event.getY())) {
+                        // You have clicked the grey area
+                        View v = this.getCurrentFocus();
+                        if(v != null) {
+                            inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        }
+                    } else {
+                        View v = this.getCurrentFocus();
+                        if(v != null) {
+                            inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                            inputMethodManager.hideSoftInputFromWindow(this
+                                    .getCurrentFocus().getWindowToken(), 0);
+                        }
+                        this.dismiss();
+                    }
+                }
+
+                return true;
+            }
+        };
+        searchDialog.setCanceledOnTouchOutside(true);
         Utility.setMargins(searchDialog, 0, 0, 0, 0);
         searchDialog.setContentView(R.layout.dialog_search);
         Window window = searchDialog.getWindow();
         if(window != null) {
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
             WindowManager.LayoutParams wlp = window.getAttributes();
             wlp.gravity = Gravity.TOP;
             window.setAttributes(wlp);
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
         }
 
         this.activity = context;
@@ -85,9 +132,13 @@ public class DialogController implements TextWatcher {
         this.searchDrawable = this.searchIcon.getDrawable();
         this.closeDrawable = context.getDrawable(R.drawable.ic_close_red);
 
+        // get background drawable
+        this.inputBackground = searchDialog.findViewById(R.id.dialog_search_input_background);
+        this.normalInputBackgroundDrawable = context.getDrawable(R.drawable.element_background);
+        this.searchInputTopBackgroundDrawable = context.getDrawable(R.drawable.element_background_toppart);
+
         // add key listener for this
         this.searchInput.addTextChangedListener(this);
-
         // initialize adapters with data
         this.stopsResultsAdapter = new StopAdapter(context, new OptymoStop[0]);
         this.linesResultsAdapter = new LineAdapter(context, new OptymoLine[0]);
@@ -116,6 +167,8 @@ public class DialogController implements TextWatcher {
             }
         });
 
+        this.noResultsFoundTextView = searchDialog.findViewById(R.id.dialog_search_no_results_found);
+
         // and hide completely
         this.searchResultsView.setVisibility(View.GONE);
         this.stopsResultLayout.setVisibility(View.GONE);
@@ -127,15 +180,25 @@ public class DialogController implements TextWatcher {
                 this.searchInput.setText("");
         });
 
-        // show and make focus
+        // show dialog
         searchDialog.show();
-        searchDialog.findViewById(R.id.dialog_search_search_input).setFocusableInTouchMode(true);
-        searchDialog.findViewById(R.id.dialog_search_search_input).requestFocus();
+
+        // search input auto focus
+        EditText editText = this.searchInput;
+        editText.setOnFocusChangeListener((v, hasFocus) -> editText.post(() -> {
+            InputMethodManager inputMethodManager= (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null) {
+                inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }));
+        editText.requestFocus();
     }
 
     private void search(String search) {
         if(!searching) {
             search = search.toLowerCase();
+            search = Normalizer.normalize(search, Normalizer.Form.NFD);
+            search = search.replaceAll("[^\\p{ASCII}]", "");
 //            Log.d("search", search);
             searching = true;
             resultFound = false;
@@ -151,8 +214,11 @@ public class DialogController implements TextWatcher {
                     this.stopsResultsList.clear();
                     // get the stops starting with search
                     OptymoStop[] stops = NetworkController.getInstance().getStops();
+                    String stopName;
                     for (OptymoStop s : stops) {
-                        if (s.getName().toLowerCase().startsWith(search))
+                        stopName = Normalizer.normalize(s.getName(), Normalizer.Form.NFD);
+                        stopName = stopName.replaceAll("[^\\p{ASCII}]", "");
+                        if (stopName.toLowerCase().startsWith(search))
                             this.stopsResultsList.add(s);
                     }
 
@@ -172,8 +238,12 @@ public class DialogController implements TextWatcher {
 
                     // get the line starting with search
                     OptymoLine[] lines = NetworkController.getInstance().getLines();
+                    String lineName;
                     for (OptymoLine l : lines) {
-                        if (l.getName().toLowerCase().contains(search) || (search.length() == 1 && search.substring(0, 1).matches("\\d") && search.charAt(0) - '0' == l.getNumber()))
+                        // smart line search: search lines with name containing the seach or ligne with the same number
+                        lineName = Normalizer.normalize(l.getName(), Normalizer.Form.NFD);
+                        lineName = lineName.replaceAll("[^\\p{ASCII}]", "");
+                        if (lineName.toLowerCase().startsWith(search) || (search.length() == 1 && search.substring(0, 1).matches("\\d") && search.charAt(0) - '0' == l.getNumber()))
                             this.linesResultsList.add(l);
                     }
 
@@ -201,16 +271,23 @@ public class DialogController implements TextWatcher {
                 // hide completely
                 this.stopsResultLayout.setVisibility(View.GONE);
                 this.linesResultLayout.setVisibility(View.GONE);
+
+                // change bg and search view result
+                inputBackground.setBackground(normalInputBackgroundDrawable);
+                searchResultsView.setVisibility(View.GONE);
             }
 
             this.linesResultsAdapter.notifyDataSetChanged();
             this.stopsResultsAdapter.notifyDataSetChanged();
 
             // if there is any result show it
-            if(resultFound)
+            if(resultFound) {
+                inputBackground.setBackground(searchInputTopBackgroundDrawable);
                 searchResultsView.setVisibility(View.VISIBLE);
-            else
-                searchResultsView.setVisibility(View.GONE);
+                noResultsFoundTextView.setVisibility(View.GONE);
+            } else {
+                noResultsFoundTextView.setVisibility(View.VISIBLE);
+            }
 
             // change utility size
             Utility.setListViewHeightBasedOnChildren(this.linesResultListView);

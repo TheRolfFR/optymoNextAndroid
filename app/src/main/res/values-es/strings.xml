@@ -2,12 +2,12 @@
 <resources>
     <string name="add_button_text">AÑADIR</string>
     <string name="add_fav_title">Añadir un favirito</string>
-    <string name="add_fav_toast_nb_of_fav">Ahoro tienes %1$d favoritos</string>
+    <string name="add_fav_toast_nb_of_fav">%1$d favoritos actualmente</string>
     <string name="add_step_1">1. Eligir una línea</string>
     <string name="add_step_2">2. Eligir una parada de bus</string>
     <string name="content_description_background">Hermoso fondo</string>
-    <string name="dialog_del_fav_message">¿Estás seguro que quieres eleminar %1$s?</string>
-    <string name="dialog_del_fav_title">¿Estás seguro?</string>
+    <string name="dialog_del_fav_message">¿Eleminar el favorito : %1$s?</string>
+    <string name="dialog_del_fav_title">Confirmar la eliminación</string>
     <string name="favorites">Favoritos</string>
     <string name="icon_app_description">Icono de la applicación</string>
     <string name="main_all_stops">Todas las paradas</string>
@@ -42,4 +42,6 @@
     <string name="dialog_download_pdf_title">No se encontró ningún lector de PDF</string>
     <string name="dialog_cancel">Cancelar</string>
     <string name="error_occured">Occurió un fallo. inténtelo más tarde.</string>
+    <string name="dialog_search_no_results_found">Ningún resultado…</string>
+    <string name="main_press_long">Mantener presionado para eleminar el favorito</string>
 </resources>

@@ -1,45 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_weight="5"
-    android:gravity="top|left"
-    android:orientation="horizontal"
-    android:paddingStart="@dimen/component_padding"
-    android:paddingTop="@dimen/component_padding_half"
-    android:paddingEnd="@dimen/component_padding"
-    android:paddingBottom="@dimen/component_padding_half"
-    tools:ignore="RtlHardcoded">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/item_line_next_stop_line_bg"
-        android:layout_width="43dp"
-        android:layout_height="28dp"
-        android:background="@color/colorLine1"
-        android:minHeight="26dp"
-        android:orientation="horizontal"
-        android:paddingLeft="13dp"
-        tools:ignore="RtlHardcoded,RtlSymmetry">
-
-        <TextView
-            android:id="@+id/item_line_next_stop_number"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorLineBlackBackground"
-            android:fontFamily="@font/nunito_extrabold"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:textColor="@color/colorLineOnBackground"
-            android:textSize="17sp"
-            tools:text="1" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="5"
-        android:orientation="vertical">
+        android:baselineAligned="false"
+        android:gravity="top|left"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/component_padding"
+        android:paddingTop="@dimen/component_padding_half"
+        android:paddingEnd="@dimen/component_padding"
+        android:paddingBottom="@dimen/component_padding_half"
+        tools:ignore="RtlHardcoded">
+
+        <LinearLayout
+            android:id="@+id/item_line_next_stop_line_bg"
+            android:layout_width="43dp"
+            android:layout_height="28dp"
+            android:background="@color/colorLine1"
+            android:minHeight="26dp"
+            android:orientation="horizontal"
+            android:paddingLeft="13dp"
+            tools:ignore="RtlHardcoded,RtlSymmetry">
+
+            <TextView
+                android:id="@+id/item_line_next_stop_number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorLineBlackBackground"
+                android:fontFamily="@font/nunito_extrabold"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/colorLineOnBackground"
+                android:textSize="17sp"
+                tools:text="1" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/item_line_next_stop_line_name"
@@ -58,12 +60,13 @@
             tools:ignore="RtlCompat"
             tools:text="Line name" />
 
-        <ListView
-            android:id="@+id/item_line_next_stop_stop_listview"
-            android:divider="@null"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
     </LinearLayout>
+
+    <ListView
+        android:id="@+id/item_line_next_stop_stop_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        android:paddingBottom="@dimen/component_padding_half" />
 
 </LinearLayout>

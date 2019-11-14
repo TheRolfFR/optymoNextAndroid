@@ -16,18 +16,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
         <activity android:name=".controller.activities.MapActivity"
-            android:theme="@style/AppTheme.NoActionBar"  />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"  />
         <activity
             android:name=".controller.activities.StopActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".controller.activities.LineActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".controller.activities.SplashScreenActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,12 +41,15 @@
         <activity
             android:name=".controller.activities.FavoritesActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".controller.activities.MainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
 
         <receiver android:name=".controller.notifications.OnBoot">
             <intent-filter>

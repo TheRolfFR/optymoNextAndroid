@@ -14,7 +14,7 @@
 
         <include
             android:id="@+id/content_main"
-            layout="@layout/content_main"
+            layout="@layout/activity_main_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -28,7 +28,7 @@
             android:backgroundTint="@color/colorPrimaryOnElement"
             android:elevation="10dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_bookmark_plus" />
+            android:src="@drawable/ic_map" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

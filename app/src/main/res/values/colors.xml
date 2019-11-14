@@ -7,7 +7,7 @@
     <color name="colorOnPrimary">@android:color/white</color>
     <color name="colorOnBackground">@android:color/black</color>
 
-    <color name="colorLightGraySearch">#B9B9B9</color>
+    <color name="colorLightGraySearch">#9E9E9E</color> // #B9B9B9
     <color name="colorSearchSeparator">#E1E1E1</color>
 
     <color name="elementBackground">@android:color/white</color>

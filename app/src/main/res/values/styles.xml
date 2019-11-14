@@ -10,10 +10,15 @@
     </style>
 
     <style name="AppTheme.CustomDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowFullscreen">false</item>
         <item name="dialogCornerRadius">@dimen/component_border_radius</item>
         <item name="colorAccent">@color/colorPrimaryOnElement</item>
         <item name="android:textColorPrimary">@color/colorOnBackground</item>
         <item name="android:background">@color/colorBackground</item>
+    </style>
+
+    <style name="AppTheme.NoFullScreenDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowFullscreen">false</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

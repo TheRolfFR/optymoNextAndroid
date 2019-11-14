@@ -79,12 +79,6 @@ public class MainActivity extends TopViewActivity {
         NetworkController networkController = NetworkController.getInstance();
         Log.e("lines number", "" + networkController.getLines().length);
 
-        // go to map
-        topLogoIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, MapActivity.class);
-            startActivity(intent);
-        });
-
         // favorite list (BEFORE refreshFavoriteList)
         favoriteList = findViewById(R.id.main_favorite_next_stops);
         favoritesAdapter = new LineNextTimeAdapter(this, favoriteList);
@@ -102,6 +96,21 @@ public class MainActivity extends TopViewActivity {
 
         // date format
         dateFormat = new SimpleDateFormat("HH:mm", getResources().getConfiguration().locale);
+
+
+        // add favorite button
+        findViewById(R.id.main_add_button).setOnClickListener(v -> {
+            if(addFavoriteActivity == null) {
+                addFavoriteActivity = new Intent(MainActivity.this, FavoritesActivity.class);
+                startActivity(addFavoriteActivity);
+            }
+        });
+
+        // refresh button
+        findViewById(R.id.main_refresh_button).setOnClickListener(v -> {
+            refreshLayout.setRefreshing(true);
+            refreshFavoriteList();
+        });
 
         refreshFavoriteList();
         refreshLayout.setOnRefreshListener(() -> {
@@ -135,14 +144,14 @@ public class MainActivity extends TopViewActivity {
         findViewById(R.id.top_search_icon).setVisibility(View.VISIBLE);
 
         // bottom floating button
+        // go to map
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setEnabled(false);
-        fab.setOnClickListener(view -> {
-            if(addFavoriteActivity == null) {
-                addFavoriteActivity = new Intent(MainActivity.this, FavoritesActivity.class);
-                startActivity(addFavoriteActivity);
-            }
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, MapActivity.class);
+            startActivity(intent);
         });
+
 
         // search part
         ImageView searchButton = findViewById(R.id.top_search_icon);
@@ -192,6 +201,7 @@ public class MainActivity extends TopViewActivity {
             }
         });
 
+        // made by part
         TextView madeBy = findViewById(R.id.main_made_by);
         String s = getString(R.string.main_made_by_text) + "\n" + getString(R.string.main_made_by_website);
         SpannableString ss = new SpannableString(s);

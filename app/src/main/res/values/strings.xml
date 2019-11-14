@@ -26,9 +26,9 @@
     <string name="update_never">Never updated</string>
     <string name="splash_generating_stop">Generating stop from point %1$d/%2$d</string>
     <string name="main_toast_loading_favorites">Loading favorites…</string>
-    <string name="add_fav_toast_nb_of_fav">You have now %1$d favorites</string>
-    <string name="dialog_del_fav_title">Are your sure?</string>
-    <string name="dialog_del_fav_message">Are you sure you want to delete %1$s?</string>
+    <string name="add_fav_toast_nb_of_fav">%1$d favorites now</string>
+    <string name="dialog_del_fav_title">Confirm deletion</string>
+    <string name="dialog_del_fav_message">Delete favorite: %1$s?</string>
     <string name="dialog_yes">yes</string>
     <string name="dialog_no">no</string>
     <string name="notification_refresh_button_text">Refresh</string>
@@ -48,4 +48,7 @@
     <string name="dialog_download_pdf_title">No PDF viewer found</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="error_occured">An error occured. Please try later.</string>
+    <string name="dialog_search_no_results_found">No result found…</string>
+    <string name="refresh_icon_desc" translatable="false">refresh icon</string>
+    <string name="main_press_long">Long press to delete favorite</string>
 </resources>

@@ -16,6 +16,7 @@
         tools:ignore="UselessParent">
 
         <LinearLayout
+            android:id="@+id/dialog_search_input_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -49,78 +50,92 @@
                 app:srcCompat="@drawable/ic_search_red" />
         </LinearLayout>
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/dialog_search_results"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    </LinearLayout>
 
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/dialog_search_results"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/element_background_bottompart"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/component_padding_half">
+
+            <View
+                android:id="@+id/dialog_search_separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/component_padding"
+                android:layout_marginEnd="@dimen/component_padding"
+                android:background="@color/colorSearchSeparator" />
 
             <LinearLayout
+                android:id="@+id/dialog_search_stops_results"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/component_padding_half">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <View
-                    android:id="@+id/dialog_search_separator"
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="@dimen/component_padding"
-                    android:layout_marginEnd="@dimen/component_padding"
-                    android:background="@color/colorSearchSeparator" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/component_padding_half"
+                    android:fontFamily="@font/nunito_regular"
+                    android:paddingStart="@dimen/component_padding"
+                    android:paddingEnd="@dimen/component_padding"
+                    android:text="@string/stops"
+                    android:textColor="@color/colorLightGraySearch" />
 
-                <LinearLayout
-                    android:id="@+id/dialog_search_stops_results"
+                <ListView
+                    android:id="@+id/dialog_search_stop_list_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/component_padding_half"
-                        android:fontFamily="@font/nunito_regular"
-                        android:paddingStart="@dimen/component_padding"
-                        android:paddingEnd="@dimen/component_padding"
-                        android:text="@string/stops"
-                        android:textColor="@color/colorLightGraySearch" />
+                </ListView>
+            </LinearLayout>
 
-                    <ListView
-                        android:id="@+id/dialog_search_stop_list_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/dialog_search_lines_results"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                    </ListView>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/dialog_search_lines_results"
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/component_padding_half"
+                    android:layout_marginBottom="@dimen/component_padding_half"
+                    android:fontFamily="@font/nunito_regular"
+                    android:paddingStart="@dimen/component_padding"
+                    android:paddingEnd="@dimen/component_padding"
+                    android:text="@string/lines"
+                    android:textColor="@color/colorLightGraySearch" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/component_padding_half"
-                        android:layout_marginBottom="@dimen/component_padding_half"
-                        android:fontFamily="@font/nunito_regular"
-                        android:paddingStart="@dimen/component_padding"
-                        android:paddingEnd="@dimen/component_padding"
-                        android:text="@string/lines"
-                        android:textColor="@color/colorLightGraySearch" />
-
-                    <ListView
-                        android:id="@+id/dialog_search_line_list_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
+                <ListView
+                    android:id="@+id/dialog_search_line_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
-        </androidx.core.widget.NestedScrollView>
+            <TextView
+                android:id="@+id/dialog_search_no_results_found"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_italic"
+                android:paddingStart="@dimen/component_padding"
+                android:paddingTop="@dimen/component_padding_half"
+                android:paddingEnd="@dimen/component_padding"
+                android:paddingBottom="@dimen/component_padding_half"
+                android:text="@string/dialog_search_no_results_found"
+                android:textColor="@color/colorLightGraySearch"
+                android:visibility="gone" />
 
-    </LinearLayout>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

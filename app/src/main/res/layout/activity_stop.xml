@@ -78,12 +78,16 @@
                             android:paddingEnd="@dimen/component_padding"
                             android:text="@string/error_occured"
                             android:textColor="@color/colorOnBackground"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:visibility="gone" />
 
                         <ListView
                             android:id="@+id/stop_nextstops_listview"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:listSelector="@android:color/transparent"
+                            android:cacheColorHint="@android:color/transparent"
+                            android:divider="@null"/>
 
                     </LinearLayout>
 

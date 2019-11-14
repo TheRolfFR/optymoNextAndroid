@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -57,28 +55,62 @@
                     android:paddingTop="@dimen/component_padding"
                     android:paddingBottom="@dimen/component_padding">
 
-                    <TextView
-                        android:id="@+id/main__favorites_title"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito_bold"
-                        android:paddingStart="@dimen/component_padding"
-                        android:paddingEnd="@dimen/component_padding"
-                        android:text="@string/favorites"
-                        android:textColor="@color/colorPrimaryOnElement"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/main_favorites_last_update_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginBottom="@dimen/component_padding"
-                        android:fontFamily="@font/nunito_semibold"
+                        android:gravity="center"
+                        android:orientation="horizontal"
                         android:paddingStart="@dimen/component_padding"
-                        android:paddingEnd="@dimen/component_padding_half"
-                        android:text="@string/update_never"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/colorPrimaryOnElement" />
+                        android:paddingEnd="@dimen/component_padding">
+
+                        <ImageButton
+                            android:id="@+id/main_refresh_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:background="@android:color/transparent"
+                            android:contentDescription="@string/refresh_icon_desc"
+                            app:srcCompat="@drawable/ic_refresh_red" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="12"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/main__favorites_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/nunito_bold"
+                                android:text="@string/favorites"
+                                android:textAlignment="center"
+                                android:textColor="@color/colorPrimaryOnElement"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/main_favorites_last_update_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/nunito_semibold"
+                                android:text="@string/update_never"
+                                android:textAlignment="center"
+                                android:textColor="@color/colorPrimaryOnElement" />
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/main_add_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:background="@android:color/transparent"
+                            android:contentDescription="@string/add_fav_title"
+                            app:srcCompat="@drawable/ic_add_red" />
+
+                    </LinearLayout>
 
                     <ListView
                         android:id="@+id/main_favorite_next_stops"
@@ -91,6 +123,19 @@
                         android:padding="0dp">
 
                     </ListView>
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/component_padding_half"
+                        android:layout_marginBottom="@dimen/component_padding_half"
+                        android:fontFamily="@font/nunito_italic"
+                        android:paddingStart="@dimen/component_padding"
+                        android:paddingEnd="@dimen/component_padding"
+                        android:text="@string/main_press_long"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorLightGraySearch" />
 
                 </LinearLayout>
 
