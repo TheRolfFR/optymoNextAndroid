@@ -1,6 +1,8 @@
 package com.therolf.optymoNext.controller.activities;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,9 +11,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -47,14 +55,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, View.OnClickListener {
 
-    private int defaultIndex = 0;
+    private static final int LOCATION_PERMISSION_CODE = 1;
+    private String locationService;
+
+    private static final int LINE_DEFAULT_INDEX = 0;
     private Map<String, Integer> zIndexes = new HashMap<String, Integer>() {{
         put("5", 6);
         put("3", 5);
@@ -63,6 +75,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         put("4", 2);
         put("1", 1);
     }};
+    private static final int BUS_INDEX = 7;
+    private static final int STOP_Z_INDEX = 8;
+
+    private Map<String, BitmapDescriptor> busIcons = new HashMap<>();
 
     private GoogleMap googleMap;
     private ArrayList<Marker> busMarkers = new ArrayList<>();
@@ -78,17 +94,28 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // load bus icon
         busIcon = bitmapDescriptorFromVector(this, R.drawable.ic_bus);
+        Set<String> keys = zIndexes.keySet();
+        for(String key : keys) {
+            int id = getResources().getIdentifier("colorLine" + key, "color", getPackageName());
+            int color = ContextCompat.getColor(this, id);
+            busIcons.put(key, bitmapDescriptorFromVector(this, R.drawable.ic_bus, color));
+        }
 
         // map view
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
+
+        // location button
+        findViewById(R.id.map_my_position_button).setOnClickListener(this);
+
+        //locationService = LocationServices.getFusedLocationProviderClient();
     }
 
     @Override
     public void onMapReady(GoogleMap gMap) {
         this.googleMap = gMap;
-        googleMap.setMyLocationEnabled(true);
+        //googleMap.setMyLocationEnabled(true);
         googleMap.setMapStyle(new MapStyleOptions("[\n  {\n    \"featureType\": \"administrative.locality\",\n    \"elementType\": \"labels.text\",\n    \"stylers\": [\n      {\n        \"color\": \"#a2a2a2\"\n      },\n      {\n        \"visibility\": \"simplified\"\n      }\n    ]\n  },\n  {\n    \"featureType\": \"poi\",\n    \"stylers\": [\n      {\n        \"visibility\": \"off\"\n      }\n    ]\n  },\n  {\n    \"featureType\": \"road\",\n    \"elementType\": \"labels.icon\",\n    \"stylers\": [\n      {\n        \"visibility\": \"off\"\n      }\n    ]\n  }\n]"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.63557, 6.85780), 14));
 
@@ -129,9 +156,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             if(index != null)
                                 polyLine.zIndex(index);
                             else
-                                polyLine.zIndex(defaultIndex);
+                                polyLine.zIndex(LINE_DEFAULT_INDEX);
                         } else {
-                            polyLine.zIndex(defaultIndex);
+                            polyLine.zIndex(LINE_DEFAULT_INDEX);
                         }
 
                         linePathPoints = linePath.getJSONArray("path");
@@ -180,7 +207,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 //                    Log.d("optymonext", "" + lat + ", " + lon);
                     marker.position(new LatLng(lat, lon));
 
-                    marker.zIndex(10);
+                    marker.zIndex(STOP_Z_INDEX);
                     marker.icon(icon);
                     marker.title(title);
                     marker.anchor(0.5f, 0.5f);
@@ -196,10 +223,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         startRepeatingTask();
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorId) {
+        return bitmapDescriptorFromVector(context, vectorId, 0);
+    }
+
+    private static BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorId, int color) {
         BitmapDescriptor result = null;
 
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorId);
+        if(color != 0 && vectorDrawable != null) {
+            vectorDrawable = vectorDrawable.mutate();
+            DrawableCompat.setTint(vectorDrawable, color);
+        }
         if (vectorDrawable != null) {
             vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
 
@@ -221,7 +257,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         return false;
     }
 
-    private final static int INTERVAL = 1000 * 60; //1 minute
+    private final static int INTERVAL = 1000 *10; // 10s = 10000ms
     private Handler mHandler = new Handler();
     private GetBusMarkers request = null;
 
@@ -251,12 +287,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         stopRepeatingTask();
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static String readUrl(String urlString) throws Exception {
         BufferedReader reader = null;
         try {
             URL url = new URL(urlString);
             reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             int read;
             char[] chars = new char[1024];
             while ((read = reader.read(chars)) != -1)
@@ -270,11 +307,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void getBusPosition() {
-        // remove all markers
-        while(busMarkers.size() > 0) {
-            busMarkers.get(0).remove();
-            busMarkers.remove(0);
-        }
 
         // stop last request
         if(this.request != null) {
@@ -286,12 +318,58 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         this.request.execute();
     }
 
+    @Override
+    public void onClick(View v) {
+        if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "You have already granted these permission!", Toast.LENGTH_SHORT).show();
+            moveCameraToMyLocation();
+        } else {
+            requestLocationPermission();
+        }
+    }
+
+    private void requestLocationPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed because of this and that")
+                    .setPositiveButton("ok", (dialog, which) -> ActivityCompat.requestPermissions(MapActivity.this,
+                            new String[] {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_CODE))
+                    .setNegativeButton("cancel", (dialog, which) -> dialog.dismiss())
+                    .create().show();
+
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[] {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_CODE);
+        }
+    }
+
+    private void moveCameraToMyLocation() {
+        googleMap.setMyLocationEnabled(true);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == LOCATION_PERMISSION_CODE)  {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
+                moveCameraToMyLocation();
+            } else {
+                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     @SuppressWarnings("unused")
     private static class GetBusMarkers extends AsyncTask<Void, Void, String> {
 
         private WeakReference<MapActivity> reference;
 
-        public GetBusMarkers(MapActivity reference) {
+        GetBusMarkers(MapActivity reference) {
             this.reference = new WeakReference<>(reference);
         }
 
@@ -316,6 +394,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             MapActivity mapActivity = reference.get();
             if(mapActivity == null || mapActivity.isFinishing()) return;
 
+            // remove all markers
+            while(mapActivity.busMarkers.size() > 0) {
+                mapActivity.busMarkers.get(0).remove();
+                mapActivity.busMarkers.remove(0);
+            }
+
             try {
                 if(s != null) {
                     JSONObject buses = new JSONObject(s);
@@ -324,6 +408,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     String busNumber;
                     JSONObject bus;
                     MarkerOptions markerOptions;
+                    BitmapDescriptor icon; // = null
                     while(keys.hasNext()) {
                         busNumber = keys.next();
                         bus = buses.getJSONObject(busNumber);
@@ -331,10 +416,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         markerOptions = new MarkerOptions();
                         markerOptions.title(bus.getString("ligne") + " - " + bus.getString("course"));
                         markerOptions.position(new LatLng(Float.parseFloat(bus.getString("lat")), Float.parseFloat(bus.getString("lng"))));
-                        markerOptions.icon(mapActivity.busIcon);
+
+                        // set bus icon
+                        icon = mapActivity.busIcons.get(bus.getString("ligne"));
+                        if(icon == null) {
+                            icon = mapActivity.busIcon;
+                        }
+                        markerOptions.icon(icon);
+
                         markerOptions.snippet("#" + bus.getString("pupitre") + " - " + bus.getString("horodate"));
                         markerOptions.anchor(.5f, .5f);
-                        markerOptions.zIndex(100);
+                        markerOptions.zIndex(BUS_INDEX);
 
                         mapActivity.busMarkers.add(mapActivity.googleMap.addMarker(markerOptions));
                     }
