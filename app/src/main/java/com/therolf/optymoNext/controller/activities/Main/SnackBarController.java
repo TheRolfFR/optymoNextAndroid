@@ -1,5 +1,6 @@
 package com.therolf.optymoNext.controller.activities.Main;
 
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -12,7 +13,7 @@ import com.therolf.optymoNextModel.OptymoNetwork;
 
 public class SnackBarController {
 
-    public static void run(TopViewActivity activity, ImageView searchButton, FloatingActionButton fab) {
+    public static void run(TopViewActivity activity, ImageView searchButton, FloatingActionButton fab, ImageButton addButton) {
         // create the snackbar
         Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.coordinator_layout), activity.getResources().getString(R.string.splash_loading_network), Snackbar.LENGTH_INDEFINITE);
 
@@ -71,6 +72,7 @@ public class SnackBarController {
                     snackbar.dismiss();
                     searchButton.setEnabled(true);
                     fab.setEnabled(true);
+                    addButton.setEnabled(true);
                 });
             }
         });

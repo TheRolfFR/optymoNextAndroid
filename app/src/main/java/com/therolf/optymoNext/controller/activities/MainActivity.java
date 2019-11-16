@@ -15,6 +15,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -98,7 +99,9 @@ public class MainActivity extends TopViewActivity {
 
 
         // add favorite button
-        findViewById(R.id.main_add_button).setOnClickListener(v -> {
+        ImageButton addButton = findViewById(R.id.main_add_button);
+        addButton.setEnabled(false);
+        addButton.setOnClickListener(v -> {
             if(addFavoriteActivity == null) {
                 addFavoriteActivity = new Intent(MainActivity.this, FavoritesActivity.class);
                 startActivity(addFavoriteActivity);
@@ -158,7 +161,7 @@ public class MainActivity extends TopViewActivity {
         searchButton.setOnClickListener(view -> dialogController = new DialogController(MainActivity.this));
 
         // snackbar
-        SnackBarController.run(this, searchButton, fab);
+        SnackBarController.run(this, searchButton, fab, addButton);
 
         GridView gridView = findViewById(R.id.main_lines_pdf_gridview);
         LinePdfAdapter.LinePdf[] arr = new LinePdfAdapter.LinePdf[] {
