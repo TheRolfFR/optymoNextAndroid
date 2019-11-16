@@ -44,4 +44,8 @@
     <string name="error_occured">Une erreur est survenue. Réessayez plus tard.</string>
     <string name="dialog_search_no_results_found">Aucun résultat…</string>
     <string name="main_press_long">Maintenir appuyé pour supprimer le favori</string>
+    <string name="permission_message">Votre emplacement est requis pour vous montrer où vous êtes.</string>
+    <string name="permission_granted">Permission accordée</string>
+    <string name="permission_denied">Permission refusée</string>
+    <string name="permission_required">Permission requise</string>
 </resources>

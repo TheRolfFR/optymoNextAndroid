@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -33,6 +35,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.therolf.optymoNext.R;
+import com.therolf.optymoNext.controller.MyLocationController;
 import com.therolf.optymoNext.controller.NetworkController;
 import com.therolf.optymoNextModel.OptymoStop;
 
@@ -61,10 +64,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, View.OnClickListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, View.OnClickListener, LocationListener {
 
     private static final int LOCATION_PERMISSION_CODE = 1;
-    private String locationService;
+    private MyLocationController myLocationController;
 
     private static final int LINE_DEFAULT_INDEX = 0;
     private Map<String, Integer> zIndexes = new HashMap<String, Integer>() {{
@@ -88,6 +91,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        // my location controller
+        myLocationController = new MyLocationController(this);
+        myLocationController.setLocationListener(this);
 
         // close button
         findViewById(R.id.map_close_button).setOnClickListener(v -> finish());
@@ -118,6 +125,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         //googleMap.setMyLocationEnabled(true);
         googleMap.setMapStyle(new MapStyleOptions("[\n  {\n    \"featureType\": \"administrative.locality\",\n    \"elementType\": \"labels.text\",\n    \"stylers\": [\n      {\n        \"color\": \"#a2a2a2\"\n      },\n      {\n        \"visibility\": \"simplified\"\n      }\n    ]\n  },\n  {\n    \"featureType\": \"poi\",\n    \"stylers\": [\n      {\n        \"visibility\": \"off\"\n      }\n    ]\n  },\n  {\n    \"featureType\": \"road\",\n    \"elementType\": \"labels.icon\",\n    \"stylers\": [\n      {\n        \"visibility\": \"off\"\n      }\n    ]\n  }\n]"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.63557, 6.85780), 14));
+        googleMap.setMinZoomPreference(10);
 
         InputStream jsonInputStream = (getResources().openRawResource(getResources().getIdentifier("lines", "raw", getPackageName())));
 
@@ -322,7 +330,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onClick(View v) {
         if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "You have already granted these permission!", Toast.LENGTH_SHORT).show();
             moveCameraToMyLocation();
         } else {
             requestLocationPermission();
@@ -334,12 +341,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Manifest.permission.ACCESS_COARSE_LOCATION) || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-            new AlertDialog.Builder(this)
-                    .setTitle("Permission needed")
-                    .setMessage("This permission is needed because of this and that")
-                    .setPositiveButton("ok", (dialog, which) -> ActivityCompat.requestPermissions(MapActivity.this,
+            new AlertDialog.Builder(this, R.style.AppTheme_CustomDialog)
+                    .setTitle(R.string.permission_required)
+                    .setMessage(R.string.permission_message)
+                    .setPositiveButton(R.string.dialog_ok, (dialog, which) -> ActivityCompat.requestPermissions(MapActivity.this,
                             new String[] {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_CODE))
-                    .setNegativeButton("cancel", (dialog, which) -> dialog.dismiss())
+                    .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.dismiss())
                     .create().show();
 
         } else {
@@ -350,18 +357,24 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void moveCameraToMyLocation() {
         googleMap.setMyLocationEnabled(true);
+        myLocationController.requestLocation();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == LOCATION_PERMISSION_CODE)  {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.permission_granted, Toast.LENGTH_SHORT).show();
                 moveCameraToMyLocation();
             } else {
-                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.permission_message, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 14));
     }
 
     @SuppressWarnings("unused")
