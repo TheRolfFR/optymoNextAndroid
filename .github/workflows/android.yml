@@ -32,3 +32,4 @@ jobs:
         with:
           name: OptymoNext
           path: app/build/outputs/apk/debug/app-debug.apk
+          artifacts: "build/app/outputs/apk/debug/*.apk"
