@@ -92,6 +92,7 @@ public class NetworkController {
     }
     public OptymoLine getLineByNumberAndName(int number, String name) { return network.getLineByNumberAndName(number, name); }
 
+    @SuppressWarnings("WeakerAccess")
     public void addProgressListener(OptymoNetwork.ProgressListener listener) {
         network.addNetworkGenerationListener(listener);
     }
