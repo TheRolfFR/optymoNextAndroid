@@ -115,12 +115,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // location button
         findViewById(R.id.map_my_position_button).setOnClickListener(this);
-
-        //locationService = LocationServices.getFusedLocationProviderClient();
     }
 
     public void startMap() {
-        //googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         googleMap.setMapStyle(new MapStyleOptions("[\n  {\n    \"featureType\": \"administrative.locality\",\n    \"elementType\": \"labels.text\",\n    \"stylers\": [\n      {\n        \"color\": \"#a2a2a2\"\n      },\n      {\n        \"visibility\": \"simplified\"\n      }\n    ]\n  },\n  {\n    \"featureType\": \"poi\",\n    \"stylers\": [\n      {\n        \"visibility\": \"off\"\n      }\n    ]\n  },\n  {\n    \"featureType\": \"road\",\n    \"elementType\": \"labels.icon\",\n    \"stylers\": [\n      {\n        \"visibility\": \"off\"\n      }\n    ]\n  }\n]"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.63557, 6.85780), 14));
         googleMap.setMinZoomPreference(10);
