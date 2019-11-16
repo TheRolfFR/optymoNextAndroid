@@ -37,10 +37,10 @@ public class OptymoNetwork {
     private HashMap<String, OptymoLine> lines;
     private HashMap<String, OptymoStop> stops;
 
-    private ProgressListener networkGenerationListener = null;
+    private ArrayList<ProgressListener> networkGenerationListeners = new ArrayList<>();
 
-    public void setNetworkGenerationListener(ProgressListener networkGenerationListener) {
-        this.networkGenerationListener = networkGenerationListener;
+    public void addNetworkGenerationListener(ProgressListener networkGenerationListener) {
+        networkGenerationListeners.add(networkGenerationListener);
     }
 
     private boolean isGenerated = false;
@@ -91,8 +91,9 @@ public class OptymoNetwork {
             JSONObject stopObject;
 
             for (int i = 0; i < stopsArray.length(); i++) {
-                if(networkGenerationListener != null) {
-                    networkGenerationListener.OnProgressUpdate(i, stopsArray.length(), "stop");
+                if(networkGenerationListeners.size() > 0) {
+                    for(ProgressListener listener : networkGenerationListeners)
+                        listener.OnProgressUpdate(i, stopsArray.length(), "stop");
                 }
 
                 stopObject = stopsArray.getJSONObject(i);
@@ -107,9 +108,11 @@ public class OptymoNetwork {
             OptymoStop foundStop;
 
             for(int i = 0; i < linesArray.length(); ++i) {
-                if(networkGenerationListener != null) {
-                    networkGenerationListener.OnProgressUpdate(i, linesArray.length(), "line");
+                if(networkGenerationListeners.size() > 0) {
+                    for(ProgressListener listener : networkGenerationListeners)
+                        listener.OnProgressUpdate(i, linesArray.length(), "line");
                 }
+
                 lineObject = linesArray.getJSONObject(i);
                 createdLine = getLine("" + lineObject.getInt(LINE_NUMBER_KEY), lineObject.getString(LINE_NAME_KEY));
                 stopsOfLine = lineObject.getJSONArray(LINE_STOPS_ARRAY_KEY);
@@ -131,8 +134,10 @@ public class OptymoNetwork {
             e.printStackTrace();
         }
 
-        if(networkGenerationListener != null) {
-            networkGenerationListener.OnGenerationEnd(result);
+
+        if(networkGenerationListeners.size() > 0) {
+            for(ProgressListener listener : networkGenerationListeners)
+                listener.OnGenerationEnd(result);
         }
 
         isGenerated = result;
@@ -172,8 +177,9 @@ public class OptymoNetwork {
                     e.printStackTrace();
                 }
                 if(doc != null && doc.getElementsByTag("h3").size() == 0) {
-                    if(networkGenerationListener != null) {
-                        networkGenerationListener.OnProgressUpdate(i, names.getLength(), "gen_stop");
+                    if(networkGenerationListeners.size() > 0) {
+                        for(ProgressListener listener : networkGenerationListeners)
+                            listener.OnProgressUpdate(i, names.getLength(), "gen_stop");
                     }
                     stringer.object()
                         .key(STOP_SLUG_KEY).value(cleanedName)
@@ -210,8 +216,9 @@ public class OptymoNetwork {
             e.printStackTrace();
         }
 
-        if(networkGenerationListener != null) {
-            networkGenerationListener.OnGenerationEnd(!resultJson.equals(""));
+        if(networkGenerationListeners.size() > 0) {
+            for(ProgressListener listener : networkGenerationListeners)
+                listener.OnGenerationEnd(!resultJson.equals(""));
         }
     }
 
@@ -352,7 +359,6 @@ public class OptymoNetwork {
         org.jsoup.nodes.Document doc;
         Elements errorTitle, directions, nextTimes, lines;
         Element title;
-        doc = null;
         doc = Jsoup.connect("https://siv.optymo.fr/passage.php?ar=" + stopSlug + "&type=1").get();
 
         if(doc != null) {
@@ -393,7 +399,7 @@ public class OptymoNetwork {
     }
 
     public interface ProgressListener {
-        void OnProgressUpdate(int current, int total, String message);
+        default void OnProgressUpdate(int current, int total, String message) {}
         void OnGenerationEnd(boolean returnValue);
     }
 }

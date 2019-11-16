@@ -1,21 +1,22 @@
 package com.therolf.optymoNext.controller;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.Context;
+import android.util.Log;
 
 public class GlobalApplication extends Application {
 
-    @SuppressLint("StaticFieldLeak")
-    private static Context context;
+    private NetworkController networkController;
 
     @Override
     public void onCreate() {
+        networkController = new NetworkController();
+        networkController.generate(this);
+
+        Log.d("optymonext", "creating application instance");
         super.onCreate();
-        context = getApplicationContext();
     }
 
-    public static Context getContext() {
-        return context;
+    public NetworkController getNetworkController() {
+        return networkController;
     }
 }

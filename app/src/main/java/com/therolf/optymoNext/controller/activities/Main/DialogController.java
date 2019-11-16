@@ -1,6 +1,5 @@
 package com.therolf.optymoNext.controller.activities.Main;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -22,10 +21,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.NetworkController;
+import com.therolf.optymoNext.controller.GlobalApplication;
 import com.therolf.optymoNext.controller.Utility;
 import com.therolf.optymoNext.controller.activities.LineActivity;
 import com.therolf.optymoNext.controller.activities.StopActivity;
@@ -38,7 +38,7 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 
 public class DialogController implements TextWatcher {
-    private Activity activity;
+    private AppCompatActivity activity;
 
     private EditText searchInput;
 
@@ -69,9 +69,10 @@ public class DialogController implements TextWatcher {
     private boolean resultFound;
 
     @SuppressWarnings("unused")
-    public DialogController(Activity context) {
+    public DialogController(AppCompatActivity context) {
 
         // search part
+        //noinspection NullableProblems
         Dialog searchDialog = new Dialog(context) {
             @Override
             public boolean onTouchEvent(MotionEvent event) {
@@ -194,7 +195,7 @@ public class DialogController implements TextWatcher {
         editText.requestFocus();
     }
 
-    private void search(String search) {
+    private void search(AppCompatActivity activity, String search) {
         if(!searching) {
             search = search.toLowerCase();
             search = Normalizer.normalize(search, Normalizer.Form.NFD);
@@ -208,12 +209,12 @@ public class DialogController implements TextWatcher {
                 searchIcon.setImageDrawable(closeDrawable);
 
                 // if the network is generated
-                if (NetworkController.getInstance().isGenerated()) {
+                if (((GlobalApplication) activity.getApplication()).getNetworkController().isGenerated()) {
 //                    Log.d("search", "generated network");
                     // empty the previous array list
                     this.stopsResultsList.clear();
                     // get the stops starting with search
-                    OptymoStop[] stops = NetworkController.getInstance().getStops();
+                    OptymoStop[] stops = ((GlobalApplication) activity.getApplication()).getNetworkController().getStops();
                     String stopName;
                     for (OptymoStop s : stops) {
                         stopName = Normalizer.normalize(s.getName(), Normalizer.Form.NFD);
@@ -237,7 +238,7 @@ public class DialogController implements TextWatcher {
                     this.linesResultsList.clear();
 
                     // get the line starting with search
-                    OptymoLine[] lines = NetworkController.getInstance().getLines();
+                    OptymoLine[] lines = ((GlobalApplication) activity.getApplication()).getNetworkController().getLines();
                     String lineName;
                     for (OptymoLine l : lines) {
                         // smart line search: search lines with name containing the seach or ligne with the same number
@@ -302,7 +303,7 @@ public class DialogController implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        search(charSequence.toString());
+        search(activity, charSequence.toString());
     }
 
     @Override

@@ -7,13 +7,12 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.therolf.optymoNext.R;
 import com.therolf.optymoNext.controller.GlobalApplication;
-import com.therolf.optymoNext.controller.NetworkRunnable;
 import com.therolf.optymoNext.controller.activities.TopViewActivity;
 import com.therolf.optymoNextModel.OptymoNetwork;
 
 public class SnackBarController {
-    @SuppressWarnings("UnusedReturnValue")
-    public static Snackbar run(TopViewActivity activity, ImageView searchButton, FloatingActionButton fab) {
+
+    public static void run(TopViewActivity activity, ImageView searchButton, FloatingActionButton fab) {
         // create the snackbar
         Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.coordinator_layout), activity.getResources().getString(R.string.splash_loading_network), Snackbar.LENGTH_INDEFINITE);
 
@@ -37,7 +36,7 @@ public class SnackBarController {
         snackbar.show();
 
         // change snackbar text
-        NetworkRunnable.getInstance(new OptymoNetwork.ProgressListener() {
+        ((GlobalApplication) activity.getApplication()).getNetworkController().addProgressListenerIfNotGenenerated(new OptymoNetwork.ProgressListener() {
             @Override
             public void OnProgressUpdate(int current, int total, String message) {
                 activity.runOnUiThread(() -> {
@@ -74,8 +73,7 @@ public class SnackBarController {
                     fab.setEnabled(true);
                 });
             }
-        }, GlobalApplication.getContext()).run();
+        });
 
-        return snackbar;
     }
 }

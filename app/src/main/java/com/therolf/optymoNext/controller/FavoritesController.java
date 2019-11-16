@@ -88,12 +88,10 @@ public class FavoritesController {
 
             } catch (java.io.IOException e) {
                 e.printStackTrace();
-                System.err.println(e.getMessage());
             }
 
             if(progressListener != null)
                 progressListener.OnGenerationEnd(true);
-            System.out.println("Loaded " + size() + " favorites!");
             isFileRead = true;
         }
 

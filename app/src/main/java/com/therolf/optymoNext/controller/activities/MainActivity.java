@@ -13,7 +13,6 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -27,6 +26,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.therolf.optymoNext.R;
 import com.therolf.optymoNext.controller.FavoritesController;
+import com.therolf.optymoNext.controller.GlobalApplication;
 import com.therolf.optymoNext.controller.NetworkController;
 import com.therolf.optymoNext.controller.Utility;
 import com.therolf.optymoNext.controller.activities.Main.DialogController;
@@ -76,8 +76,7 @@ public class MainActivity extends TopViewActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_main, true);
-        NetworkController networkController = NetworkController.getInstance();
-        Log.e("lines number", "" + networkController.getLines().length);
+        NetworkController networkController = ((GlobalApplication) getApplication()).getNetworkController();
 
         // favorite list (BEFORE refreshFavoriteList)
         favoriteList = findViewById(R.id.main_favorite_next_stops);

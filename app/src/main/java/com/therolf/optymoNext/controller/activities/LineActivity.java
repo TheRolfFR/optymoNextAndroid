@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.NetworkController;
+import com.therolf.optymoNext.controller.GlobalApplication;
 import com.therolf.optymoNext.controller.Utility;
 import com.therolf.optymoNext.vue.adapters.StopAdapter;
 import com.therolf.optymoNextModel.OptymoLine;
@@ -34,8 +34,8 @@ public class LineActivity extends TopViewActivity {
         String lineName = getIntent().getStringExtra(LINE_NAME_KEY_DATA);
         int lineNumber = getIntent().getIntExtra(LINE_NUMBER_KEY_DATA, LINE_NUMBER_DEFAULT_VALUE);
 
-        if(NetworkController.getInstance().isGenerated() && lineNumber != LINE_NUMBER_DEFAULT_VALUE && lineName != null) {
-            OptymoLine line = NetworkController.getInstance().getLineByNumberAndName(lineNumber, lineName);
+        if(((GlobalApplication) getApplication()).getNetworkController().isGenerated() && lineNumber != LINE_NUMBER_DEFAULT_VALUE && lineName != null) {
+            OptymoLine line = ((GlobalApplication) getApplication()).getNetworkController().getLineByNumberAndName(lineNumber, lineName);
 
             if(line != null) {
                 notFinishedWell = false;
@@ -69,7 +69,7 @@ public class LineActivity extends TopViewActivity {
         }
 
         if(notFinishedWell) {
-            Log.e("line", "I didn't find your fucking line");
+            Log.e("optymonext", "I didn't find your fucking line");
             finish();
         }
     }

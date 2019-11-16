@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.therolf.optymoNext.R;
 import com.therolf.optymoNext.controller.FavoritesController;
-import com.therolf.optymoNext.controller.NetworkController;
+import com.therolf.optymoNext.controller.GlobalApplication;
 import com.therolf.optymoNext.vue.adapters.LineAdapter;
 import com.therolf.optymoNext.vue.adapters.StopAdapter;
 import com.therolf.optymoNextModel.OptymoDirection;
@@ -29,7 +29,7 @@ public class FavoritesActivity extends TopViewActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_add_favorite);
 
-        lines = NetworkController.getInstance().getLines();
+        lines = ((GlobalApplication) getApplication()).getNetworkController().getLines();
 
         final Spinner lineSpinner = findViewById(R.id.add_line_spinner);
         stopSpinner = findViewById(R.id.add_direction_spinner);
@@ -59,9 +59,6 @@ public class FavoritesActivity extends TopViewActivity {
                 );
 
                 FavoritesController.getInstance().addFavorite(newDirection, FavoritesActivity.this);
-                for(OptymoDirection dir : FavoritesController.getInstance().getFavorites()) {
-                    System.out.println(dir);
-                }
 
                 Toast.makeText(FavoritesActivity.this, getResources().getString(R.string.add_fav_toast_nb_of_fav, FavoritesController.getInstance().size()), Toast.LENGTH_SHORT).show();
             }

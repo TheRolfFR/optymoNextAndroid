@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings({"unused"})
 public class NetworkController {
 
     private static final String TAG = "NetworkGen";
@@ -21,15 +21,7 @@ public class NetworkController {
     private OptymoNetwork network;
     private String jsonFileName;
 
-    private OptymoNetwork.ProgressListener progressListener;
-
-    private static NetworkController networkController = new NetworkController();
-
-    public static NetworkController getInstance() {
-        return networkController;
-    }
-
-    private NetworkController() {
+    NetworkController() {
         this.jsonFileName = "stops.json";
         network = new OptymoNetwork();
     }
@@ -38,11 +30,12 @@ public class NetworkController {
         return network.isGenerated();
     }
 
-    public void generate(Context context) {
+    void generate(Context context) {
         generate(context, false);
     }
 
-    public void generate(Context context, boolean forceXml) {
+    @SuppressWarnings("SameParameterValue")
+    private void generate(Context context, boolean forceXml) {
         // iniialize default values
         InputStream xmlInputStream;
         String stopsJsonString = "";
@@ -75,7 +68,6 @@ public class NetworkController {
 
         // save json resulting if xml was generated
         String result = network.getResultJson();
-        System.out.println(result);
         if(!result.equals("")) {
             try {
                 FileOutputStream fos = context.openFileOutput(jsonFileName, Context.MODE_PRIVATE);
@@ -100,9 +92,16 @@ public class NetworkController {
     }
     public OptymoLine getLineByNumberAndName(int number, String name) { return network.getLineByNumberAndName(number, name); }
 
-    public void setProgressListener(OptymoNetwork.ProgressListener listener) {
-        progressListener = listener;
-        network.setNetworkGenerationListener(listener);
+    public void addProgressListener(OptymoNetwork.ProgressListener listener) {
+        network.addNetworkGenerationListener(listener);
+    }
+
+    public void addProgressListenerIfNotGenenerated(OptymoNetwork.ProgressListener listener) {
+        if(!network.isGenerated()) {
+            addProgressListener(listener);
+        } else {
+            listener.OnGenerationEnd(true);
+        }
     }
 
     public String getResultJSON() {

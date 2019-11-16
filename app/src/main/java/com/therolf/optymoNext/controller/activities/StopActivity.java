@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.NetworkController;
+import com.therolf.optymoNext.controller.GlobalApplication;
 import com.therolf.optymoNext.controller.Utility;
 import com.therolf.optymoNext.vue.adapters.NextTimeAdapter;
 import com.therolf.optymoNextModel.OptymoNextTime;
@@ -66,9 +66,9 @@ public class StopActivity extends TopViewActivity implements SwipeRefreshLayout.
      */
     private void decode() {
         // if network generated and stopslug decoded
-        if(NetworkController.getInstance().isGenerated() && stopSlug != null) {
+        if(((GlobalApplication) getApplication()).getNetworkController().isGenerated() && stopSlug != null) {
             // try to get the stop by its slug
-            OptymoStop stop = NetworkController.getInstance().getStopBySlug(stopSlug);
+            OptymoStop stop = ((GlobalApplication) getApplication()).getNetworkController().getStopBySlug(stopSlug);
 
             // if the stop exists
             if(stop != null) {

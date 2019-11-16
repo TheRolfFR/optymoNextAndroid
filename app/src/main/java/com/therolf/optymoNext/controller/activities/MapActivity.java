@@ -11,7 +11,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -35,8 +34,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.therolf.optymoNext.R;
+import com.therolf.optymoNext.controller.GlobalApplication;
 import com.therolf.optymoNext.controller.MyLocationController;
-import com.therolf.optymoNext.controller.NetworkController;
+import com.therolf.optymoNextModel.OptymoNetwork;
 import com.therolf.optymoNextModel.OptymoStop;
 
 import org.json.JSONArray;
@@ -119,9 +119,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         //locationService = LocationServices.getFusedLocationProviderClient();
     }
 
-    @Override
-    public void onMapReady(GoogleMap gMap) {
-        this.googleMap = gMap;
+    public void startMap() {
         //googleMap.setMyLocationEnabled(true);
         googleMap.setMapStyle(new MapStyleOptions("[\n  {\n    \"featureType\": \"administrative.locality\",\n    \"elementType\": \"labels.text\",\n    \"stylers\": [\n      {\n        \"color\": \"#a2a2a2\"\n      },\n      {\n        \"visibility\": \"simplified\"\n      }\n    ]\n  },\n  {\n    \"featureType\": \"poi\",\n    \"stylers\": [\n      {\n        \"visibility\": \"off\"\n      }\n    ]\n  },\n  {\n    \"featureType\": \"road\",\n    \"elementType\": \"labels.icon\",\n    \"stylers\": [\n      {\n        \"visibility\": \"off\"\n      }\n    ]\n  }\n]"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.63557, 6.85780), 14));
@@ -231,6 +229,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         startRepeatingTask();
     }
 
+    @Override
+    public void onMapReady(GoogleMap gMap) {
+        this.googleMap = gMap;
+
+        //noinspection Convert2Lambda
+        ((GlobalApplication) getApplication()).getNetworkController().addProgressListenerIfNotGenenerated(new OptymoNetwork.ProgressListener() {
+            @Override
+            public void OnGenerationEnd(boolean returnValue) {
+                startMap();
+            }
+        });
+    }
+
     @SuppressWarnings("SameParameterValue")
     private static BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorId) {
         return bitmapDescriptorFromVector(context, vectorId, 0);
@@ -260,7 +271,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if(NetworkController.getInstance().isGenerated() && NetworkController.getInstance().getStopBySlug(OptymoStop.nameToSlug(marker.getTitle())) != null)
+        if(((GlobalApplication) getApplication()).getNetworkController().isGenerated() && ((GlobalApplication) getApplication()).getNetworkController().getStopBySlug(OptymoStop.nameToSlug(marker.getTitle())) != null)
             StopActivity.launchStopActivity(this, OptymoStop.nameToSlug(marker.getTitle()));
         return false;
     }
@@ -273,7 +284,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     {
         @Override
         public void run() {
-            Log.d("optymonext", "Querying new bus locations");
+//            Log.d("optymonext", "Querying new bus locations");
             getBusPosition();
             mHandler.postDelayed(mHandlerTask, INTERVAL);
         }
