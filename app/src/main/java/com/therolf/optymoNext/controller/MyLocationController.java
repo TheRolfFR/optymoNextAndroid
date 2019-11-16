@@ -23,7 +23,8 @@ public class MyLocationController {
 
     @SuppressLint("MissingPermission")
     public void requestLocation() {
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, new LocationListener() {
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, new LocationListener() {
+
             @Override
             public void onLocationChanged(Location location) {
                 locationListener.onLocationChanged(location);
