@@ -15,12 +15,14 @@
 
     <TextView
         android:id="@+id/notification_expanded_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:clickable="true"
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"
+        android:gravity="bottom"
         android:marqueeRepeatLimit="marquee_forever"
-        android:scrollHorizontally="true"
         android:textColor="@android:color/tertiary_text_light"
-        tools:text="Sample content" />
+        tools:text="Sample contentSample contentSample contentSample contentSample contentSample contentSample contentSample contentSample contentSample contentSample contentSample contentSample content"
+        android:focusable="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
 </LinearLayout>
