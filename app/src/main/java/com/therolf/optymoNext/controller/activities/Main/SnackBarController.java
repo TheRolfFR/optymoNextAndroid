@@ -7,13 +7,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.GlobalApplication;
+import com.therolf.optymoNext.controller.global.GlobalApplication;
 import com.therolf.optymoNext.controller.activities.TopViewActivity;
 import com.therolf.optymoNextModel.OptymoNetwork;
 
-public class SnackBarController {
+class SnackBarController {
 
-    public static void run(TopViewActivity activity, ImageView searchButton, FloatingActionButton fab, ImageButton addButton) {
+    static void run(TopViewActivity activity, ImageView searchButton, FloatingActionButton fab, ImageButton addButton) {
         // create the snackbar
         Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.coordinator_layout), activity.getResources().getString(R.string.splash_loading_network), Snackbar.LENGTH_INDEFINITE);
 

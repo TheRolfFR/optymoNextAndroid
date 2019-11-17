@@ -12,8 +12,8 @@ import android.widget.TextView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.GlobalApplication;
-import com.therolf.optymoNext.controller.Utility;
+import com.therolf.optymoNext.controller.global.GlobalApplication;
+import com.therolf.optymoNext.controller.global.Utility;
 import com.therolf.optymoNext.vue.adapters.NextTimeAdapter;
 import com.therolf.optymoNextModel.OptymoNextTime;
 import com.therolf.optymoNextModel.OptymoStop;

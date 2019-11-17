@@ -1,4 +1,4 @@
-package com.therolf.optymoNext.controller;
+package com.therolf.optymoNext.controller.global;
 
 import android.app.Application;
 import android.util.Log;

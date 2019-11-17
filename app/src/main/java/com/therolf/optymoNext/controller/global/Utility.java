@@ -1,4 +1,4 @@
-package com.therolf.optymoNext.controller;
+package com.therolf.optymoNext.controller.global;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -83,7 +83,7 @@ public class Utility {
 
     @SuppressWarnings("ConstantConditions")
     @NonNull
-    public static Point getDisplayDimensions( Context context )
+    private static Point getDisplayDimensions(Context context)
     {
         WindowManager wm = ( WindowManager ) context.getSystemService( Context.WINDOW_SERVICE );
         Display display = wm.getDefaultDisplay();
@@ -107,14 +107,14 @@ public class Utility {
         return new Point( screenWidth, screenHeight );
     }
 
-    public static int getStatusBarHeight(Context context )
+    private static int getStatusBarHeight(Context context)
     {
         Resources resources = context.getResources();
         int resourceId = resources.getIdentifier( "status_bar_height", "dimen", "android" );
         return ( resourceId > 0 ) ? resources.getDimensionPixelSize( resourceId ) : 0;
     }
 
-    public static int getNavigationBarHeight(Context context )
+    private static int getNavigationBarHeight(Context context)
     {
         Resources resources = context.getResources();
         int resourceId = resources.getIdentifier( "navigation_bar_height", "dimen", "android" );

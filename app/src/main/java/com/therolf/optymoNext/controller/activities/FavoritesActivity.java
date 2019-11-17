@@ -9,7 +9,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.GlobalApplication;
+import com.therolf.optymoNext.controller.global.GlobalApplication;
+import com.therolf.optymoNext.controller.activities.Main.MainActivity;
 import com.therolf.optymoNext.vue.adapters.LineAdapter;
 import com.therolf.optymoNext.vue.adapters.StopAdapter;
 import com.therolf.optymoNextModel.OptymoDirection;

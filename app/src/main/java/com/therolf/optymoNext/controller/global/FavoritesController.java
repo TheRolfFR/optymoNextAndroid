@@ -1,4 +1,4 @@
-package com.therolf.optymoNext.controller;
+package com.therolf.optymoNext.controller.global;
 
 import android.content.Context;
 import android.util.ArrayMap;

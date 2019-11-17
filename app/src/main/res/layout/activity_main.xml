@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:id="@+id/main_refresh_layout"
     android:layout_height="match_parent"
-    tools:context=".controller.activities.MainActivity"
+    tools:context=".controller.activities.Main.MainActivity"
     android:background="@color/colorBackground">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

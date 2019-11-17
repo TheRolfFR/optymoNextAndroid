@@ -13,8 +13,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.GlobalApplication;
-import com.therolf.optymoNext.controller.Utility;
+import com.therolf.optymoNext.controller.global.GlobalApplication;
+import com.therolf.optymoNext.controller.global.Utility;
 import com.therolf.optymoNext.vue.adapters.StopAdapter;
 import com.therolf.optymoNextModel.OptymoLine;
 import com.therolf.optymoNextModel.OptymoStop;

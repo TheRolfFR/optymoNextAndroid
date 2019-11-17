@@ -1,4 +1,4 @@
-package com.therolf.optymoNext.controller.activities;
+package com.therolf.optymoNext.controller.activities.Map;
 
 import android.Manifest;
 import android.content.Context;
@@ -34,8 +34,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.GlobalApplication;
-import com.therolf.optymoNext.controller.MyLocationController;
+import com.therolf.optymoNext.controller.global.GlobalApplication;
+import com.therolf.optymoNext.controller.activities.StopActivity;
 import com.therolf.optymoNextModel.OptymoNetwork;
 import com.therolf.optymoNextModel.OptymoStop;
 

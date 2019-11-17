@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.Utility;
+import com.therolf.optymoNext.controller.global.Utility;
 import com.therolf.optymoNextModel.OptymoNextTime;
 
 import java.util.ArrayList;

@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 
 import androidx.annotation.Nullable;
 
-import com.therolf.optymoNext.controller.GlobalApplication;
+import com.therolf.optymoNext.controller.global.GlobalApplication;
 import com.therolf.optymoNextModel.OptymoDirection;
 import com.therolf.optymoNextModel.OptymoNetwork;
 import com.therolf.optymoNextModel.OptymoNextTime;

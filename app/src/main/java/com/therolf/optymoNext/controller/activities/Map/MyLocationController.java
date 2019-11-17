@@ -1,4 +1,4 @@
-package com.therolf.optymoNext.controller;
+package com.therolf.optymoNext.controller.activities.Map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,21 +8,21 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 @SuppressWarnings("unused")
-public class MyLocationController {
+class MyLocationController {
 
     private LocationManager locationManager;
     private com.google.android.gms.location.LocationListener locationListener;
 
-    public void setLocationListener(com.google.android.gms.location.LocationListener locationListener) {
+    void setLocationListener(com.google.android.gms.location.LocationListener locationListener) {
         this.locationListener = locationListener;
     }
 
-    public MyLocationController(Context context) {
+    MyLocationController(Context context) {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
     }
 
     @SuppressLint("MissingPermission")
-    public void requestLocation() {
+    void requestLocation() {
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, new LocationListener() {
 
             @Override

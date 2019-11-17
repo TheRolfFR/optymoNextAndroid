@@ -13,7 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.GlobalApplication;
+import com.therolf.optymoNext.controller.global.GlobalApplication;
+import com.therolf.optymoNext.controller.activities.Main.MainActivity;
 import com.therolf.optymoNextModel.OptymoNetwork;
 
 public class SplashScreenActivity extends AppCompatActivity implements OptymoNetwork.ProgressListener {

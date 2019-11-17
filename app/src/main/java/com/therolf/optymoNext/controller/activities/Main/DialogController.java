@@ -25,8 +25,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.GlobalApplication;
-import com.therolf.optymoNext.controller.Utility;
+import com.therolf.optymoNext.controller.global.GlobalApplication;
+import com.therolf.optymoNext.controller.global.Utility;
 import com.therolf.optymoNext.controller.activities.LineActivity;
 import com.therolf.optymoNext.controller.activities.StopActivity;
 import com.therolf.optymoNext.vue.adapters.LineAdapter;
@@ -69,7 +69,7 @@ public class DialogController implements TextWatcher {
     private boolean resultFound;
 
     @SuppressWarnings("unused")
-    public DialogController(AppCompatActivity context) {
+    DialogController(AppCompatActivity context) {
 
         // search part
         //noinspection NullableProblems

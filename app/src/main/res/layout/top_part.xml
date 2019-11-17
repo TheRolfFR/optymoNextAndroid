@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:backgroundTint="@color/colorBackground"
-    tools:context=".controller.activities.MainActivity">
+    tools:context=".controller.activities.Main.MainActivity">
 
     <ImageView
         android:id="@+id/top_bg_app"

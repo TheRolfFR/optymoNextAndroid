@@ -1,4 +1,4 @@
-package com.therolf.optymoNext.controller.activities;
+package com.therolf.optymoNext.controller.activities.Main;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -26,11 +26,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.GlobalApplication;
-import com.therolf.optymoNext.controller.NetworkController;
-import com.therolf.optymoNext.controller.Utility;
-import com.therolf.optymoNext.controller.activities.Main.DialogController;
-import com.therolf.optymoNext.controller.activities.Main.SnackBarController;
+import com.therolf.optymoNext.controller.global.GlobalApplication;
+import com.therolf.optymoNext.controller.global.NetworkController;
+import com.therolf.optymoNext.controller.global.Utility;
+import com.therolf.optymoNext.controller.activities.FavoritesActivity;
+import com.therolf.optymoNext.controller.activities.Map.MapActivity;
+import com.therolf.optymoNext.controller.activities.TopViewActivity;
 import com.therolf.optymoNext.controller.notifications.NotificationService;
 import com.therolf.optymoNext.vue.adapters.LineNextTimeAdapter;
 import com.therolf.optymoNext.vue.adapters.LinePdfAdapter;

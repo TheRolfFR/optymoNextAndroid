@@ -7,7 +7,7 @@
     android:background="@color/colorBackground"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".controller.activities.MapActivity">
+    tools:context=".controller.activities.Map.MapActivity">
 
     <fragment
         android:id="@+id/map_fragment"
