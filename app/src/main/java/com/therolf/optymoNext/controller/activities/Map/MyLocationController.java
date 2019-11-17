@@ -23,11 +23,11 @@ class MyLocationController {
 
     @SuppressLint("MissingPermission")
     void requestLocation() {
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, new LocationListener() {
-
+        locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                locationListener.onLocationChanged(location);
+                if(locationListener != null)
+                    locationListener.onLocationChanged(location);
             }
 
             @Override
@@ -44,6 +44,6 @@ class MyLocationController {
             public void onProviderDisabled(String provider) {
 
             }
-        });
+        }, null);
     }
 }
