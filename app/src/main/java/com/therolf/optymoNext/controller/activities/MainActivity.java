@@ -26,7 +26,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.FavoritesController;
 import com.therolf.optymoNext.controller.GlobalApplication;
 import com.therolf.optymoNext.controller.NetworkController;
 import com.therolf.optymoNext.controller.Utility;
@@ -132,7 +131,7 @@ public class MainActivity extends TopViewActivity {
             builder.setMessage(getResources().getString(R.string.dialog_del_fav_message, n.directionToString()));
             builder.setPositiveButton(R.string.dialog_yes,
                     (dialog, which) -> {
-                        FavoritesController.getInstance().remove(n, MainActivity.this);
+                        ((GlobalApplication) getApplication()).getFavoritesController().remove(n, MainActivity.this);
                         refreshFavoriteList();
                     });
             builder.setNegativeButton(R.string.dialog_no, (dialog, which) -> {
@@ -224,7 +223,7 @@ public class MainActivity extends TopViewActivity {
     private void refreshFavoriteList() {
         Toast.makeText(this, R.string.main_toast_loading_favorites, Toast.LENGTH_SHORT).show();
 
-        OptymoDirection[] directions = FavoritesController.getInstance().getFavorites();
+        OptymoDirection[] directions = ((GlobalApplication) getApplication()).getFavoritesController().getFavorites();
 
         Intent refreshIntent = new Intent(this.getApplicationContext(), NotificationService.class);
         refreshIntent.setAction(NotificationService.REFRESH_ACTION);

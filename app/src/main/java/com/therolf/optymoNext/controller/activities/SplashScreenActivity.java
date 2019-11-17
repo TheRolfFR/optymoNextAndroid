@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.FavoritesController;
+import com.therolf.optymoNext.controller.GlobalApplication;
 import com.therolf.optymoNextModel.OptymoNetwork;
 
 public class SplashScreenActivity extends AppCompatActivity implements OptymoNetwork.ProgressListener {
@@ -38,7 +38,7 @@ public class SplashScreenActivity extends AppCompatActivity implements OptymoNet
         loadingText = findViewById(R.id.splash_loading_text);
         errorText = findViewById(R.id.splash_error_text);
 
-        FavoritesController.getInstance().setProgressListener(this).readFile(this);
+        ((GlobalApplication) getApplication()).getFavoritesController().addProgressListenerIfNotLoaded(this);
     }
 
     void goToMain() {

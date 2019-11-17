@@ -4,38 +4,38 @@ import android.content.Context;
 import android.util.ArrayMap;
 
 import com.therolf.optymoNextModel.OptymoDirection;
-import com.therolf.optymoNextModel.OptymoNetwork;
+import com.therolf.optymoNextModel.OptymoNetwork.ProgressListener;
 import com.therolf.optymoNextModel.OptymoNextTime;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 
-@SuppressWarnings({"WeakerAccess"})
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class FavoritesController {
 
     private static final String PATH = "favorites.txt";
     private static final char LINE_SEPARATOR = '!';
     private static final String LINE_SEPARATOR_REGEX = "!";
     private static final char FIELD_SEPARATOR = '|';
-    private static FavoritesController controller = null;
-
-    @SuppressWarnings("unused")
-    public static FavoritesController getInstance() {
-        if(controller == null)
-            controller = new FavoritesController();
-        return controller;
-    }
 
     private ArrayMap<String, OptymoDirection> favorites = new ArrayMap<>();
     private boolean isFileRead = false;
-    private OptymoNetwork.ProgressListener progressListener;
+    private ArrayList<ProgressListener> progressListener = new ArrayList<>();
 
-    @SuppressWarnings("unused")
-    public FavoritesController setProgressListener(OptymoNetwork.ProgressListener progressListener) {
-        this.progressListener = progressListener;
-        return this;
+    public void addProgressListener(ProgressListener progressListener) {
+        this.progressListener.add(progressListener);
     }
 
+    public void addProgressListenerIfNotLoaded(ProgressListener progressListener) {
+        if(!isFileRead) {
+            addProgressListener(progressListener);
+        } else {
+            progressListener.OnGenerationEnd(true);
+        }
+    }
+
+    @SuppressWarnings("SameParameterValue")
     private static String escapeQuotes(String str) {
         if(str != null && str.length() > 0) {
             return str.replaceAll("[\\W]", "\\\\$0"); // \W designates non-word characters
@@ -43,7 +43,7 @@ public class FavoritesController {
         return "";
     }
 
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
+    @SuppressWarnings({"UnusedReturnValue"})
     public FavoritesController readFile(Context context) {
         if(!isFileRead) {
             try {
@@ -66,8 +66,8 @@ public class FavoritesController {
                         String line = lines[i];
 //                        System.err.println(line);
                         if (line.length() != 0) {
-                            if(progressListener != null)
-                                progressListener.OnProgressUpdate(i, Math.max(i, lines.length-1), "favorite");
+                            for(ProgressListener listener : progressListener)
+                                listener.OnProgressUpdate(i, Math.max(i, lines.length-1), "favorite");
 
                             parts = line.split(escapeQuotes("" + FIELD_SEPARATOR));
                             if (parts.length == 4) {
@@ -80,8 +80,8 @@ public class FavoritesController {
                             }
                         }
                     }
-                    if(progressListener != null)
-                        progressListener.OnGenerationEnd(true);
+                    for(ProgressListener listener : progressListener)
+                        listener.OnGenerationEnd(true);
                 }
 
                 fis.close();
@@ -90,10 +90,15 @@ public class FavoritesController {
                 e.printStackTrace();
             }
 
-            if(progressListener != null)
-                progressListener.OnGenerationEnd(true);
+            for(ProgressListener listener : progressListener)
+                listener.OnGenerationEnd(true);
             isFileRead = true;
+
+            return this;
         }
+
+        for(ProgressListener listener : progressListener)
+            listener.OnGenerationEnd(false);
 
         return this;
     }

@@ -9,7 +9,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.FavoritesController;
 import com.therolf.optymoNext.controller.GlobalApplication;
 import com.therolf.optymoNext.vue.adapters.LineAdapter;
 import com.therolf.optymoNext.vue.adapters.StopAdapter;
@@ -58,9 +57,9 @@ public class FavoritesActivity extends TopViewActivity {
                         stopsOfTheLine[stopSpinner.getSelectedItemPosition()].getSlug()
                 );
 
-                FavoritesController.getInstance().addFavorite(newDirection, FavoritesActivity.this);
+                ((GlobalApplication) getApplication()).getFavoritesController().addFavorite(newDirection, FavoritesActivity.this);
 
-                Toast.makeText(FavoritesActivity.this, getResources().getString(R.string.add_fav_toast_nb_of_fav, FavoritesController.getInstance().size()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(FavoritesActivity.this, getResources().getString(R.string.add_fav_toast_nb_of_fav, ((GlobalApplication) getApplication()).getFavoritesController().size()), Toast.LENGTH_SHORT).show();
             }
         });
     }
