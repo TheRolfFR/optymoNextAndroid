@@ -15,7 +15,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.therolf.optymoNext.R;
 import com.therolf.optymoNext.controller.activities.SplashScreenActivity;
-import com.therolf.optymoNext.vue.adapters.NextTimeItemAdapter;
 import com.therolf.optymoNextModel.OptymoNextTime;
 
 import java.text.DateFormat;
@@ -23,37 +22,34 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-@SuppressWarnings({"unused", "WeakerAccess", "FieldCanBeLocal"})
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class NotificationController {
 
-    public static final String NEXT_SIX_OFFSET_KEY = "offset";
+    private static final String NEXT_SIX_OFFSET_KEY = "offset";
 
     private RemoteViews notificationLayoutExpanded;
     private NotificationManager notificationManager;
     private NotificationCompat.Builder builder;
 
-    private StringBuilder buffer = new StringBuilder();
+    private StringBuilder stringBuilder = new StringBuilder();
     private DateFormat dateFormat;
-    private NextTimeItemAdapter nextTimeItemAdapter;
     private ArrayList<OptymoNextTime> nextTimes = new ArrayList<>();
 
     private String title = "";
-    private NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
     private Intent nextSixIntent;
     private PendingIntent nextSixPendingIntent;
 
     private static final int NOTIFICATION_ID = 234;
-    private static final String NOTIFICATION_CHANNEL_ID = "my_channel_01";
-    private static final CharSequence NOTIFICATION_CHANNEL_NAME = "my_channel";
-    private static final String NOTIFICATION_CHANNEL_DESCRIPTION = "This is my channel";
+    private static final String NOTIFICATION_CHANNEL_ID = "optymo_next_times_01";
+    private static final CharSequence NOTIFICATION_CHANNEL_NAME = "optymo_next_times";
+    private static final String NOTIFICATION_CHANNEL_DESCRIPTION = "Channel only used to show persistent next times notification";
 
-    public void run(Context context) {
+    void run(Context context) {
         if(builder != null) {
             return;
         }
 
-        nextTimeItemAdapter = new NextTimeItemAdapter(context, nextTimes);
         notificationLayoutExpanded = new RemoteViews(context.getPackageName(), R.layout.notification_expanded);
 
         // date format
@@ -61,6 +57,7 @@ public class NotificationController {
 
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        // channel for greater versions than 8.0
         NotificationChannel mChannel = null; // = null
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
@@ -91,7 +88,8 @@ public class NotificationController {
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(context.getString(R.string.update_never))
                 .setContentText(context.getString(R.string.notification_content_text))
-                .setStyle(inboxStyle)
+                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                .setCustomBigContentView(notificationLayoutExpanded)
                 .setOngoing(true)
                 .setPriority(Notification.PRIORITY_MIN)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) //to show content in lock screen
@@ -115,53 +113,43 @@ public class NotificationController {
         }
     }
 
-    public void updateBody(ArrayList<OptymoNextTime> otherNextTimes) {
-        if(inboxStyle == null) {
-            inboxStyle = new NotificationCompat.InboxStyle();
-            inboxStyle.setBigContentTitle(title);
-        }
+    void resetNotificationBody() {
+        // reset string builder
+        stringBuilder.setLength(0);
+        // reset string in notification also
+        notificationLayoutExpanded.setTextViewText(R.id.notification_expanded_content, stringBuilder);
 
-        for(OptymoNextTime n : otherNextTimes) {
-            appendToNotificationBody(n.toString());
-        }
+//        this.sendNotification();
     }
 
-    public void resetNotificationBody() {
-        inboxStyle = new NotificationCompat.InboxStyle();
-        inboxStyle.setBigContentTitle(title);
+    void appendToNotificationBody(String line) {
+        // add new end line
+        if(stringBuilder.length() > 0)
+            stringBuilder.append('\n');
 
-        buffer.setLength(0);
+        // add the line to the buffer
+        stringBuilder.append(line);
 
-        this.sendNotification();
+        // reset string in notification also
+        notificationLayoutExpanded.setTextViewText(R.id.notification_expanded_content, stringBuilder);
+
+//        this.sendNotification();
     }
 
-    public void appendToNotificationBody(String line) {
-        if(inboxStyle == null) {
-            inboxStyle = new NotificationCompat.InboxStyle();
-            inboxStyle.setBigContentTitle(title);
-        }
-        inboxStyle.addLine(line);
-
-        this.sendNotification();
-    }
-
-    public void updateTitle(String title) {
-        if(inboxStyle == null) {
-            inboxStyle = new NotificationCompat.InboxStyle();
-        }
-
+    private void updateTitle(String title) {
+        // update data title
         this.title = title;
 
-        inboxStyle.setBigContentTitle(title);
+        // update title textview
+        notificationLayoutExpanded.setTextViewText(R.id.notification_expanded_title, this.title);
 
+        // will update notification title
         this.sendNotification();
     }
 
     private void sendNotification() {
         if(builder != null) {
-            builder
-                    .setStyle(inboxStyle)
-                    .setContentTitle(title);
+            builder = builder.setContentTitle(title);
             notificationManager.notify(NOTIFICATION_ID, builder.build());
         }
     }
@@ -170,11 +158,11 @@ public class NotificationController {
         updateTitle(context.getString(R.string.update_pending));
     }
 
-    public void setTitlePending(Context context) {
+    void setTitlePending(Context context) {
         updateTitle(context.getString(R.string.update_pending));
     }
 
-    public void setUpdatedAtTitle(Context context) {
+    void setUpdatedAtTitle(Context context) {
         Date date = new Date();
         String dateFormatted = dateFormat.format(date);
         updateTitle(context.getString(R.string.update_last, dateFormatted));
