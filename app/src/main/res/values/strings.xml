@@ -44,10 +44,10 @@
     <string name="lines">Lines</string>
     <string name="main_made_by_text">App made by TheRolf</string>
     <string name="main_made_by_website" translatable="false">https://therolf.fr</string>
-    <string name="dialog_download_pdf_content">We didn\'t find any PDF viewer. Do you want to downlaod it?</string>
+    <string name="dialog_download_pdf_content">We didn\'t find any PDF viewer. Do you want to download it?</string>
     <string name="dialog_download_pdf_title">No PDF viewer found</string>
     <string name="dialog_cancel">Cancel</string>
-    <string name="error_occured">An error occured. Please try later.</string>
+    <string name="error_occured">An error occurred. Please try later.</string>
     <string name="dialog_search_no_results_found">No result found…</string>
     <string name="refresh_icon_desc" translatable="false">refresh icon</string>
     <string name="main_press_long">Long press to delete favorite</string>
@@ -55,7 +55,7 @@
     <string name="permission_granted">Permission granted</string>
     <string name="permission_denied">Permission denied</string>
     <string name="permission_required">Permission required</string>
-    <string name="dialog_ok" translatable="false">ok</string>
+    <string name="dialog_ok" translatable="false">OK</string>
     <string name="main_traffic_info">Traffic infos</string>
     <string name="arrow_expandable_list" translatable="false">arrow expandable list</string>
 </resources>
