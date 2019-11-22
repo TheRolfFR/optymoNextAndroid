@@ -1,8 +1,8 @@
 package com.therolf.optymoNext.controller.activities.Main;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -26,12 +26,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.global.GlobalApplication;
-import com.therolf.optymoNext.controller.global.NetworkController;
-import com.therolf.optymoNext.controller.global.Utility;
 import com.therolf.optymoNext.controller.activities.FavoritesActivity;
 import com.therolf.optymoNext.controller.activities.Map.MapActivity;
 import com.therolf.optymoNext.controller.activities.TopViewActivity;
+import com.therolf.optymoNext.controller.global.AlertController;
+import com.therolf.optymoNext.controller.global.GlobalApplication;
+import com.therolf.optymoNext.controller.global.NetworkController;
+import com.therolf.optymoNext.controller.global.Utility;
 import com.therolf.optymoNext.controller.notifications.NotificationService;
 import com.therolf.optymoNext.vue.adapters.LineNextTimeAdapter;
 import com.therolf.optymoNext.vue.adapters.LinePdfAdapter;
@@ -126,20 +127,18 @@ public class MainActivity extends TopViewActivity {
 
             OptymoNextTime n = (OptymoNextTime) nextTime;
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppTheme_CustomDialog);
-            builder.setCancelable(true);
+            AlertController builder = new AlertController(MainActivity.this);
             builder.setTitle(R.string.dialog_del_fav_title);
             builder.setMessage(getResources().getString(R.string.dialog_del_fav_message, n.directionToString()));
             builder.setPositiveButton(R.string.dialog_yes,
-                    (dialog, which) -> {
+                    (DialogInterface dialog, int which) -> {
                         ((GlobalApplication) getApplication()).getFavoritesController().remove(n, MainActivity.this);
                         refreshFavoriteList();
                     });
             builder.setNegativeButton(R.string.dialog_no, (dialog, which) -> {
             });
 
-            AlertDialog dialog = builder.create();
-            dialog.show();
+            builder.show();
         });
 
         // search icon
@@ -185,8 +184,7 @@ public class MainActivity extends TopViewActivity {
             }
             catch (ActivityNotFoundException e)
             {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppTheme_CustomDialog);
-                builder.setCancelable(true);
+                AlertController builder = new AlertController(MainActivity.this);
                 builder.setTitle(R.string.dialog_download_pdf_title);
                 builder.setMessage(R.string.dialog_download_pdf_content);
                 builder.setPositiveButton(R.string.dialog_yes,
@@ -197,11 +195,12 @@ public class MainActivity extends TopViewActivity {
                         });
                 builder.setNegativeButton(R.string.dialog_cancel, (dialog, which) -> {
                 });
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                builder.show();
             }
         });
+
+        // traffic info
+        new TrafficController(this);
 
         // made by part
         TextView madeBy = findViewById(R.id.main_made_by);

@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.therolf.optymoNext.R;
 import com.therolf.optymoNext.controller.global.GlobalApplication;
 import com.therolf.optymoNext.controller.activities.StopActivity;
+import com.therolf.optymoNext.controller.global.Utility;
 import com.therolf.optymoNextModel.OptymoNetwork;
 import com.therolf.optymoNextModel.OptymoStop;
 
@@ -48,12 +49,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -304,25 +302,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         stopRepeatingTask();
     }
 
-    @SuppressWarnings("SameParameterValue")
-    private static String readUrl(String urlString) throws Exception {
-        BufferedReader reader = null;
-        try {
-            URL url = new URL(urlString);
-            reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuilder buffer = new StringBuilder();
-            int read;
-            char[] chars = new char[1024];
-            while ((read = reader.read(chars)) != -1)
-                buffer.append(chars, 0, read);
-
-            return buffer.toString();
-        } finally {
-            if (reader != null)
-                reader.close();
-        }
-    }
-
     private void getBusPosition() {
 
         // stop last request
@@ -400,7 +379,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             String result = null;
 
             try {
-                result = readUrl("https://www.optymo.fr/wp-admin/admin-ajax.php?action=getItrBus&src=itrsub/get_markers_urb.php");
+                result = Utility.readUrl("https://www.optymo.fr/wp-admin/admin-ajax.php?action=getItrBus&src=itrsub/get_markers_urb.php");
             } catch (Exception e) {
                 e.printStackTrace();
             }

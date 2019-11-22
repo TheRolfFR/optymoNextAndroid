@@ -48,4 +48,5 @@
     <string name="permission_granted">Permission accordée</string>
     <string name="permission_denied">Permission refusée</string>
     <string name="permission_required">Permission requise</string>
+    <string name="main_traffic_info">Infos Trafic</string>
 </resources>

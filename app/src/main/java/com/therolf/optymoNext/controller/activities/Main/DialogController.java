@@ -131,12 +131,12 @@ public class DialogController implements TextWatcher {
 
         // set search / close drawable for image view
         this.searchDrawable = this.searchIcon.getDrawable();
-        this.closeDrawable = context.getDrawable(R.drawable.ic_close_red);
+        this.closeDrawable = context.getResources().getDrawable(R.drawable.ic_close_red);
 
         // get background drawable
         this.inputBackground = searchDialog.findViewById(R.id.dialog_search_input_background);
-        this.normalInputBackgroundDrawable = context.getDrawable(R.drawable.element_background);
-        this.searchInputTopBackgroundDrawable = context.getDrawable(R.drawable.element_background_toppart);
+        this.normalInputBackgroundDrawable = context.getResources().getDrawable(R.drawable.element_background);
+        this.searchInputTopBackgroundDrawable = context.getResources().getDrawable(R.drawable.element_background_toppart);
 
         // add key listener for this
         this.searchInput.addTextChangedListener(this);

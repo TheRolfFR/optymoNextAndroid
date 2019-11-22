@@ -1,6 +1,7 @@
 package com.therolf.optymoNext.controller.global;
 
 import android.app.Application;
+import android.os.AsyncTask;
 import android.util.Log;
 
 public class GlobalApplication extends Application {
@@ -11,7 +12,7 @@ public class GlobalApplication extends Application {
     @Override
     public void onCreate() {
         networkController = new NetworkController();
-        networkController.generate(this);
+        new GenerateNetworkRequest().execute(this);
 
         favoritesController = new FavoritesController();
         favoritesController.readFile(this);
@@ -26,5 +27,17 @@ public class GlobalApplication extends Application {
 
     public FavoritesController getFavoritesController() {
         return favoritesController;
+    }
+
+    private static class GenerateNetworkRequest extends AsyncTask<GlobalApplication, Void, Void> {
+
+        @Override
+        protected Void doInBackground(GlobalApplication... contexts) {
+            if(contexts.length  > 0) {
+                contexts[0].networkController.generate(contexts[0]);
+            }
+
+            return null;
+        }
     }
 }

@@ -72,7 +72,8 @@
                             android:adjustViewBounds="true"
                             android:background="@android:color/transparent"
                             android:contentDescription="@string/refresh_icon_desc"
-                            app:srcCompat="@drawable/ic_refresh_red" />
+                            app:srcCompat="@drawable/ic_refresh_red"
+                            tools:ignore="VectorDrawableCompat" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -108,7 +109,8 @@
                             android:adjustViewBounds="true"
                             android:background="@android:color/transparent"
                             android:contentDescription="@string/add_fav_title"
-                            app:srcCompat="@drawable/ic_add_red" />
+                            app:srcCompat="@drawable/ic_add_red"
+                            tools:ignore="VectorDrawableCompat" />
 
                     </LinearLayout>
 
@@ -120,7 +122,8 @@
                         android:elevation="6dp"
                         android:minWidth="100dp"
                         android:nestedScrollingEnabled="true"
-                        android:padding="0dp">
+                        android:padding="0dp"
+                        tools:ignore="UnusedAttribute">
 
                     </ListView>
 
@@ -183,6 +186,31 @@
 
             </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/component_vertical_margin"
+                android:background="@color/elementBackground"
+                app:cardCornerRadius="@dimen/component_border_radius">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/component_padding"
+                    android:paddingBottom="@dimen/component_padding">
+
+                    <ExpandableListView
+                        android:id="@+id/main_traffic_info_listview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@null"
+                        android:groupIndicator="@null" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
             <TextView
                 android:id="@+id/main_made_by"
                 android:layout_width="match_parent"
@@ -190,8 +218,8 @@
                 android:fontFamily="@font/nunito_bold"
                 android:gravity="left|center_vertical"
                 android:textSize="18sp"
-                tools:text="Sample Text"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded"
+                tools:text="Sample Text" />
 
         </LinearLayout>
 

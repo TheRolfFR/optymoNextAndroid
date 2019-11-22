@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_app">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/element_background"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_app"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:id="@+id/dialog_alert_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_semibold"
+            android:textColor="@color/colorOnBackground"
+            android:textSize="22sp"
+            tools:text="Sample title" />
+
+        <TextView
+            android:id="@+id/dialog_alert_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/component_padding_half"
+            android:paddingBottom="@dimen/component_padding_half"
+            android:textColor="@color/colorOnBackground"
+            android:textSize="16sp"
+            tools:text="Sample content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="clip_vertical|right"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/component_padding"
+            tools:ignore="RtlHardcoded">
+
+            <Button
+                android:id="@+id/dialog_alert_negative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/nunito_bold"
+                android:minWidth="50dp"
+                android:minHeight="0dp"
+                android:padding="@dimen/component_padding_half"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="13sp"
+                tools:ignore="ButtonStyle"
+                tools:text="@string/dialog_cancel" />
+
+            <Button
+                android:id="@+id/dialog_alert_positive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/component_padding_half"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/nunito_bold"
+                android:minWidth="50dp"
+                android:minHeight="0dp"
+                android:padding="@dimen/component_padding_half"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="13sp"
+                tools:ignore="ButtonStyle,RtlHardcoded"
+                tools:text="@string/dialog_ok" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

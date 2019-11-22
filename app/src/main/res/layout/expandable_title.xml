@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/component_padding"
+    android:paddingEnd="@dimen/component_padding"
+    tools:ignore="UseCompoundDrawables">
+
+    <TextView
+        android:id="@+id/expandable_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/component_padding_half"
+        android:layout_marginBottom="@dimen/component_padding_half"
+        android:layout_weight="1"
+        android:fontFamily="@font/nunito_bold"
+        android:includeFontPadding="true"
+        android:text="@string/main_traffic_info"
+        android:textColor="@color/colorPrimaryOnElement"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/expandable_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/component_padding"
+        android:contentDescription="@string/arrow_expandable_list"
+        app:srcCompat="@drawable/ic_arrow_down_red"
+        tools:ignore="RtlHardcoded,VectorDrawableCompat"
+        tools:srcCompat="@drawable/ic_arrow_down_red" />
+
+</LinearLayout>

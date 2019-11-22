@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -9,12 +9,12 @@
         <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
 
-    <style name="AppTheme.CustomDialog" parent="Theme.AppCompat.Dialog.Alert">
+    <style name="AppTheme.CustomDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowFullscreen">false</item>
         <item name="dialogCornerRadius">@dimen/component_border_radius</item>
         <item name="colorAccent">@color/colorPrimaryOnElement</item>
         <item name="android:textColorPrimary">@color/colorOnBackground</item>
-        <item name="android:background">@color/colorBackground</item>
+<!--        <item name="android:background">@color/colorBackground</item>-->
     </style>
 
     <style name="AppTheme.NoFullScreenDialog" parent="Theme.AppCompat.Dialog">
@@ -48,9 +48,9 @@
 
     <style name="AppTheme.EditText" parent="Widget.AppCompat.EditText">
         <item name="android:textColorHint">@color/colorLightGraySearch</item>
-        <item name="android:backgroundTint">@android:color/transparent</item>
+        <item name="android:backgroundTint" tools:ignore="NewApi">@android:color/transparent</item>
         <item name="android:fontFamily">@font/nunito_regular</item>
-        <item name="android:colorAccent">@color/colorPrimary</item>
+        <item name="android:colorAccent" tools:ignore="NewApi">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/dialog_search_input_text_size</item>
     </style>
 

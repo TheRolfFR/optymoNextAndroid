@@ -92,7 +92,8 @@
                 <ListView
                     android:id="@+id/dialog_search_stop_list_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:divider="@null">
 
                 </ListView>
             </LinearLayout>
@@ -117,7 +118,8 @@
                 <ListView
                     android:id="@+id/dialog_search_line_list_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:divider="@null" />
 
             </LinearLayout>
 

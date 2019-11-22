@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/main_refresh_layout"
@@ -25,8 +26,6 @@
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="@dimen/padding_app"
             android:layout_marginBottom="@dimen/floating_button_margin_bottom"
-            android:backgroundTint="@color/colorPrimaryOnElement"
-            android:elevation="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_map" />
 

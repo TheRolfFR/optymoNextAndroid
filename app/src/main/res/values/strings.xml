@@ -56,4 +56,6 @@
     <string name="permission_denied">Permission denied</string>
     <string name="permission_required">Permission required</string>
     <string name="dialog_ok" translatable="false">ok</string>
+    <string name="main_traffic_info">Traffic infos</string>
+    <string name="arrow_expandable_list" translatable="false">arrow expandable list</string>
 </resources>
