@@ -8,21 +8,515 @@
     <TextView
         android:id="@+id/notification_expanded_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/primary_text_light"
+        android:layout_height="22dp"
+        android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
         android:textSize="16sp"
+        android:textStyle=""
         tools:text="Sample title" />
 
-    <TextView
-        android:id="@+id/notification_expanded_content"
-        android:clickable="true"
-        android:ellipsize="marquee"
-        android:fadingEdge="horizontal"
-        android:gravity="bottom"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:textColor="@android:color/tertiary_text_light"
-        tools:text="Sample contentSample contentSample contentSample contentSample contentSample contentSample contentSample contentSample contentSample contentSample contentSample contentSample content"
-        android:focusable="true"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content" />
+    <LinearLayout
+        android:id="@+id/notification_next_stop_0"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            tools:ignore="RtlHardcoded,RtlSymmetry">
+
+            <RelativeLayout
+                android:layout_width="10dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/notification_next_stop_line_bg_0"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="-20dp"
+                    android:layout_marginTop="-40dp"
+                    android:layout_marginEnd="-20dp"
+                    android:layout_marginBottom="-20dp"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center_horizontal|top"
+                    android:text="|"
+                    android:textColor="@color/colorLine1"
+                    android:textSize="70sp"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/notification_next_stop_number_0"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorLineBlackBackground"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:textColor="@color/colorLineOnBackground"
+                android:textSize="12sp"
+                tools:text="1" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/notification_next_stop_main_0"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/TextAppearance.Compat.Notification"
+            tools:ignore="RtlCompat"
+            tools:text="Sample text" />
+
+        <TextView
+            android:id="@+id/notification_next_stop_time_0"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="0dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textAlignment="textEnd"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
+            tools:ignore="RtlCompat"
+            tools:text="7 min" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/notification_next_stop_1"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:orientation="horizontal"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            tools:ignore="RtlHardcoded,RtlSymmetry">
+
+            <RelativeLayout
+                android:layout_width="10dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/notification_next_stop_line_bg_1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="-20dp"
+                    android:layout_marginTop="-40dp"
+                    android:layout_marginEnd="-20dp"
+                    android:layout_marginBottom="-20dp"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center_horizontal|top"
+                    android:text="|"
+                    android:textColor="@color/colorLine1"
+                    android:textSize="70sp"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/notification_next_stop_number_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorLineBlackBackground"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:textColor="@color/colorLineOnBackground"
+                android:textSize="12sp"
+                tools:text="1" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/notification_next_stop_main_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/TextAppearance.Compat.Notification"
+            tools:ignore="RtlCompat"
+            tools:text="Sample text" />
+
+        <TextView
+            android:id="@+id/notification_next_stop_time_1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="0dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textAlignment="textEnd"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
+            tools:ignore="RtlCompat"
+            tools:text="7 min" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/notification_next_stop_2"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:orientation="horizontal"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            tools:ignore="RtlHardcoded,RtlSymmetry">
+
+            <RelativeLayout
+                android:layout_width="10dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/notification_next_stop_line_bg_2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="-20dp"
+                    android:layout_marginTop="-40dp"
+                    android:layout_marginEnd="-20dp"
+                    android:layout_marginBottom="-20dp"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center_horizontal|top"
+                    android:text="|"
+                    android:textColor="@color/colorLine1"
+                    android:textSize="70sp"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/notification_next_stop_number_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorLineBlackBackground"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:textColor="@color/colorLineOnBackground"
+                android:textSize="12sp"
+                tools:text="1" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/notification_next_stop_main_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/TextAppearance.Compat.Notification"
+            tools:ignore="RtlCompat"
+            tools:text="Sample text" />
+
+        <TextView
+            android:id="@+id/notification_next_stop_time_2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="0dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textAlignment="textEnd"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
+            tools:ignore="RtlCompat"
+            tools:text="7 min" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/notification_next_stop_3"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:orientation="horizontal"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            tools:ignore="RtlHardcoded,RtlSymmetry">
+
+            <RelativeLayout
+                android:layout_width="10dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/notification_next_stop_line_bg_3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="-20dp"
+                    android:layout_marginTop="-40dp"
+                    android:layout_marginEnd="-20dp"
+                    android:layout_marginBottom="-20dp"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center_horizontal|top"
+                    android:text="|"
+                    android:textColor="@color/colorLine1"
+                    android:textSize="70sp"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/notification_next_stop_number_3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorLineBlackBackground"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:textColor="@color/colorLineOnBackground"
+                android:textSize="12sp"
+                tools:text="1" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/notification_next_stop_main_3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/TextAppearance.Compat.Notification"
+            tools:ignore="RtlCompat"
+            tools:text="Sample text" />
+
+        <TextView
+            android:id="@+id/notification_next_stop_time_3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="0dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textAlignment="textEnd"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
+            tools:ignore="RtlCompat"
+            tools:text="7 min" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/notification_next_stop_4"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:orientation="horizontal"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            tools:ignore="RtlHardcoded,RtlSymmetry">
+
+            <RelativeLayout
+                android:layout_width="10dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/notification_next_stop_line_bg_4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="-20dp"
+                    android:layout_marginTop="-40dp"
+                    android:layout_marginEnd="-20dp"
+                    android:layout_marginBottom="-20dp"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center_horizontal|top"
+                    android:text="|"
+                    android:textColor="@color/colorLine1"
+                    android:textSize="70sp"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/notification_next_stop_number_4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorLineBlackBackground"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:textColor="@color/colorLineOnBackground"
+                android:textSize="12sp"
+                tools:text="1" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/notification_next_stop_main_4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/TextAppearance.Compat.Notification"
+            tools:ignore="RtlCompat"
+            tools:text="Sample text" />
+
+        <TextView
+            android:id="@+id/notification_next_stop_time_4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="0dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textAlignment="textEnd"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
+            tools:ignore="RtlCompat"
+            tools:text="7 min" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/notification_next_stop_5"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:orientation="horizontal"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            tools:ignore="RtlHardcoded,RtlSymmetry">
+
+            <RelativeLayout
+                android:layout_width="10dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/notification_next_stop_line_bg_5"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="-20dp"
+                    android:layout_marginTop="-40dp"
+                    android:layout_marginEnd="-20dp"
+                    android:layout_marginBottom="-20dp"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center_horizontal|top"
+                    android:text="|"
+                    android:textColor="@color/colorLine1"
+                    android:textSize="70sp"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/notification_next_stop_number_5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorLineBlackBackground"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:textColor="@color/colorLineOnBackground"
+                android:textSize="12sp"
+                tools:text="1" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/notification_next_stop_main_5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/TextAppearance.Compat.Notification"
+            tools:ignore="RtlCompat"
+            tools:text="Sample text" />
+
+        <TextView
+            android:id="@+id/notification_next_stop_time_5"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="0dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textAlignment="textEnd"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
+            tools:ignore="RtlCompat"
+            tools:text="7 min" />
+    </LinearLayout>
+
 </LinearLayout>

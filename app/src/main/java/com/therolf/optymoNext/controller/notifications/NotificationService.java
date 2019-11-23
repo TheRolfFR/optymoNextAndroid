@@ -3,6 +3,7 @@ package com.therolf.optymoNext.controller.notifications;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -76,6 +77,7 @@ public class NotificationService extends IntentService {
         int rNumber = 0;
         int startIndex = OnBoot.getIndex();
         while (startIndex + rNumber < fav.length && rNumber < 6) {
+            Log.d("optymonext", "request #" + rNumber);
 
             // make a new request
             NextTimeRequest request = new NextTimeRequest(this);
@@ -147,7 +149,7 @@ public class NotificationService extends IntentService {
 
             // add line to notification if first 6
             if(service.numberOfRequests < 7)
-                service.notificationController.appendToNotificationBody(nextTime.toString());
+                service.notificationController.appendToNotificationBody(nextTime);
         }
 
     }

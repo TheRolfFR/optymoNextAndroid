@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
@@ -30,6 +32,54 @@ public class NotificationController {
     private RemoteViews notificationLayoutExpanded;
     private NotificationManager notificationManager;
     private NotificationCompat.Builder builder;
+    private int numberOfLines = 0;
+
+    private int[] layoutIds = {
+            R.id.notification_next_stop_0,
+            R.id.notification_next_stop_1,
+            R.id.notification_next_stop_2,
+            R.id.notification_next_stop_3,
+            R.id.notification_next_stop_4,
+            R.id.notification_next_stop_5
+    };
+
+    private int[] bgIds = {
+            R.id.notification_next_stop_line_bg_0,
+            R.id.notification_next_stop_line_bg_1,
+            R.id.notification_next_stop_line_bg_2,
+            R.id.notification_next_stop_line_bg_3,
+            R.id.notification_next_stop_line_bg_4,
+            R.id.notification_next_stop_line_bg_5
+    };
+
+    private int[] textIds = {
+            R.id.notification_next_stop_main_0,
+            R.id.notification_next_stop_main_1,
+            R.id.notification_next_stop_main_2,
+            R.id.notification_next_stop_main_3,
+            R.id.notification_next_stop_main_4,
+            R.id.notification_next_stop_main_5
+    };
+
+    private int[] colors;
+
+    private int[] nextTimesIds = {
+            R.id.notification_next_stop_time_0,
+            R.id.notification_next_stop_time_1,
+            R.id.notification_next_stop_time_2,
+            R.id.notification_next_stop_time_3,
+            R.id.notification_next_stop_time_4,
+            R.id.notification_next_stop_time_5
+    };
+
+    private int[] numberIds = {
+            R.id.notification_next_stop_number_0,
+            R.id.notification_next_stop_number_1,
+            R.id.notification_next_stop_number_2,
+            R.id.notification_next_stop_number_3,
+            R.id.notification_next_stop_number_4,
+            R.id.notification_next_stop_number_5,
+    };
 
     private StringBuilder stringBuilder = new StringBuilder();
     private DateFormat dateFormat;
@@ -50,7 +100,21 @@ public class NotificationController {
             return;
         }
 
+        // set up colors
+        colors = new int[10];
+        colors[0] = context.getResources().getColor(R.color.colorLineDefault);
+        int[] numbers = {1, 2, 3, 4, 5, 8, 9};
+        for (int number : numbers) {
+            int id = context.getResources().getIdentifier("colorLine" + number, "color", context.getPackageName());
+            colors[number] = context.getResources().getColor(id);
+        }
+
         notificationLayoutExpanded = new RemoteViews(context.getPackageName(), R.layout.notification_expanded);
+
+        // hide all views
+        for (int layoutId : layoutIds) {
+            notificationLayoutExpanded.setViewVisibility(layoutId, View.GONE);
+        }
 
         // date format
         dateFormat = new SimpleDateFormat("HH:mm", context.getResources().getConfiguration().locale);
@@ -116,24 +180,40 @@ public class NotificationController {
     void resetNotificationBody() {
         // reset string builder
         stringBuilder.setLength(0);
-        // reset string in notification also
-        notificationLayoutExpanded.setTextViewText(R.id.notification_expanded_content, stringBuilder);
 
-//        this.sendNotification();
+        // hide all views
+        for (int layoutId : layoutIds) {
+            notificationLayoutExpanded.setViewVisibility(layoutId, View.GONE);
+        }
+
+        // reset number of lines
+        numberOfLines = 0;
     }
 
-    void appendToNotificationBody(String line) {
-        // add new end line
-        if(stringBuilder.length() > 0)
-            stringBuilder.append('\n');
+    void appendToNotificationBody(OptymoNextTime nextTime) {
+        if(numberOfLines < layoutIds.length) {
+            Log.d("optymonext", nextTime.toString());
+            Log.d("optymonext", "adding line #" + numberOfLines);
+            // update bg color
+//            notificationLayoutExpanded.setBa
 
-        // add the line to the buffer
-        stringBuilder.append(line);
+            // update main text
+            notificationLayoutExpanded.setTextViewText(numberIds[numberOfLines], "" + nextTime.getLineNumber());
+            notificationLayoutExpanded.setTextViewText(textIds[numberOfLines], nextTime.directionToString().substring(4));
+            notificationLayoutExpanded.setTextViewText(nextTimesIds[numberOfLines], nextTime.getNextTime());
 
-        // reset string in notification also
-        notificationLayoutExpanded.setTextViewText(R.id.notification_expanded_content, stringBuilder);
+            // show layout
+            notificationLayoutExpanded.setViewVisibility(layoutIds[numberOfLines], View.VISIBLE);
 
-//        this.sendNotification();
+            // total cheating to change a background
+            notificationLayoutExpanded.setTextColor(bgIds[numberOfLines], colors[nextTime.getLineNumber()]);
+
+            // increase number of lines
+            numberOfLines++;
+
+            // will update notification title
+            this.sendNotification();
+        }
     }
 
     private void updateTitle(String title) {
