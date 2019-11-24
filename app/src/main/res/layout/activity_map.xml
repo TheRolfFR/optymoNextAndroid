@@ -27,7 +27,8 @@
         android:background="@drawable/topleft_gradient_background"
         android:contentDescription="@string/search_icon_description"
         android:padding="@dimen/component_padding"
-        app:srcCompat="@drawable/ic_my_location" />
+        app:srcCompat="@drawable/ic_my_location"
+        tools:ignore="VectorDrawableCompat" />
 
     <LinearLayout
         android:id="@+id/map_close_button"
