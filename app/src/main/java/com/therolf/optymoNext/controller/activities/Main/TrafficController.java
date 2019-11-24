@@ -1,6 +1,7 @@
 package com.therolf.optymoNext.controller.activities.Main;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ExpandableListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -103,8 +104,9 @@ public class TrafficController implements ExpandableListView.OnGroupExpandListen
 
             Document document = Jsoup.parse(page), dateDocument;
             Elements items = document.getElementsByTag("item"), dates;
-            String body, date, lines, content;
+            String body, date, lines, content, url, itemHtml;
             for(Element item : items) {
+//                Log.d("optmyonext", item.html());
                 dateDocument = Jsoup.parse(item.getElementsByTag("description").get(0).text());
                 body = dateDocument.body().text();
 
@@ -119,8 +121,13 @@ public class TrafficController implements ExpandableListView.OnGroupExpandListen
                 }
                 content = item.getElementsByTag("title").get(0).text();
 
+                itemHtml = item.html();
+                url = itemHtml.substring(itemHtml.indexOf("<link>")+6, itemHtml.indexOf("<description>"));
+                url = url.replace("</link>", "");
+                Log.d("optmyonext", "url:" + url);
+
                 // add string
-                tc.data.add(new TrafficAdapter.TrafficInfo(date, lines, content));
+                tc.data.add(new TrafficAdapter.TrafficInfo(date, lines, content, url));
             }
 
             // notify update

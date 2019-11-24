@@ -123,7 +123,7 @@
                 <Button
                     android:id="@+id/add_button"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/add_fav_button_height"
+                    android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:fontFamily="@font/nunito_extrabold"
                     android:text="@string/add_button_text"

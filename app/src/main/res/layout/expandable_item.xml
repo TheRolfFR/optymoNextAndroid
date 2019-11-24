@@ -37,12 +37,22 @@
         android:id="@+id/expandable_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/component_padding"
         android:fontFamily="@font/nunito_regular"
         android:paddingStart="@dimen/component_padding"
         android:paddingEnd="@dimen/component_padding"
         android:textColor="@color/colorOnBackground"
         android:textSize="@dimen/component_content_font_size"
         tools:text="Sample content" />
+
+    <TextView
+        android:id="@+id/expandable_more_infos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/component_padding"
+        android:fontFamily="@font/nunito_regular"
+        android:paddingStart="@dimen/component_padding"
+        android:paddingEnd="@dimen/component_padding"
+        android:text="@string/main_traffic_info_more_infos"
+        android:textColor="@android:color/holo_blue_dark" />
 
 </LinearLayout>

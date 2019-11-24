@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/ic_launcher_background"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="@dimen/notification_padding"
@@ -35,7 +35,6 @@
             android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
             android:textColor="@color/colorOnPrimary"
             android:textSize="16sp"
-            android:textStyle=""
             tools:ignore="RtlHardcoded,RtlSymmetry"
             tools:text="Sample title" />
 

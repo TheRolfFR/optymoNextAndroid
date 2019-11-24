@@ -50,4 +50,5 @@
     <string name="permission_required">Require permiso</string>
     <string name="main_traffic_info">Notificias del tráfico</string>
     <string name="no_favorites">No favoritos</string>
+    <string name="main_traffic_info_more_infos">Más info</string>
 </resources>

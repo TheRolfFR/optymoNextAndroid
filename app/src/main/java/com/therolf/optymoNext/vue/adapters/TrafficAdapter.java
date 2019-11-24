@@ -3,6 +3,9 @@ package com.therolf.optymoNext.vue.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,6 +114,21 @@ public class TrafficAdapter extends BaseExpandableListAdapter {
         // update content
         ((TextView) convertView.findViewById(R.id.expandable_content)).setText(data.get(childPosition).content);
 
+        // update more infos url
+        TextView moreInfos = convertView.findViewById(R.id.expandable_more_infos);
+        if(data.get(childPosition).url != null && data.get(childPosition).url.startsWith("http")) {
+            CharSequence text = moreInfos.getText();
+            String linkText = "<a href='" + data.get(childPosition).url + "'>" + text + "</a>";
+            moreInfos.setMovementMethod(LinkMovementMethod.getInstance());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                moreInfos.setText(Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                moreInfos.setText(Html.fromHtml(linkText));
+            }
+        } else {
+            moreInfos.setVisibility(View.INVISIBLE);
+        }
+
         return convertView;
     }
 
@@ -123,11 +141,13 @@ public class TrafficAdapter extends BaseExpandableListAdapter {
         String date;
         String lines;
         String content;
+        String url;
 
-        public TrafficInfo(String date, String lines, String content) {
+        public TrafficInfo(String date, String lines, String content, String url) {
             this.date = date;
             this.lines = lines;
             this.content = content;
+            this.url = url;
         }
     }
 }
