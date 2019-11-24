@@ -3,6 +3,7 @@
     <dimen name="splash_icon_margin_vertical">28dp</dimen>
 
     <dimen name="padding_app">16dp</dimen>
+    <dimen name="notification_padding">15dp</dimen>
     <dimen name="fab_margin">@dimen/padding_app</dimen>
 
     <dimen name="logo_icon_size">52dp</dimen>

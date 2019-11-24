@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -72,6 +71,15 @@ public class NotificationController {
             R.id.notification_next_stop_time_5
     };
 
+    private int[] fbgIds = {
+            R.id.notification_expanded_fbg_0,
+            R.id.notification_expanded_fbg_1,
+            R.id.notification_expanded_fbg_2,
+            R.id.notification_expanded_fbg_3,
+            R.id.notification_expanded_fbg_4,
+            R.id.notification_expanded_fbg_5
+    };
+
     private int[] numberIds = {
             R.id.notification_next_stop_number_0,
             R.id.notification_next_stop_number_1,
@@ -86,6 +94,12 @@ public class NotificationController {
     private ArrayList<OptymoNextTime> nextTimes = new ArrayList<>();
 
     private String title = "";
+
+    private Intent resultIntent;
+    private PendingIntent pIntent;
+
+    private Intent refreshIntent;
+    private PendingIntent refreshPendingIntent;
 
     private Intent nextSixIntent;
     private PendingIntent nextSixPendingIntent;
@@ -135,42 +149,40 @@ public class NotificationController {
             }
         }
 
-        Intent resultIntent = new Intent(context.getApplicationContext(), SplashScreenActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), resultIntent, 0);
+        resultIntent = new Intent(context.getApplicationContext(), SplashScreenActivity.class);
+        pIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), resultIntent, 0);
 
-        Intent refreshIntent = new Intent(context.getApplicationContext(), OnBoot.class);
+        refreshIntent = new Intent(context.getApplicationContext(), OnBoot.class);
         refreshIntent.setAction(NotificationService.REFRESH_ACTION);
-        PendingIntent refreshPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), (int) System.currentTimeMillis(), refreshIntent, 0);
+        refreshPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), (int) System.currentTimeMillis()+1, refreshIntent, 0);
+        notificationLayoutExpanded.setOnClickPendingIntent(R.id.notification_expanded_refresh, refreshPendingIntent);
 
         nextSixIntent = new Intent(context.getApplicationContext(), OnBoot.class);
         nextSixIntent.putExtra(NEXT_SIX_OFFSET_KEY, 0);
         nextSixIntent.setAction(NotificationService.NEXT_SIX_GET);
         nextSixPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), (int) System.currentTimeMillis(), nextSixIntent, 0);
-
-        builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_logo_form)
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
-                .setContentTitle(context.getString(R.string.update_never))
-                .setContentText(context.getString(R.string.notification_content_text))
-                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                .setCustomBigContentView(notificationLayoutExpanded)
-                .setOngoing(true)
-                .setPriority(Notification.PRIORITY_MIN)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) //to show content in lock screen
-                .addAction(R.drawable.ic_refresh, context.getString(R.string.notification_refresh_button_text), refreshPendingIntent)
-                .addAction(R.drawable.ic_next, context.getString(R.string.notification_others_button_text), nextSixPendingIntent);
-
-        //noinspection ConstantConditions
-        if (mChannel != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                builder.setChannelId(mChannel.getId());
-        }
+        notificationLayoutExpanded.setOnClickPendingIntent(R.id.notification_expanded_next, nextSixPendingIntent);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(SplashScreenActivity.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        builder.setContentIntent(resultPendingIntent);
+        builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(android.R.color.transparent)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
+                .setCustomBigContentView(notificationLayoutExpanded)
+                .setOngoing(true)
+                .setPriority(Notification.PRIORITY_LOW)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) //to show content in lock screen
+                .setContentTitle(context.getString(R.string.update_never))
+                .setContentIntent(resultPendingIntent)
+                .setContentText(context.getString(R.string.notification_content_text));
+
+        //noinspection ConstantConditions
+        if (mChannel != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                builder.setChannelId(mChannel.getId());
+        }
 
         if (notificationManager != null) {
             notificationManager.notify(NOTIFICATION_ID, builder.build());
@@ -192,8 +204,6 @@ public class NotificationController {
 
     void appendToNotificationBody(OptymoNextTime nextTime) {
         if(numberOfLines < layoutIds.length) {
-            Log.d("optymonext", nextTime.toString());
-            Log.d("optymonext", "adding line #" + numberOfLines);
             // update bg color
 //            notificationLayoutExpanded.setBa
 
@@ -207,6 +217,8 @@ public class NotificationController {
 
             // total cheating to change a background
             notificationLayoutExpanded.setTextColor(bgIds[numberOfLines], colors[nextTime.getLineNumber()]);
+            notificationLayoutExpanded.setInt(bgIds[numberOfLines], "setBackgroundColor", colors[nextTime.getLineNumber()]);
+            notificationLayoutExpanded.setInt(fbgIds[numberOfLines], "setBackgroundColor", colors[nextTime.getLineNumber()]);
 
             // increase number of lines
             numberOfLines++;
@@ -235,11 +247,15 @@ public class NotificationController {
     }
 
     public void setNeverUpdatedTitle(Context context) {
+        updateTitle(context.getString(R.string.update_never));
+    }
+
+    void setPendingTitle(Context context) {
         updateTitle(context.getString(R.string.update_pending));
     }
 
-    void setTitlePending(Context context) {
-        updateTitle(context.getString(R.string.update_pending));
+    void setNoFavoritesTitle(Context context) {
+        updateTitle(context.getString(R.string.no_favorites));
     }
 
     void setUpdatedAtTitle(Context context) {

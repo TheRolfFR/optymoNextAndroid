@@ -19,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -221,8 +220,6 @@ public class MainActivity extends TopViewActivity {
     }
 
     private void refreshFavoriteList() {
-        Toast.makeText(this, R.string.main_toast_loading_favorites, Toast.LENGTH_SHORT).show();
-
         OptymoDirection[] directions = ((GlobalApplication) getApplication()).getFavoritesController().getFavorites();
 
         Intent refreshIntent = new Intent(this.getApplicationContext(), NotificationService.class);
@@ -238,14 +235,16 @@ public class MainActivity extends TopViewActivity {
             favoritesAdapter.notifyDataSetChanged();
             // update height
             this.updateListHeight();
+
+            lastUpdateText.setText(getResources().getString(R.string.no_favorites));
+        } else {
+            // tell user that update is pending
+            lastUpdateText.setText(getResources().getString(R.string.update_pending));
         }
 
         // we reset number of updated
         numberOfUpdated = 0;
         favoritesAdapter.clear();
-
-        // tell user that update is pending
-        lastUpdateText.setText(getResources().getString(R.string.update_pending));
 
         // we add all the new favorites
         // 1. Stop the remaining requests

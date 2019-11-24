@@ -63,8 +63,14 @@ public class NotificationService extends IntentService {
 
         // run and reset notification body and title
         notificationController.run(this);
-        notificationController.setTitlePending(this);
         notificationController.resetNotificationBody();
+
+        // set appropriate title
+        if(fav.length == 0) {
+            notificationController.setNoFavoritesTitle(this);
+        } else {
+            notificationController.setPendingTitle(this);
+        }
 
         // clear requests
         while(lastRequests.size() > 0) {

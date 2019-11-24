@@ -49,4 +49,5 @@
     <string name="permission_denied">Permiso denegado</string>
     <string name="permission_required">Require permiso</string>
     <string name="main_traffic_info">Notificias del tráfico</string>
+    <string name="no_favorites">No favoritos</string>
 </resources>
