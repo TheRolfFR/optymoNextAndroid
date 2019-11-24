@@ -19,7 +19,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,8 +33,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.therolf.optymoNext.R;
-import com.therolf.optymoNext.controller.global.GlobalApplication;
 import com.therolf.optymoNext.controller.activities.StopActivity;
+import com.therolf.optymoNext.controller.global.GlobalApplication;
 import com.therolf.optymoNext.controller.global.Utility;
 import com.therolf.optymoNextModel.OptymoNetwork;
 import com.therolf.optymoNextModel.OptymoStop;
@@ -62,7 +61,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, View.OnClickListener, LocationListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, LocationListener, GoogleMap.OnInfoWindowClickListener {
 
     private static final int LOCATION_PERMISSION_CODE = 1;
     private MyLocationController myLocationController;
@@ -76,7 +75,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         put("4", 2);
         put("1", 1);
     }};
-    private static final int BUS_INDEX = 7;
+    private static final int BUS_INDEX = 100;
     private static final int STOP_Z_INDEX = 8;
 
     private Map<String, BitmapDescriptor> busIcons = new HashMap<>();
@@ -98,12 +97,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         findViewById(R.id.map_close_button).setOnClickListener(v -> finish());
 
         // load bus icon
-        busIcon = bitmapDescriptorFromVector(this, R.drawable.ic_bus);
+        busIcon = bitmapDescriptorFromVector(this, R.drawable.ic_bus_default);
         Set<String> keys = zIndexes.keySet();
         for(String key : keys) {
-            int id = getResources().getIdentifier("colorLine" + key, "color", getPackageName());
-            int color = ContextCompat.getColor(this, id);
-            busIcons.put(key, bitmapDescriptorFromVector(this, R.drawable.ic_bus, color));
+            int id = getResources().getIdentifier("ic_bus_" + key, "drawable", getPackageName());
+            busIcons.put(key, bitmapDescriptorFromVector(this, id));
         }
 
         // map view
@@ -221,7 +219,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
 
-        googleMap.setOnMarkerClickListener(this);
+        googleMap.setOnInfoWindowClickListener(this);
         startRepeatingTask();
     }
 
@@ -238,19 +236,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
-    @SuppressWarnings("SameParameterValue")
     private static BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorId) {
-        return bitmapDescriptorFromVector(context, vectorId, 0);
-    }
-
-    private static BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorId, int color) {
         BitmapDescriptor result = null;
 
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorId);
-        if(color != 0 && vectorDrawable != null) {
-            vectorDrawable = vectorDrawable.mutate();
-            DrawableCompat.setTint(vectorDrawable, color);
-        }
         if (vectorDrawable != null) {
             vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
 
@@ -263,13 +252,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
         return result;
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        if(((GlobalApplication) getApplication()).getNetworkController().isGenerated() && ((GlobalApplication) getApplication()).getNetworkController().getStopBySlug(OptymoStop.nameToSlug(marker.getTitle())) != null)
-            StopActivity.launchStopActivity(this, OptymoStop.nameToSlug(marker.getTitle()));
-        return false;
     }
 
     private final static int INTERVAL = 1000 *10; // 10s = 10000ms
@@ -362,7 +344,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 14));
+        // change zoom only if lower
+        float zoom = googleMap.getCameraPosition().zoom;
+        if(zoom < 14)
+            zoom = 14;
+
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), zoom));
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        if(((GlobalApplication) getApplication()).getNetworkController().isGenerated() && ((GlobalApplication) getApplication()).getNetworkController().getStopBySlug(OptymoStop.nameToSlug(marker.getTitle())) != null)
+            StopActivity.launchStopActivity(this, OptymoStop.nameToSlug(marker.getTitle()));
     }
 
     @SuppressWarnings("unused")
