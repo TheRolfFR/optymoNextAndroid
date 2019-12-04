@@ -263,4 +263,9 @@ public class NotificationController {
         String dateFormatted = dateFormat.format(date);
         updateTitle(context.getString(R.string.update_last, dateFormatted));
     }
+
+    void cancelAll() {
+        if(notificationManager != null)
+            notificationManager.cancelAll();
+    }
 }

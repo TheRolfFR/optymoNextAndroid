@@ -51,4 +51,5 @@
     <string name="main_traffic_info">Notificias del tráfico</string>
     <string name="no_favorites">No favoritos</string>
     <string name="main_traffic_info_more_infos">Más info</string>
+    <string name="main_authorize_notification">Mostrar la notificación con los próximos horarios</string>
 </resources>

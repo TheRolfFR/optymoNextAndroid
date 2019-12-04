@@ -20,6 +20,7 @@ public class NotificationService extends IntentService {
 
     public static final String REFRESH_ACTION = "refresh_action";
     public static final String NEXT_SIX_GET = "next_six_get";
+    public static final String CANCEL_ACTION = "notification_cancel_all";
     private NotificationController notificationController = new NotificationController();
 
     private int numberOfRequests;
@@ -32,7 +33,7 @@ public class NotificationService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent workIntent) {
         if(workIntent != null && workIntent.getAction() != null) {
-            if(workIntent.getAction().equals(REFRESH_ACTION) || workIntent.getAction().equals(NEXT_SIX_GET)) {
+            if(workIntent.getAction().equals(REFRESH_ACTION) || workIntent.getAction().equals(NEXT_SIX_GET) || workIntent.getAction().equals(CANCEL_ACTION)) {
                 handleAction(workIntent.getAction());
             }
         }
@@ -46,6 +47,8 @@ public class NotificationService extends IntentService {
         // reset index if refresh
         if(action.equals(REFRESH_ACTION))
             OnBoot.setIndex(0);
+        else if(action.equals(CANCEL_ACTION))
+            notificationController.cancelAll();
         else { // else its next
             // increase index of 6
             OnBoot.increaseIndex(6);

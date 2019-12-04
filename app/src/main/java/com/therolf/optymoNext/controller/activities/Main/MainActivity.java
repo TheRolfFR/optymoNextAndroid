@@ -217,6 +217,8 @@ public class MainActivity extends TopViewActivity {
         ss.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimaryDark)), getString(R.string.main_made_by_text).length(), s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         madeBy.setText(ss);
         madeBy.setMovementMethod(LinkMovementMethod.getInstance());
+
+        new NotificationCheckboxController(this);
     }
 
     private void refreshFavoriteList() {

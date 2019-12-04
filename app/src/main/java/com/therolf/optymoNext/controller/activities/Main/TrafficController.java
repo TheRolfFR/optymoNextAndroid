@@ -2,7 +2,9 @@ package com.therolf.optymoNext.controller.activities.Main;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,6 +28,8 @@ public class TrafficController implements ExpandableListView.OnGroupExpandListen
     private TrafficAdapter trafficAdapter;
     private ExpandableListView listView;
 
+    private ProgressBar progressBar;
+
     private TrafficInfoRequest request;
 
     TrafficController(AppCompatActivity context) {
@@ -36,6 +40,9 @@ public class TrafficController implements ExpandableListView.OnGroupExpandListen
         listView.setAdapter(trafficAdapter);
         listView.setOnGroupExpandListener(this);
         listView.setOnGroupCollapseListener(this);
+
+        progressBar = context.findViewById(R.id.main_traffic_info_progressbar);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -80,6 +87,7 @@ public class TrafficController implements ExpandableListView.OnGroupExpandListen
 
             // notify update
             tc.context.runOnUiThread(() -> {
+                tc.progressBar.setVisibility(View.VISIBLE); // visible visibility
                 tc.trafficAdapter.notifyDataSetChanged();
                 Utility.setListViewHeightBasedOnChildren(tc.listView);
             });
@@ -98,6 +106,9 @@ public class TrafficController implements ExpandableListView.OnGroupExpandListen
         @Override
         protected void onPostExecute(String page) {
             super.onPostExecute(page);
+
+            // gone visibility
+            tc.context.runOnUiThread(() -> tc.progressBar.setVisibility(View.GONE));
 
             if(page == null)
                 return;

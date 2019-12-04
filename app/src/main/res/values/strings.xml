@@ -61,4 +61,5 @@
     <string name="no_favorites">No favorites</string>
     <string name="content_description" translatable="false">this is a description</string>
     <string name="main_traffic_info_more_infos">More infos</string>
+    <string name="main_authorize_notification">Show the notification with upcoming buses</string>
 </resources>
