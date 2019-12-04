@@ -44,11 +44,15 @@ public class NotificationService extends IntentService {
         OptymoDirection[] fav = ((GlobalApplication) getApplication()).getFavoritesController().getFavorites();
 //        Log.d("optymo", "" + fav.length);
 
+        // if action is cancel we cancel
+        if(action.equals(CANCEL_ACTION)) {
+            notificationController.cancelAll(this);
+            return;
+        }
+
         // reset index if refresh
         if(action.equals(REFRESH_ACTION))
             OnBoot.setIndex(0);
-        else if(action.equals(CANCEL_ACTION))
-            notificationController.cancelAll();
         else { // else its next
             // increase index of 6
             OnBoot.increaseIndex(6);

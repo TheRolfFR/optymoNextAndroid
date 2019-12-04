@@ -173,7 +173,7 @@ public class NotificationController {
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setCustomBigContentView(notificationLayoutExpanded)
                 .setOngoing(true)
-                .setPriority(Notification.PRIORITY_LOW)
+                .setPriority(Notification.PRIORITY_MIN)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) //to show content in lock screen
                 .setContentTitle(context.getString(R.string.update_never))
                 .setContentIntent(resultPendingIntent)
@@ -264,8 +264,11 @@ public class NotificationController {
         updateTitle(context.getString(R.string.update_last, dateFormatted));
     }
 
-    void cancelAll() {
+    void cancelAll(Context context) {
+        if(notificationManager == null)
+            notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
         if(notificationManager != null)
-            notificationManager.cancelAll();
+            notificationManager.cancel(NOTIFICATION_ID);
     }
 }

@@ -147,5 +147,13 @@ public class TrafficController implements ExpandableListView.OnGroupExpandListen
                 Utility.setListViewHeightBasedOnChildren(tc.listView);
             });
         }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+
+            // gone visibility
+            tc.context.runOnUiThread(() -> tc.progressBar.setVisibility(View.GONE));
+        }
     }
 }
