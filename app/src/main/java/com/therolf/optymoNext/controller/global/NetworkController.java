@@ -7,8 +7,6 @@ import com.therolf.optymoNextModel.OptymoLine;
 import com.therolf.optymoNextModel.OptymoNetwork;
 import com.therolf.optymoNextModel.OptymoStop;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
@@ -19,10 +17,8 @@ public class NetworkController {
     private static final String TAG = "NetworkGen";
 
     private OptymoNetwork network;
-    private String jsonFileName;
 
     NetworkController() {
-        this.jsonFileName = "network.json";
         network = new OptymoNetwork();
     }
 
@@ -30,53 +26,30 @@ public class NetworkController {
         return network.isGenerated();
     }
 
-    void generate(Context context) {
-        generate(context, false);
-    }
-
     @SuppressWarnings("SameParameterValue")
-    private void generate(Context context, boolean forceXml) {
+    void generate(Context context) {
         // iniialize default values
-        InputStream xmlInputStream;
         String stopsJsonString = "";
-        boolean jsonParsingWentWell = false;
 
         // try to parse JSON
         try {
-            FileInputStream fis = context.openFileInput(jsonFileName);
-            byte[] buffer = new byte[fis.available()];
+            InputStream jsonInputStream = context.getResources().openRawResource(context.getResources().getIdentifier("network", "raw", context.getPackageName()));
+            byte[] buffer = new byte[jsonInputStream.available()];
             //noinspection ResultOfMethodCallIgnored
-            fis.read(buffer);
+            jsonInputStream.read(buffer);
+
+            // affect json string
             stopsJsonString = new String(buffer);
-            jsonParsingWentWell = true;
+
         } catch (IOException e) {
             Log.e(TAG, Objects.requireNonNull(e.getMessage()));
         }
 
-        if(!jsonParsingWentWell)
-            forceXml = true;
-
-        // parse XML
-        xmlInputStream = (context.getResources().openRawResource(context.getResources().getIdentifier("belfort", "raw", context.getPackageName())));
-
-        //noinspection ConstantConditions
-        if(forceXml || jsonParsingWentWell) {
-            network.begin(stopsJsonString, xmlInputStream, forceXml);
+        if(!stopsJsonString.equals("")) {
+            network.begin(stopsJsonString);
         } else {
-            Log.e(TAG, "Failed to parse XML or JSON: " + jsonParsingWentWell);
-        }
-
-        // save json resulting if xml was generated
-        String result = network.getResultJson();
-        if(!result.equals("")) {
-            try {
-                FileOutputStream fos = context.openFileOutput(jsonFileName, Context.MODE_PRIVATE);
-                fos.write(network.getResultJson().getBytes());
-                fos.close();
-//                Log.d("stops", network.getResultJson());
-            } catch (java.io.IOException e) {
-//                Log.e(TAG, Objects.requireNonNull(e.getMessage()));
-            }
+            Log.e("OptymoNext", "[NetworkController] failed to read json file");
+            System.exit(-1);
         }
     }
 

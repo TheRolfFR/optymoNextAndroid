@@ -29,10 +29,10 @@ public class OptymoLine implements Comparable<OptymoLine> {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public void addStopToLine(OptymoStop stop) {
+    public boolean addStopToLine(OptymoStop stop) {
         for (OptymoStop optymoStop : stops) {
             if (optymoStop.equals(stop)) {
-                return;
+                return false;
             }
         }
 
@@ -42,13 +42,14 @@ public class OptymoLine implements Comparable<OptymoLine> {
         newTable[stops.length] = stop;
 
         stops = newTable;
+        return true;
     }
 
     public String getCleanedToString() {
         return Normalizer.normalize(this.toString(), Normalizer.Form.NFD).replaceAll("[^A-Za-z0-9]", "").toLowerCase();
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "RedundantSuppression"})
     @Override
     public String toString() {
         return "[" + this.number + "] " + this.name;

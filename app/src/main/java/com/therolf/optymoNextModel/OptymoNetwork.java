@@ -22,7 +22,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class OptymoNetwork {
 
     private static final String STOPS_ARRAY_KEY = "stops";
@@ -64,6 +64,7 @@ public class OptymoNetwork {
         stops = new HashMap<>();
     }
 
+    public void begin(String stopsJson) { begin(stopsJson, null); }
     public void begin(String stopsJson, InputStream linesXml) {
         begin(stopsJson, linesXml, false);
     }
@@ -114,17 +115,19 @@ public class OptymoNetwork {
                 }
 
                 lineObject = linesArray.getJSONObject(i);
-                createdLine = getLine("" + lineObject.getInt(LINE_NUMBER_KEY), lineObject.getString(LINE_NAME_KEY));
-                stopsOfLine = lineObject.getJSONArray(LINE_STOPS_ARRAY_KEY);
-                //noinspection UnusedAssignment
-                foundStop = null;
+                if(!OptymoStop.nameToSlug(lineObject.getString(LINE_NAME_KEY)).contains("depot")) {
+                    createdLine = getLine("" + lineObject.getInt(LINE_NUMBER_KEY), lineObject.getString(LINE_NAME_KEY));
+                    stopsOfLine = lineObject.getJSONArray(LINE_STOPS_ARRAY_KEY);
+                    //noinspection UnusedAssignment
+                    foundStop = null;
 
-                for(int a = 0; a < stopsOfLine.length(); a++) {
-                    stopSlug = stopsOfLine.getString(a);
-                    foundStop = getStopBySlug(stopSlug);
+                    for(int a = 0; a < stopsOfLine.length(); a++) {
+                        stopSlug = stopsOfLine.getString(a);
+                        foundStop = getStopBySlug(stopSlug);
 
-                    if(foundStop != null && createdLine != null) {
-                        createdLine.addStopToLine(foundStop);
+                        if(foundStop != null && createdLine != null) {
+                            createdLine.addStopToLine(foundStop);
+                        }
                     }
                 }
             }
@@ -145,11 +148,93 @@ public class OptymoNetwork {
     }
 
     /**
+     * This methods is used to increase lines going through stops
+     * so for each stop I get their next stops and add a new stop to the line
+     * problem due to "hub" stops in the ntwork they have many lines coming
+     */
+    @SuppressWarnings("UnusedReturnValue")
+    public String improveNetwork() {
+        int modified = 0;
+
+        System.out.println("Network with " + stops.size() + " stops");
+        for (OptymoStop stop : stops.values()) {
+            // get avalable directions
+            OptymoDirection[] directions = stop.getAvailableDirections();
+
+            OptymoLine l;
+            for(OptymoDirection dir : directions) {
+                // avoid storage direction
+                if(!OptymoStop.nameToSlug(dir.getDirection()).contains("depot")) {
+                    // get and or create line
+                    l = getLine("" + dir.getLineNumber(), dir.getDirection());
+                    if(l != null) {
+                        if(l.addStopToLine(stop)) {
+                            System.out.println("added " + stop + " stop to line " + l);
+                            ++modified;
+                        }
+                    }
+                }
+            }
+        }
+
+        if(modified != 0) {
+            System.out.println("improved network " + modified + " times");
+            return this.generateJSONNetworkFile();
+        }
+
+        return resultJson;
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    private String generateJSONNetworkFile() {
+        JSONStringer jsonStringer = new JSONStringer();
+        try {
+            jsonStringer.object();
+            // add each single stop
+            jsonStringer.key(STOPS_ARRAY_KEY).array();
+            for(OptymoStop stop : stops.values()) {
+                jsonStringer.object()
+                        .key(STOP_SLUG_KEY).value(stop.getSlug())
+                        .key(STOP_NAME_KEY).value(stop.getName())
+                        .endObject();
+            }
+            jsonStringer.endArray();
+
+            // add each single line
+            jsonStringer.key(LINES_ARRAY_KEY).array();
+            for(OptymoLine line : lines.values()) {
+                jsonStringer.object()
+                        .key(LINE_NUMBER_KEY).value(line.getNumber())
+                        .key(LINE_NAME_KEY).value(line.getName())
+                        .key(LINE_STOPS_ARRAY_KEY)
+                        .array();
+                for(OptymoStop stop : line.getStops()) {
+                    jsonStringer.value(stop.getSlug());
+                }
+                jsonStringer.endArray()
+                        .endObject();
+            }
+            jsonStringer.endArray();
+            //affect result json
+            resultJson = jsonStringer.endObject().toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        for(ProgressListener p : networkGenerationListeners) {
+            p.OnGenerationEnd(true);
+        }
+
+        return resultJson;
+    }
+
+    /**
      * JSON generation in an attriibute from XML
      * @param linesXml raw XML document in an InputStream
      */
     private void generateFromXML(InputStream linesXml) {
         System.out.println("decode xml");
+        //noinspection RedundantSuppression
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
                     .newInstance();
@@ -389,7 +474,7 @@ public class OptymoNetwork {
 
                 result = resultMap.values().toArray(new OptymoNextTime[0]);
             } else {
-                System.err.println("stop not found");
+                System.err.println("stop not found : " + stopSlug);
             }
         } else {
             System.err.println("cannot access page");
