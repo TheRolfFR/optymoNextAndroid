@@ -12,11 +12,11 @@ xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="28dp"
         android:layout_marginTop="@dimen/component_padding_half"
         android:layout_marginBottom="@dimen/component_padding_half"
-        android:background="@color/colorLine1"
+        android:background="@color/colorLineDefault"
         android:minHeight="26dp"
         android:orientation="horizontal"
         android:paddingLeft="13dp"
-        tools:ignore="RtlHardcoded,RtlSymmetry">
+        tools:ignore="RtlHardcoded,RtlSymmetry,UselessParent">
 
         <TextView
             android:id="@+id/item_next_stop_number"

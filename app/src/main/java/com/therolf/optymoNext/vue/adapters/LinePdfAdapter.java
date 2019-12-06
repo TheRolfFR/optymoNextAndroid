@@ -17,15 +17,15 @@ import com.therolf.optymoNext.R;
 public class LinePdfAdapter extends BaseAdapter {
 
     public static class LinePdf {
-        private int number;
+        private String number;
         private String pdfUrl;
 
-        public LinePdf(int number, String pdfUrl) {
+        public LinePdf(String number, String pdfUrl) {
             this.number = number;
             this.pdfUrl = pdfUrl;
         }
 
-        public int getNumber() {
+        public String getNumber() {
             return number;
         }
 
@@ -63,10 +63,11 @@ public class LinePdfAdapter extends BaseAdapter {
         LayoutInflater inflater = LayoutInflater.from(context);
         convertView = inflater.inflate(R.layout.item_line_number, parent, false);
 
-        ((TextView) convertView.findViewById(R.id.item_next_stop_number)).setText("" + linePdfs[position].getNumber());
+        ((TextView) convertView.findViewById(R.id.item_next_stop_number)).setText(linePdfs[position].getNumber());
 
         int id = context.getResources().getIdentifier("colorLine" + linePdfs[position].getNumber(), "color", context.getPackageName());
-        convertView.findViewById(R.id.item_next_stop_line_bg).setBackgroundColor(ContextCompat.getColor(context, id));
+        if(id != 0)
+            convertView.findViewById(R.id.item_next_stop_line_bg).setBackgroundColor(ContextCompat.getColor(context, id));
 
         return convertView;
     }

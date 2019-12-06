@@ -163,13 +163,13 @@ public class MainActivity extends TopViewActivity {
 
         GridView gridView = findViewById(R.id.main_lines_pdf_gridview);
         LinePdfAdapter.LinePdf[] arr = new LinePdfAdapter.LinePdf[] {
-                new LinePdfAdapter.LinePdf(1, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne-1_2019_09.pdf"),
-                new LinePdfAdapter.LinePdf(2, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne-2_2019_09.pdf"),
-                new LinePdfAdapter.LinePdf(3, "https://www.optymo.fr/wp-content/uploads/2019/10/fiche_web_ligne-3_2019_08.pdf"),
-                new LinePdfAdapter.LinePdf(4, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_4_2019_08.pdf"),
-                new LinePdfAdapter.LinePdf(5, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_5_2019_08.pdf"),
-                new LinePdfAdapter.LinePdf(8, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_8_2019_08.pdf"),
-                new LinePdfAdapter.LinePdf(9, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_9_2019_08.pdf")
+                new LinePdfAdapter.LinePdf("" + 1, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne-1_2019_09.pdf"),
+                new LinePdfAdapter.LinePdf("" + 2, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne-2_2019_09.pdf"),
+                new LinePdfAdapter.LinePdf("" + 3, "https://www.optymo.fr/wp-content/uploads/2019/10/fiche_web_ligne-3_2019_08.pdf"),
+                new LinePdfAdapter.LinePdf("" + 4, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_4_2019_08.pdf"),
+                new LinePdfAdapter.LinePdf("" + 5, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_5_2019_08.pdf"),
+                new LinePdfAdapter.LinePdf("" + 8, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_8_2019_08.pdf"),
+                new LinePdfAdapter.LinePdf("" + 9, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_9_2019_08.pdf")
         };
         gridView.setAdapter(new LinePdfAdapter(arr, this));
         gridView.setOnItemClickListener((parent, view, position, id) -> {

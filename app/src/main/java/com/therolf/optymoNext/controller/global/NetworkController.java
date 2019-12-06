@@ -22,7 +22,7 @@ public class NetworkController {
     private String jsonFileName;
 
     NetworkController() {
-        this.jsonFileName = "stops.json";
+        this.jsonFileName = "network.json";
         network = new OptymoNetwork();
     }
 
