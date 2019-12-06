@@ -75,7 +75,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         put("4", 2);
         put("1", 1);
     }};
-    private static final int BUS_INDEX = 100;
+    private static final int BUS_INDEX = 10;
     private static final int STOP_Z_INDEX = 8;
 
     private Map<String, BitmapDescriptor> busIcons = new HashMap<>();
@@ -209,9 +209,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 //                    Log.d("optymonext", "" + lat + ", " + lon);
                         marker.position(new LatLng(lat, lon));
 
-                        marker.zIndex(STOP_Z_INDEX);
-                        marker.icon(icon);
-                        marker.title(title);
+                        marker.zIndex(STOP_Z_INDEX)
+                        .icon(icon)
+                        .title(title)
+                        .snippet(this.getString(R.string.map_more_infos));
                         marker.anchor(0.5f, 0.5f);
 
                         googleMap.addMarker(marker);

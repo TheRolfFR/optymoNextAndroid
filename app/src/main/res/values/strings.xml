@@ -62,4 +62,5 @@
     <string name="content_description" translatable="false">this is a description</string>
     <string name="main_traffic_info_more_infos">More infos</string>
     <string name="main_authorize_notification">Show the notification with upcoming buses</string>
+    <string name="map_more_infos">Tap on me to get next times</string>
 </resources>
