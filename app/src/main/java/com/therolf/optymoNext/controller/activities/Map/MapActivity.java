@@ -204,15 +204,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     lon = Float.parseFloat(element.getElementsByTagName("longitude").item(0).getTextContent());
                     title = element.getElementsByTagName("name").item(0).getTextContent();
 
+                    //check if this is an urban stop so if it belongs to the network
+                    if( ((GlobalApplication) getApplication()).getNetworkController().getStopBySlug(OptymoStop.nameToSlug(title)) != null) {
 //                    Log.d("optymonext", "" + lat + ", " + lon);
-                    marker.position(new LatLng(lat, lon));
+                        marker.position(new LatLng(lat, lon));
 
-                    marker.zIndex(STOP_Z_INDEX);
-                    marker.icon(icon);
-                    marker.title(title);
-                    marker.anchor(0.5f, 0.5f);
+                        marker.zIndex(STOP_Z_INDEX);
+                        marker.icon(icon);
+                        marker.title(title);
+                        marker.anchor(0.5f, 0.5f);
 
-                    googleMap.addMarker(marker);
+                        googleMap.addMarker(marker);
+                    }
                 }
             }
         } catch (ParserConfigurationException | IOException | SAXException e) {
