@@ -216,10 +216,25 @@ public class DialogController implements TextWatcher {
                     // get the stops starting with search
                     OptymoStop[] stops = ((GlobalApplication) activity.getApplication()).getNetworkController().getStops();
                     String stopName;
+
+                    String[] words;
+                    boolean wordNotFound;
+                    int i;
                     for (OptymoStop s : stops) {
+                        wordNotFound = true;
+                        i = 0;
+
                         stopName = Normalizer.normalize(s.getName(), Normalizer.Form.NFD);
-                        stopName = stopName.replaceAll("[^\\p{ASCII}]", "");
-                        if (stopName.toLowerCase().startsWith(search))
+                        words = stopName.replaceAll("[^\\p{ASCII}]", "").toLowerCase().split(" ");
+                        while(i < words.length && wordNotFound) {
+                            if(words[i].startsWith(search))
+                                wordNotFound = false;
+
+                            ++i;
+                        }
+
+                        // word was found
+                        if (!wordNotFound)
                             this.stopsResultsList.add(s);
                     }
 
