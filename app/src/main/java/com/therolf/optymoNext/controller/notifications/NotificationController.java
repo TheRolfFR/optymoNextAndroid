@@ -1,5 +1,6 @@
 package com.therolf.optymoNext.controller.notifications;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -7,6 +8,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.view.View;
@@ -25,6 +27,9 @@ import java.util.Date;
 
 @SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class NotificationController {
+
+    private static final String NOTIFICATION_DISPLAY_KEY = "display_notification_key";
+    private static final boolean NOTIFICATION_DISPLAY_DEFAULT = false;
 
     private static final String NEXT_SIX_OFFSET_KEY = "offset";
 
@@ -109,8 +114,19 @@ public class NotificationController {
     private static final CharSequence NOTIFICATION_CHANNEL_NAME = "optymo_next_times";
     private static final String NOTIFICATION_CHANNEL_DESCRIPTION = "Channel only used to show persistent next times notification";
 
+    public static boolean isNotificationShown(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("NotificationPrefs", Context.MODE_PRIVATE);
+        return preferences.getBoolean(NOTIFICATION_DISPLAY_KEY, NOTIFICATION_DISPLAY_DEFAULT);
+    }
+
+    @SuppressLint("ApplySharedPref")
+    public static void setNotificationShown(Context context, boolean state) {
+        SharedPreferences preferences = context.getSharedPreferences("NotificationPrefs", Context.MODE_PRIVATE);
+        preferences.edit().putBoolean(NOTIFICATION_DISPLAY_KEY, state).commit();
+    }
+
     void run(Context context) {
-        if(builder != null) {
+        if(builder != null || !isNotificationShown(context)) {
             return;
         }
 
@@ -169,11 +185,11 @@ public class NotificationController {
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(android.R.color.transparent)
+                .setSmallIcon(R.drawable.ic_logo_form)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setCustomBigContentView(notificationLayoutExpanded)
                 .setOngoing(true)
-                .setPriority(Notification.PRIORITY_MIN)
+                .setPriority(Notification.PRIORITY_LOW)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) //to show content in lock screen
                 .setContentTitle(context.getString(R.string.update_never))
                 .setContentIntent(resultPendingIntent)
@@ -194,8 +210,10 @@ public class NotificationController {
         stringBuilder.setLength(0);
 
         // hide all views
-        for (int layoutId : layoutIds) {
-            notificationLayoutExpanded.setViewVisibility(layoutId, View.GONE);
+        if(notificationLayoutExpanded != null) {
+            for (int layoutId : layoutIds) {
+                notificationLayoutExpanded.setViewVisibility(layoutId, View.GONE);
+            }
         }
 
         // reset number of lines
@@ -203,7 +221,7 @@ public class NotificationController {
     }
 
     void appendToNotificationBody(OptymoNextTime nextTime) {
-        if(numberOfLines < layoutIds.length) {
+        if(notificationLayoutExpanded != null && numberOfLines < layoutIds.length) {
             // update bg color
 //            notificationLayoutExpanded.setBa
 
@@ -229,6 +247,9 @@ public class NotificationController {
     }
 
     private void updateTitle(String title) {
+        if(notificationLayoutExpanded == null)
+            return;
+
         // update data title
         this.title = title;
 
@@ -259,12 +280,15 @@ public class NotificationController {
     }
 
     void setUpdatedAtTitle(Context context) {
+        if(dateFormat == null)
+            return;
+
         Date date = new Date();
         String dateFormatted = dateFormat.format(date);
         updateTitle(context.getString(R.string.update_last, dateFormatted));
     }
 
-    void cancelAll(Context context) {
+    void cancelNotification(Context context) {
         if(notificationManager == null)
             notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 

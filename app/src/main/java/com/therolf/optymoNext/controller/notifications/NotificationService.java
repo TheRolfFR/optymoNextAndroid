@@ -46,7 +46,7 @@ public class NotificationService extends IntentService {
 
         // if action is cancel we cancel
         if(action.equals(CANCEL_ACTION)) {
-            notificationController.cancelAll(this);
+            notificationController.cancelNotification(this);
             return;
         }
 
