@@ -3,7 +3,7 @@ name: Android CI
 on:
   push:
     tags:
-      - v0.*
+      - v*
 
 jobs:
   build:
@@ -28,8 +28,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Build debug APK
-        run: bash ./gradlew assembleDebug --stacktrace
+      - name: "Run test suite"
+        uses: msfjarvis/setup-android@1.0
+        with:
+          entrypoint: ./gradlew
+          args: dependencies spotlessApply detekt assembleDebug
       - name: Upload release
         uses: yakuhzi/action-release@v1
         with:
