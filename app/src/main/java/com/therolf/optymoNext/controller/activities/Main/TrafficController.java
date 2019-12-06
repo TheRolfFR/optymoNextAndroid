@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -110,8 +111,10 @@ public class TrafficController implements ExpandableListView.OnGroupExpandListen
             // gone visibility
             tc.context.runOnUiThread(() -> tc.progressBar.setVisibility(View.GONE));
 
-            if(page == null)
+            if(page == null) {
+                Toast.makeText(tc.context, R.string.error_occured, Toast.LENGTH_SHORT).show();
                 return;
+            }
 
             Document document = Jsoup.parse(page), dateDocument;
             Elements items = document.getElementsByTag("item"), dates;
