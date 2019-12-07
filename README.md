@@ -9,10 +9,10 @@
 ![https://bit.ly/therolf-webite](https://img.shields.io/badge/Author-TheRolf-31a589.svg?style=flat-square)
 
 <div align="center">
-    <img src="./presentation/add_favorite.png" width="411">
-    <img src="./presentation/favorites_notification.png" width="411">
-    <img src="./presentation/map.png" width="411">
-    <img src="./presentation/smart_search.png" width="411">
-    <img src="./presentation/traffic_infos.png" width="411">
-    <img src="./presentation/modern_user_interface.png" width="411">
+    <img src="./presentation/add_favorite.png" width="174">
+    <img src="./presentation/favorites_notification.png" width="174">
+    <img src="./presentation/map.png" width="174">
+    <img src="./presentation/smart_search.png" width="174">
+    <img src="./presentation/traffic_infos.png" width="174">
+    <img src="./presentation/modern_user_interface.png" width="174">
 </div>
