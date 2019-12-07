@@ -160,6 +160,7 @@ public class NotificationController {
             mChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, importance);
             mChannel.setDescription(NOTIFICATION_CHANNEL_DESCRIPTION);
             mChannel.setShowBadge(false);
+            mChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             if (notificationManager != null) {
                 notificationManager.createNotificationChannel(mChannel);
             }
