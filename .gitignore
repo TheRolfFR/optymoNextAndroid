@@ -12,3 +12,16 @@
 /captures
 .externalNativeBuild
 .cxx
+
+/.idea
+/SVG
+/gradle
+/org-json
+
+git
+
+*.docx
+*.ai
+*.psd
+*.xd
+*.
