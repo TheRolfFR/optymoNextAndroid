@@ -303,6 +303,7 @@ public class MainActivity extends TopViewActivity {
             }
             int i = 0;
             while(i < nextTimes.length && result == null) {
+//                Log.d("OptymoNext", optymoDirections[0].toString() + " " + nextTimes[i].directionToString());
                 if(optymoDirections[0].toString().equals(nextTimes[i].directionToString()))
                     result = nextTimes[i];
                 if(latestResult == null) {
