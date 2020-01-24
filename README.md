@@ -18,7 +18,7 @@ You can read the articles at in the link below:<br>
 # Releases
 
 All APK are available here:<br>
-[GitHub release page](/TheRolfFR/optymoNextAndroid/releases)
+[GitHub release page](https://github.com/TheRolfFR/optymoNextAndroid/releases)
 
 # Screenshots
 
