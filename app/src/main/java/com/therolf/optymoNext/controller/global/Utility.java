@@ -11,8 +11,8 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.MeasureSpec;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ListAdapter;
@@ -21,9 +21,14 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
+import com.therolf.optymoNext.BuildConfig;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 @SuppressWarnings("unused")
 public class Utility {
@@ -142,5 +147,13 @@ public class Utility {
             if (reader != null)
                 reader.close();
         }
+    }
+
+    public static String getBuildDate(Context ctx) {
+        Locale locale = ctx.getResources().getConfiguration().locale;
+        Date buildDate = new Date(BuildConfig.TIMESTAMP);
+        return SimpleDateFormat.getDateInstance(
+                SimpleDateFormat.LONG, locale)
+                .format(buildDate);
     }
 }

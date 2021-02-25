@@ -53,4 +53,7 @@
     <string name="main_traffic_info_more_infos">Plus d\'infos</string>
     <string name="main_authorize_notification">Montrer la notification des prochains horaires</string>
     <string name="map_more_infos">Appuyer pour voir les prochains horaires</string>
+    <string name="main_lines_pdf_static">URLs statiques du %1$s</string>
+    <string name="main_lines_pdf_dynamic">Derniers PDFs en ligne</string>
+    <string name="main_lines_pdf_loading">Chargement...</string>
 </resources>

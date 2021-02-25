@@ -53,6 +53,8 @@ public class MainActivity extends TopViewActivity {
     private SwipeRefreshLayout refreshLayout;
     private TextView lastUpdateText;
 
+    private LinePdfAdapter.LinePdfAdapterFactory pdfFactory = null;
+
     private DialogController dialogController;
 
     // favorites
@@ -118,6 +120,8 @@ public class MainActivity extends TopViewActivity {
         refreshLayout.setOnRefreshListener(() -> {
             refreshLayout.setRefreshing(true);
             refreshFavoriteList();
+            if(pdfFactory != null)
+                pdfFactory.request();
         });
 
         // favoriteList on long press delete element
@@ -162,18 +166,21 @@ public class MainActivity extends TopViewActivity {
         SnackBarController.run(this, searchButton, fab, addButton);
 
         GridView gridView = findViewById(R.id.main_lines_pdf_gridview);
-        LinePdfAdapter.LinePdf[] arr = new LinePdfAdapter.LinePdf[] {
-                new LinePdfAdapter.LinePdf("" + 1, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne-1_2019_09.pdf"),
-                new LinePdfAdapter.LinePdf("" + 2, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne-2_2019_09.pdf"),
-                new LinePdfAdapter.LinePdf("" + 3, "https://www.optymo.fr/wp-content/uploads/2019/10/fiche_web_ligne-3_2019_08.pdf"),
-                new LinePdfAdapter.LinePdf("" + 4, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_4_2019_08.pdf"),
-                new LinePdfAdapter.LinePdf("" + 5, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_5_2019_08.pdf"),
-                new LinePdfAdapter.LinePdf("" + 8, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_8_2019_08.pdf"),
-                new LinePdfAdapter.LinePdf("" + 9, "https://www.optymo.fr/wp-content/uploads/2019/07/fiche_web_ligne_9_2019_08.pdf")
+        TextView descriptionPDFs = findViewById(R.id.main_lines_desc);
+        LinePdfAdapter.LinePdf[] staticResult = new LinePdfAdapter.LinePdf[] {
+                new LinePdfAdapter.LinePdf("" + 1, "https://www.optymo.fr/wp-content/uploads/2020/11/ligne-1-fiche-web-19-11-20.pdf"),
+                new LinePdfAdapter.LinePdf("" + 2, "https://www.optymo.fr/wp-content/uploads/2021/01/L2-fiche-web-01-21.pdf"),
+                new LinePdfAdapter.LinePdf("" + 3, "https://www.optymo.fr/wp-content/uploads/2021/02/L3-fiche-web-13-au-28-fev.pdf"),
+                new LinePdfAdapter.LinePdf("" + 4, "https://www.optymo.fr/wp-content/uploads/2021/01/L4-fiche-web-01-21.pdf"),
+                new LinePdfAdapter.LinePdf("" + 5, "https://www.optymo.fr/wp-content/uploads/2021/01/ligne-5-fiche-web-01-21.pdf"),
+                new LinePdfAdapter.LinePdf("" + 8, "https://www.optymo.fr/wp-content/uploads/2021/01/L8-fiche-web-01-21.pdf"),
+                new LinePdfAdapter.LinePdf("" + 9, "https://www.optymo.fr/wp-content/uploads/2017/06/L9-fiche-web-08-20.pdf")
         };
-        gridView.setAdapter(new LinePdfAdapter(arr, this));
+        gridView.setAdapter(new LinePdfAdapter(new LinePdfAdapter.LinePdf[0], this));
+        pdfFactory = new LinePdfAdapter.LinePdfAdapterFactory(this, staticResult, descriptionPDFs, gridView);
+
         gridView.setOnItemClickListener((parent, view, position, id) -> {
-            Uri uri = Uri.parse(arr[position].getPdfUrl());
+            Uri uri = Uri.parse(staticResult[position].getPdfUrl());
             try
             {
                 Intent intentUrl = new Intent(Intent.ACTION_VIEW);

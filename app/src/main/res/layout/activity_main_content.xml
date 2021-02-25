@@ -162,13 +162,23 @@
                         android:id="@+id/main_lines_pdf_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/component_padding_half"
                         android:fontFamily="@font/nunito_bold"
                         android:paddingStart="@dimen/component_padding"
                         android:paddingEnd="@dimen/component_padding"
                         android:text="@string/main_line_pdf_title"
                         android:textColor="@color/colorPrimaryOnElement"
                         android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/main_lines_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/component_padding_half"
+                        android:fontFamily="@font/nunito_regular"
+                        android:paddingStart="@dimen/component_padding"
+                        android:paddingEnd="@dimen/component_padding"
+                        android:text="@string/main_lines_pdf_loading"
+                        android:textSize="16sp" />
 
                     <com.therolf.optymoNext.vue.MyGridView
                         android:id="@+id/main_lines_pdf_gridview"

@@ -63,4 +63,7 @@
     <string name="main_traffic_info_more_infos">More infos</string>
     <string name="main_authorize_notification">Show the notification with upcoming buses</string>
     <string name="map_more_infos">Tap on me to get next times</string>
+    <string name="main_lines_pdf_static">Static URLs of %1$s</string>
+    <string name="main_lines_pdf_dynamic">Latest PDFs online</string>
+    <string name="main_lines_pdf_loading">Loading...</string>
 </resources>
