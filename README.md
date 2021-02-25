@@ -14,6 +14,7 @@ You can read the articles at in the link below:<br>
 
 - Part 1 : [Get the data](https://therolf.fr/anchor/index.php/posts/optymo-reverse-engineering-part-1)
 - Part 2 : [Structure the data](https://therolf.fr/anchor/index.php/posts/optymo-reverse-engineering-part-2)
+- Part 3 : [Make the app](https://therolf.fr/anchor/index.php/posts/optymo-reverse-engineering-part-3)
 
 # Releases
 
