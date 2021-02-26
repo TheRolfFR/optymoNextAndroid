@@ -1,4 +1,4 @@
-name: Android CI
+name: Release Build
 
 on:
   workflow_dispatch:
@@ -36,7 +36,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
-          name: apk
+          name: OptymoNext_${{ github.event.inputs.version || github.ref }}
           path: app/build/outputs/apk/debug/**.apk
       - name: Create Release
         id: create_release
