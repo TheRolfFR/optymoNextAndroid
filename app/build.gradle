@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'de.nanogiants.android-versioning'
 
 android {
     compileSdkVersion 29
@@ -7,8 +8,8 @@ android {
         applicationId "com.therolf.optymonext"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode versioning.getVersionCode()
+        versionName versioning.getVersionName()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "long", "TIMESTAMP", System.currentTimeMillis() + "L"
     }
@@ -21,6 +22,11 @@ android {
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "app-debug.apk"
+        }
     }
 }
 
