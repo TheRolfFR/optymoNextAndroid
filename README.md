@@ -6,7 +6,7 @@
     <div>
         <a href="https://github.com/TheRolfFR/optymoNextAndroid/releases"><img src="https://img.shields.io/github/release/therolffr/optymoNextAndroid.svg" alt="Last release" /></a>
         <img src="https://img.shields.io/github/languages/code-size/TheRolfFR/optymoNextAndroid.svg" alt="Repo Size" />
-        <a href="https://bit.ly/therolf-webite"><img src="https://img.shields.io/badge/Author-TheRolf-31a589.svg" alt="Author website" /></a>
+        <a href="https://bit.ly/therolf-website"><img src="https://img.shields.io/badge/Author-TheRolf-31a589.svg" alt="Author website" /></a>
         <a href="https://github.com/TheRolfFR/optymoNextAndroid/actions/workflows/android.yml"><img src="https://github.com/TheRolfFR/optymoNextAndroid/actions/workflows/android.yml/badge.svg" alt="Android CI" /></a>
     </div>
 </div>
