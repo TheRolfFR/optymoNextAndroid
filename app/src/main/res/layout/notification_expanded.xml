@@ -5,22 +5,22 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/ic_launcher_background"
         android:gravity="center"
-        android:orientation="horizontal"
         android:paddingStart="@dimen/notification_padding"
         android:paddingTop="@dimen/component_padding_half"
         android:paddingEnd="8dp"
-        android:paddingBottom="@dimen/component_padding_half"
-        tools:ignore="UseCompoundDrawables">
+        android:paddingBottom="@dimen/component_padding_half">
 
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="22dp"
             android:layout_height="22dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:adjustViewBounds="true"
             android:contentDescription="@string/content_description_background"
             android:scaleType="fitCenter"
@@ -28,20 +28,24 @@
 
         <TextView
             android:id="@+id/notification_expanded_title"
-            android:layout_width="0dp"
-            android:layout_height="22dp"
-            android:layout_weight="5"
-            android:paddingLeft="@dimen/component_padding_half"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/notification_expanded_refresh"
+            android:layout_toEndOf="@id/imageView2"
+            android:paddingStart="@dimen/component_padding_half"
+            android:paddingEnd="0dp"
+            android:text="@string/update_never"
             android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
             android:textColor="@color/colorOnPrimary"
-            android:textSize="16sp"
-            tools:ignore="RtlHardcoded,RtlSymmetry"
-            tools:text="Sample title" />
+            android:textSize="16sp" />
 
         <ImageButton
             android:id="@+id/notification_expanded_refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/notification_expanded_next"
             android:background="@android:color/transparent"
             android:contentDescription="@string/content_description"
             android:padding="2dp"
@@ -52,19 +56,24 @@
             android:id="@+id/notification_expanded_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:contentDescription="@string/content_description"
             android:padding="2dp"
             android:src="@drawable/ic_next"
             android:tint="@android:color/white" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/notification_padding">
+        android:paddingStart="@dimen/notification_padding"
+        android:paddingTop="@dimen/component_padding_half"
+        android:paddingEnd="@dimen/notification_padding"
+        android:paddingBottom="@dimen/notification_padding">
 
         <LinearLayout
             android:id="@+id/notification_next_stop_0"

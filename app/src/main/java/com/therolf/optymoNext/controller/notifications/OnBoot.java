@@ -9,6 +9,7 @@ import android.content.Intent;
 public class OnBoot extends BroadcastReceiver {
 
     private static int index;
+    private static NotificationController nCon;
 
     public static int getIndex() {
         return index;
@@ -20,6 +21,14 @@ public class OnBoot extends BroadcastReceiver {
 
     public static void increaseIndex(int value) {
         OnBoot.index += value;
+    }
+
+    public static NotificationController getNotificationController() {
+        if(nCon == null) {
+            nCon = new NotificationController();
+        }
+
+        return nCon;
     }
 
     @SuppressLint("UnsafeProtectedBroadcastReceiver")

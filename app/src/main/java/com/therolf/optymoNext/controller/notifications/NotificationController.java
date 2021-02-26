@@ -111,8 +111,8 @@ public class NotificationController {
 
     private static final int NOTIFICATION_ID = 234;
     private static final String NOTIFICATION_CHANNEL_ID = "optymo_next_times_01";
-    private static final CharSequence NOTIFICATION_CHANNEL_NAME = "optymo_next_times";
-    private static final String NOTIFICATION_CHANNEL_DESCRIPTION = "Channel only used to show persistent next times notification";
+    private static CharSequence NOTIFICATION_CHANNEL_NAME = "Next stops";
+    private static String NOTIFICATION_CHANNEL_DESCRIPTION = "Persistent notification with next stops";
 
     public static boolean isNotificationShown(Context context) {
         SharedPreferences preferences = context.getSharedPreferences("NotificationPrefs", Context.MODE_PRIVATE);
@@ -154,9 +154,13 @@ public class NotificationController {
         // channel for greater versions than 8.0
         NotificationChannel mChannel = null; // = null
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // set category description to current local
+            NOTIFICATION_CHANNEL_NAME = context.getResources().getString(R.string.notification_channel_title);
+            NOTIFICATION_CHANNEL_DESCRIPTION = context.getResources().getString(R.string.notification_channel_description);
 
             // cannot be stored as constant because require api 24 min
-            int importance = NotificationManager.IMPORTANCE_MIN;
+            // fix with low priority for Xiaomi where importance min is not allowed on the lock screen, set low or higher
+            int importance = NotificationManager.IMPORTANCE_DEFAULT; // I want to be sure to be displayed
             mChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, importance);
             mChannel.setDescription(NOTIFICATION_CHANNEL_DESCRIPTION);
             mChannel.setShowBadge(false);
@@ -190,11 +194,16 @@ public class NotificationController {
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setCustomBigContentView(notificationLayoutExpanded)
                 .setOngoing(true)
-                .setPriority(Notification.PRIORITY_LOW)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) //to show content in lock screen
                 .setContentTitle(context.getString(R.string.update_never))
                 .setContentIntent(resultPendingIntent)
-                .setContentText(context.getString(R.string.notification_content_text));
+                .setContentText(context.getString(R.string.notification_content_text))
+                .setNotificationSilent(); // have no sound for this notification
+
+        // set importance was deprecated in API 26
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            builder.setPriority(Notification.PRIORITY_DEFAULT);
+        }
 
         //noinspection ConstantConditions
         if (mChannel != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

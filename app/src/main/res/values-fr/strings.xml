@@ -28,7 +28,7 @@
     <string name="dialog_no">non</string>
     <string name="notification_refresh_button_text">Actualiser</string>
     <string name="notification_content_text">Étendre pour voir les favoris</string>
-    <string name="update_pending">Mise à jour en cours…</string>
+    <string name="update_pending">Mise à jour…</string>
     <string name="dialog_search_input_hint">Chercher un arrêt, un stop…</string>
     <string name="stops">Arrêts</string>
     <string name="stop_next_stops">Prochains horaires</string>
@@ -55,5 +55,7 @@
     <string name="map_more_infos">Appuyer pour voir les prochains horaires</string>
     <string name="main_lines_pdf_static">URLs statiques du %1$s</string>
     <string name="main_lines_pdf_dynamic">Derniers PDFs en ligne</string>
-    <string name="main_lines_pdf_loading">Chargement...</string>
+    <string name="main_lines_pdf_loading">Chargement…</string>
+    <string name="notification_channel_title">Prochains arrêts</string>
+    <string name="notification_channel_description">Notification persistente avec les prochains arrêts</string>
 </resources>

@@ -21,13 +21,16 @@ public class NotificationService extends IntentService {
     public static final String REFRESH_ACTION = "refresh_action";
     public static final String NEXT_SIX_GET = "next_six_get";
     public static final String CANCEL_ACTION = "notification_cancel_all";
-    private NotificationController notificationController = new NotificationController();
 
     private int numberOfRequests;
     private ArrayList<NextTimeRequest> lastRequests = new ArrayList<>();
 
     public NotificationService() {
         super("MyNotificationService");
+    }
+
+    private static NotificationController getNotificationController() {
+        return OnBoot.getNotificationController();
     }
 
     @Override
@@ -44,6 +47,7 @@ public class NotificationService extends IntentService {
         OptymoDirection[] fav = ((GlobalApplication) getApplication()).getFavoritesController().getFavorites();
 //        Log.d("optymo", "" + fav.length);
 
+        NotificationController notificationController = getNotificationController();
         // if action is cancel we cancel
         if(action.equals(CANCEL_ACTION)) {
             notificationController.cancelNotification(this);
@@ -83,8 +87,9 @@ public class NotificationService extends IntentService {
         while(lastRequests.size() > 0) {
             NextTimeRequest request = lastRequests.get(0);
             request.cancel(true);
-            lastRequests.clear();
         }
+        //noinspection RedundantOperationOnEmptyContainer
+        lastRequests.clear();
 
         // make maximum 6 requests
         int rNumber = 0;
@@ -158,11 +163,11 @@ public class NotificationService extends IntentService {
 
             service.numberOfRequests++;
             if (service.numberOfRequests >= service.lastRequests.size())
-                service.notificationController.setUpdatedAtTitle(service);
+               getNotificationController().setUpdatedAtTitle(service);
 
             // add line to notification if first 6
             if(service.numberOfRequests < 7)
-                service.notificationController.appendToNotificationBody(nextTime);
+                getNotificationController().appendToNotificationBody(nextTime);
         }
 
     }

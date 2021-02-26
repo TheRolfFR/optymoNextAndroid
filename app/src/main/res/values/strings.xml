@@ -33,7 +33,7 @@
     <string name="dialog_no">no</string>
     <string name="notification_refresh_button_text">Refresh</string>
     <string name="notification_content_text">Expand to see favorites</string>
-    <string name="update_pending">Update pending…</string>
+    <string name="update_pending">Updating…</string>
     <string name="dialog_search_input_hint">Search stop, line…</string>
     <string name="stops">Stops</string>
     <string name="stop_next_stops">Next stops</string>
@@ -65,5 +65,7 @@
     <string name="map_more_infos">Tap on me to get next times</string>
     <string name="main_lines_pdf_static">Static URLs of %1$s</string>
     <string name="main_lines_pdf_dynamic">Latest PDFs online</string>
-    <string name="main_lines_pdf_loading">Loading...</string>
+    <string name="main_lines_pdf_loading">Loading…</string>
+    <string name="notification_channel_title">Next stops</string>
+    <string name="notification_channel_description">Persistent notification with next stops</string>
 </resources>
