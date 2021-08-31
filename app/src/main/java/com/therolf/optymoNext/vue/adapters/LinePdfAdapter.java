@@ -57,6 +57,14 @@ public class LinePdfAdapter extends BaseAdapter {
         public String getPdfUrl() {
             return pdfUrl;
         }
+
+        @Override
+        public String toString() {
+            return "LinePdf{" +
+                    "number='" + number + '\'' +
+                    ", pdfUrl='" + pdfUrl + '\'' +
+                    '}';
+        }
     }
 
     public static class LinePdfAdapterFactory {

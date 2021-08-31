@@ -168,19 +168,19 @@ public class MainActivity extends TopViewActivity {
         GridView gridView = findViewById(R.id.main_lines_pdf_gridview);
         TextView descriptionPDFs = findViewById(R.id.main_lines_desc);
         LinePdfAdapter.LinePdf[] staticResult = new LinePdfAdapter.LinePdf[] {
-                new LinePdfAdapter.LinePdf("" + 1, "https://www.optymo.fr/wp-content/uploads/2020/11/ligne-1-fiche-web-19-11-20.pdf"),
-                new LinePdfAdapter.LinePdf("" + 2, "https://www.optymo.fr/wp-content/uploads/2021/01/L2-fiche-web-01-21.pdf"),
-                new LinePdfAdapter.LinePdf("" + 3, "https://www.optymo.fr/wp-content/uploads/2021/02/L3-fiche-web-13-au-28-fev.pdf"),
-                new LinePdfAdapter.LinePdf("" + 4, "https://www.optymo.fr/wp-content/uploads/2021/01/L4-fiche-web-01-21.pdf"),
-                new LinePdfAdapter.LinePdf("" + 5, "https://www.optymo.fr/wp-content/uploads/2021/01/ligne-5-fiche-web-01-21.pdf"),
-                new LinePdfAdapter.LinePdf("" + 8, "https://www.optymo.fr/wp-content/uploads/2021/01/L8-fiche-web-01-21.pdf"),
-                new LinePdfAdapter.LinePdf("" + 9, "https://www.optymo.fr/wp-content/uploads/2017/06/L9-fiche-web-08-20.pdf")
+                new LinePdfAdapter.LinePdf("1", "https://www.optymo.fr/wp-content/uploads/2017/06/L1-Web.pdf"),
+                new LinePdfAdapter.LinePdf("2", "https://www.optymo.fr/wp-content/uploads/2021/08/L2-Web.pdf"),
+                new LinePdfAdapter.LinePdf("3", "https://www.optymo.fr/wp-content/uploads/2021/08/L3-Web.pdf"),
+                new LinePdfAdapter.LinePdf("4", "https://www.optymo.fr/wp-content/uploads/2021/08/L4-Web.pdf"),
+                new LinePdfAdapter.LinePdf("5", "https://www.optymo.fr/wp-content/uploads/2021/08/L5-Web.pdf"),
+                new LinePdfAdapter.LinePdf("8", "https://www.optymo.fr/wp-content/uploads/2017/06/L8-Web.pdf"),
+                new LinePdfAdapter.LinePdf("9", "https://www.optymo.fr/wp-content/uploads/2017/06/L9-fiche-web-08-20.pdf")
         };
         gridView.setAdapter(new LinePdfAdapter(new LinePdfAdapter.LinePdf[0], this));
         pdfFactory = new LinePdfAdapter.LinePdfAdapterFactory(this, staticResult, descriptionPDFs, gridView);
 
         gridView.setOnItemClickListener((parent, view, position, id) -> {
-            Uri uri = Uri.parse(staticResult[position].getPdfUrl());
+            Uri uri = Uri.parse(((LinePdfAdapter.LinePdf) gridView.getAdapter().getItem(position)).getPdfUrl());
             try
             {
                 Intent intentUrl = new Intent(Intent.ACTION_VIEW);
