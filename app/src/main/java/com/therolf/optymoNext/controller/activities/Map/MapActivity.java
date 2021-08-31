@@ -68,12 +68,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private static final int LINE_DEFAULT_INDEX = 0;
     private Map<String, Integer> zIndexes = new HashMap<String, Integer>() {{
-        put("5", 6);
-        put("3", 5);
-        put("2", 4);
-        put("8", 3);
-        put("4", 2);
-        put("1", 1);
+        put("3", 6); // blue
+        put("8", 5); // maroon
+        put("4", 4); // purple
+        put("5", 3); // green
+        put("2", 2); // yellow
+        put("1", 1); // red
+    }};
+    private HashMap<String, String> lineColors = new HashMap<String, String>() {{
+        put("1", "DC002E");
+        put("2", "FABE19");
+        put("3", "009CDA");
+        put("4", "9D5B9C");
+        put("5", "96BE13");
+        put("8", "B07E5B");
     }};
     private static final int BUS_INDEX = 10;
     private static final int STOP_Z_INDEX = 8;
@@ -148,7 +156,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         linePath = allLinesPaths.getJSONObject(b);
 
                         polyLine = new PolylineOptions();
-                        polyLine.color(Color.parseColor("#" + linePath.getString("color")));
+                        polyLine.color(Color.parseColor("#" + lineColors.get(lineNumber)));
                         polyLine.clickable(true);
 
                         if(zIndexes.containsKey(lineNumber)) {
