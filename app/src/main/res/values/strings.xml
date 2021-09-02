@@ -68,4 +68,8 @@
     <string name="main_lines_pdf_loading">Loading…</string>
     <string name="notification_channel_title">Next stops</string>
     <string name="notification_channel_description">Persistent notification with next stops</string>
+    <string name="main_traffic_info_lines_prefix">Lines: %1$s</string>
+    <string name="main_traffic_info_date_from">From %1$s</string>
+    <string name="main_traffic_info_date_from_to">From %1$s to %2$s</string>
+    <string name="main_traffic_info_date_same_day">The %1$s</string>
 </resources>

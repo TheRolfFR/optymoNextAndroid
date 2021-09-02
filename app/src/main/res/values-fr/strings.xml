@@ -58,4 +58,8 @@
     <string name="main_lines_pdf_loading">Chargement…</string>
     <string name="notification_channel_title">Prochains arrêts</string>
     <string name="notification_channel_description">Notification persistente avec les prochains arrêts</string>
+    <string name="main_traffic_info_lines_prefix">Lignes : %1$s</string>
+    <string name="main_traffic_info_date_from">À partir du %1$s</string>
+    <string name="main_traffic_info_date_from_to">Du %1$s au %2$s</string>
+    <string name="main_traffic_info_date_same_day">Le %1$s</string>
 </resources>

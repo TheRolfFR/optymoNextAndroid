@@ -58,4 +58,8 @@
     <string name="main_lines_pdf_loading">Cargamento…</string>
     <string name="notification_channel_title">Proximos horarios</string>
     <string name="notification_channel_description">Notificación persistente con los proximos horarios</string>
+    <string name="main_traffic_info_lines_prefix">Líneas : %1$s</string>
+    <string name="main_traffic_info_date_from">Desde el %1$s</string>
+    <string name="main_traffic_info_date_from_to">Desde el %1$s hasta el %2$s</string>
+    <string name="main_traffic_info_date_same_day">El %1$s</string>
 </resources>
