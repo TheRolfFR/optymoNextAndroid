@@ -7,3 +7,4 @@ include:
   - optymo-reverse-engineering-part-1.md
   - optymo-reverse-engineering-part-2.md
   - optymo-reverse-engineering-part-3.md
+theme: Architect
