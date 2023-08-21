@@ -14,11 +14,10 @@
 # Reverse engineering on urban bus stops service
 
 You can read the articles at in the link below:<br>
-[Article category page](https://therolf.fr/anchor/index.php/category/optymo-reverse-engineering)
 
-- Part 1 : [Get the data](https://therolf.fr/anchor/index.php/posts/optymo-reverse-engineering-part-1)
-- Part 2 : [Structure the data](https://therolf.fr/anchor/index.php/posts/optymo-reverse-engineering-part-2)
-- Part 3 : [Make the app](https://therolf.fr/anchor/index.php/posts/optymo-reverse-engineering-part-3)
+- Part 1 : [Get the data](https://therolffr.github.io/optymoNextAndroid/optymo-reverse-engineering-part-1)
+- Part 2 : [Structure the data](https://therolffr.github.io/optymoNextAndroid/optymo-reverse-engineering-part-2)
+- Part 3 : [Make the app](https://therolffr.github.io/optymoNextAndroid/optymo-reverse-engineering-part-3)
 
 # Releases
 
